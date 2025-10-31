@@ -68,10 +68,10 @@
             //                                     ┗━━━━━━━━━━━┻━━━━━━━━━━━┻━━━━━━━━━━━┛   ┗━━━━━━━━━━━┻━━━━━━━━━━━┻━━━━━━━━━━━┛
 
             bindings = <
-       &bt BT_CLR_ALL  &bootloader  &out OUT_TOG    &bt BT_SEL 1  &bt BT_SEL 0    &bt BT_SEL 0  &bt BT_SEL 1  &out OUT_TOG    &bootloader  &bt BT_CLR_ALL
-       &mt LGUI A      &kp A        &studio_unlock  &kp A         &kp D           &kp H         &kp B         &studio_unlock  &kp B        &mt RGUI O
-&kp Z  &kp Z           &kp X        &kp C           &kp V         &kp B           &kp K         &kp M         &kp COMMA       &kp DOT      &kp FSLH        &kp FSLH
-                                    &kp TAB         &kp TAB       &lt 0 SPACE     &lt 0 RET     &kp BSPC      &kp BSPC
+       &kp P  &kp O  &kp I  &kp U           &kp T    &bt BT_SEL 0  &bt BT_SEL 1  &out OUT_TOG    &bootloader  &bt BT_CLR_ALL
+       &kp S  &kp A  &kp E  &kp N           &kp R    &kp H         &kp B         &studio_unlock  &kp B        &mt RGUI O
+&kp Z  &kp D  &kp L  &kp C  &kp F           &kp H    &kp K         &kp M         &kp COMMA       &kp DOT      &kp FSLH        &kp FSLH
+                     &sl 1  &kp LEFT_SHIFT  &sl 2    &lt 0 RET     &kp BSPC      &kp BSPC
             >;
         };
 
@@ -104,6 +104,15 @@
 &trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans  &trans  &trans  &trans  &trans
                         &trans  &trans  &trans    &trans  &trans  &trans
             >;
+        };
+    };
+
+    conditional_layers {
+        compatible = "zmk,conditional-layers";
+
+        BT {
+            if-layers = <1 2>;
+            then-layer = <3>;
         };
     };
 };
