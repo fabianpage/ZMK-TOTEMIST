@@ -26,6 +26,76 @@
             bindings = <&kp DE_Z>;
             key-positions = <4 3>;
         };
+
+        kpm {
+            bindings = <&kp DE_M>;
+            key-positions = <3 2>;
+        };
+
+        kpw {
+            bindings = <&kp DE_W>;
+            key-positions = <1 2>;
+        };
+
+        kpx {
+            bindings = <&kp DE_X>;
+            key-positions = <0 1>;
+        };
+
+        kpg {
+            bindings = <&kp DE_G>;
+            key-positions = <13 14>;
+        };
+
+        kpv {
+            bindings = <&kp DE_V>;
+            key-positions = <13 12>;
+        };
+
+        kptap {
+            bindings = <&kp TAB>;
+            key-positions = <11 12>;
+        };
+
+        kpq {
+            bindings = <&kp DE_Q>;
+            key-positions = <10 11>;
+        };
+
+        kpb {
+            bindings = <&kp DE_B>;
+            key-positions = <25 24>;
+        };
+
+        kpj {
+            bindings = <&kp DE_J>;
+            key-positions = <24 23>;
+        };
+
+        kpk {
+            bindings = <&kp DE_K>;
+            key-positions = <22 23>;
+        };
+
+        kpy {
+            bindings = <&kp DE_Y>;
+            key-positions = <21 22>;
+        };
+
+        kpgui {
+            bindings = <&kp LEFT_GUI>;
+            key-positions = <4 14>;
+        };
+
+        kpctrl {
+            bindings = <&kp LCTRL>;
+            key-positions = <14 25>;
+        };
+
+        kpalt {
+            bindings = <&kp LEFT_ALT>;
+            key-positions = <3 13>;
+        };
     };
 
     macros {
@@ -67,10 +137,10 @@
             //                                     ┗━━━━━━━━━━━┻━━━━━━━━━━━┻━━━━━━━━━━━┛   ┗━━━━━━━━━━━┻━━━━━━━━━━━┻━━━━━━━━━━━┛
 
             bindings = <
-       &kp P  &kp O  &kp I  &kp U           &kp T    &bt BT_SEL 0  &bt BT_SEL 1  &out OUT_TOG    &bootloader  &bt BT_CLR_ALL
-       &kp S  &kp A  &kp E  &kp N           &kp R    &kp H         &kp B         &studio_unlock  &kp B        &mt RGUI O
-&kp Z  &kp D  &kp L  &kp C  &kp F           &kp H    &kp K         &kp M         &kp COMMA       &kp DOT      &kp FSLH        &kp FSLH
-                     &sl 1  &kp LEFT_SHIFT  &sl 2    &lt 0 RET     &kp BSPC      &kp BSPC
+       &kp P       &kp O  &kp I  &kp U           &kp T    &bt BT_SEL 0  &bt BT_SEL 1  &out OUT_TOG    &bootloader  &bt BT_CLR_ALL
+       &lt 3 DE_S  &kp A  &kp E  &kp N           &kp R    &kp H         &kp B         &studio_unlock  &kp B        &mt RGUI O
+&kp Z  &kp D       &kp L  &kp C  &kp F           &kp H    &kp K         &kp M         &kp COMMA       &kp DOT      &kp FSLH        &kp FSLH
+                          &sl 1  &kp LEFT_SHIFT  &sl 2    &lt 0 RET     &kp BSPC      &kp BSPC
             >;
         };
 
