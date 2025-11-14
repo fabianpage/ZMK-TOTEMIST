@@ -96,6 +96,11 @@
             bindings = <&kp LEFT_ALT>;
             key-positions = <3 13>;
         };
+
+        kpcapsword {
+            bindings = <&caps_word>;
+            key-positions = <13 24>;
+        };
     };
 
     macros {
