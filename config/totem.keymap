@@ -101,22 +101,24 @@
             bindings = <&caps_word>;
             key-positions = <13 24>;
         };
+
+        kpesc {
+            bindings = <&esc_layerreset>;
+            key-positions = <2 12>;
+        };
+
+        kpspace {
+            bindings = <&kp SPACE>;
+            key-positions = <23 12>;
+        };
     };
 
     macros {
-        gif: gif {
-            label = "giphy";
+        esc_layerreset: esc_layerreset {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings =
-                <&macro_press>,
-                <&kp LSHFT>,
-                <&macro_tap>,
-                <&kp N2>,
-                <&macro_release>,
-                <&kp LSHFT>,
-                <&macro_tap>,
-                <&kp G &kp I &kp F>;
+            bindings = <&kp ESCAPE &to 0>;
+            label = "ESC_LAYERRESET";
         };
     };
 
