@@ -111,6 +111,26 @@
             bindings = <&kp SPACE>;
             key-positions = <23 12>;
         };
+
+        round_brackets {
+            bindings = <&round_brackets>;
+            key-positions = <1 11>;
+        };
+
+        square_brackets {
+            bindings = <&square_brackets>;
+            key-positions = <11 22>;
+        };
+
+        backspace_delete {
+            bindings = <&backspace_delete>;
+            key-positions = <0 10>;
+        };
+
+        enter {
+            bindings = <&kp ENTER>;
+            key-positions = <10 21>;
+        };
     };
 
     macros {
@@ -154,6 +174,15 @@
             compatible = "zmk,behavior-mod-morph";
             label = "CURLY_BRACKETS";
             bindings = <&kp DE_LEFT_BRACE>, <&kp DE_RIGHT_BRACE>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT)>;
+        };
+
+        backspace_delete: backspace_delete {
+            compatible = "zmk,behavior-mod-morph";
+            label = "BACKSPACE_DELETE";
+            bindings = <&kp BACKSPACE>, <&kp DELETE>;
 
             #binding-cells = <0>;
             mods = <(MOD_LSFT)>;
