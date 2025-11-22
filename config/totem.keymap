@@ -278,10 +278,10 @@
 
         Nav2 {
             bindings = <
-        &trans  &trans  &trans  &trans  &trans    &trans  &trans  &trans  &trans  &trans
-        &trans  &kp L   &kp K   &kp J   &kp H     &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans  &trans  &trans  &trans  &trans
-                        &trans  &trans  &trans    &trans  &trans  &trans
+        &frage_ausrufe_zeichen  &komma_strickpunkt  &punkt_doppelpunkt  &back_front_tick  &double_single_quote    &trans  &trans  &trans  &trans  &trans
+        &trans                  &kp L               &kp K               &kp J             &kp H                   &trans  &trans  &trans  &trans  &trans
+&trans  &trans                  &trans              &trans              &trans            &trans                  &trans  &trans  &trans  &trans  &trans  &trans
+                                                    &trans              &trans            &trans                  &trans  &trans  &trans
             >;
         };
 
