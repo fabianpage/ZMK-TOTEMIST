@@ -196,6 +196,42 @@
             #binding-cells = <0>;
             mods = <(MOD_LSFT)>;
         };
+
+        back_front_tick: back_front_tick {
+            compatible = "zmk,behavior-mod-morph";
+            label = "BACK_FRONT_TICK";
+            bindings = <&kp DE_GRAVE>, <&kp DE_ACUTE>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT)>;
+        };
+
+        punkt_doppelpunkt: punkt_doppelpunkt {
+            compatible = "zmk,behavior-mod-morph";
+            label = "PUNKT_DOPPELPUNKT";
+            bindings = <&kp DE_DOT>, <&kp DE_COLON>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT)>;
+        };
+
+        komma_strickpunkt: komma_strickpunkt {
+            compatible = "zmk,behavior-mod-morph";
+            label = "KOMMA_STRICKPUNKT";
+            bindings = <&kp DE_COMMA>, <&kp DE_SEMICOLON>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT)>;
+        };
+
+        frage_ausrufe_zeichen: frage_ausrufe_zeichen {
+            compatible = "zmk,behavior-mod-morph";
+            label = "FRAGE_AUSRUFE_ZEICHEN";
+            bindings = <&kp DE_QUESTION>, <&kp DE_EXCLAMATION>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT)>;
+        };
     };
 
     keymap {
