@@ -140,6 +140,20 @@
             bindings = <&kp ESCAPE &to 0>;
             label = "ESC_LAYERRESET";
         };
+
+        daechli: daechli {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp DE_CARET &kp SPACE>;
+            label = "DAECHLI";
+        };
+
+        tilde: tilde {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp DE_TILDE &kp SPACE>;
+            label = "TILDE";
+        };
     };
 
     behaviors {
@@ -232,6 +246,24 @@
             #binding-cells = <0>;
             mods = <(MOD_LSFT)>;
         };
+
+        daechli_tilde: daechli_tilde {
+            compatible = "zmk,behavior-mod-morph";
+            label = "DAECHLI_TILDE";
+            bindings = <&daechli>, <&tilde>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT)>;
+        };
+
+        prozent_ringli: prozent_ringli {
+            compatible = "zmk,behavior-mod-morph";
+            label = "PROZENT_RINGLI";
+            bindings = <&kp DE_PERCENT>, <&kp DE_DEGREE>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT)>;
+        };
     };
 
     keymap {
@@ -280,7 +312,7 @@
             bindings = <
         &frage_ausrufe_zeichen  &komma_strickpunkt  &punkt_doppelpunkt  &back_front_tick  &double_single_quote    &trans  &trans  &trans  &trans  &trans
         &trans                  &kp L               &kp K               &kp J             &kp H                   &trans  &trans  &trans  &trans  &trans
-&trans  &trans                  &trans              &trans              &trans            &trans                  &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans                  &trans              &trans              &trans            &daechli_tilde          &trans  &trans  &trans  &trans  &trans  &trans
                                                     &trans              &trans            &trans                  &trans  &trans  &trans
             >;
         };
