@@ -187,6 +187,15 @@
             #binding-cells = <0>;
             mods = <(MOD_LSFT)>;
         };
+
+        double_single_quote: double_single_quote {
+            compatible = "zmk,behavior-mod-morph";
+            label = "DOUBLE_SINGLE_QUOTE";
+            bindings = <&kp DE_DOUBLE_QUOTES>, <&kp SINGLE_QUOTE>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT)>;
+        };
     };
 
     keymap {
@@ -234,7 +243,7 @@
         Nav2 {
             bindings = <
         &trans  &trans  &trans  &trans  &trans    &trans  &trans  &trans  &trans  &trans
-        &trans  &trans  &trans  &trans  &trans    &trans  &trans  &trans  &trans  &trans
+        &trans  &kp L   &kp K   &kp J   &kp H     &trans  &trans  &trans  &trans  &trans
 &trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans  &trans  &trans  &trans  &trans
                         &trans  &trans  &trans    &trans  &trans  &trans
             >;
