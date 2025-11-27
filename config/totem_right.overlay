@@ -28,8 +28,8 @@
         >;
     };
 
-    &keymap_transform_0 {
-    };
+    /* &keymap_transform_0 { */
+    /* }; */
 
 
     /* kscan0: kscan_0 { */
