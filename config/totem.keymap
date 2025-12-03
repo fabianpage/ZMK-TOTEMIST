@@ -151,6 +151,11 @@
             bindings = <&komma_strickpunkt>;
             key-positions = <24 12>;
         };
+
+        toBT {
+            bindings = <&to 4>;
+            key-positions = <1 2 3 4>;
+        };
     };
 
     macros {
@@ -402,10 +407,10 @@
 
         BT {
             bindings = <
-        &bt BT_CLR_ALL  &bt BT_SEL 2  &bt BT_SEL 1  &bt BT_SEL 0  &bt BT_CLR     &trans  &trans  &trans  &trans  &trans
-        &trans          &trans        &trans        &out OUT_BLE  &trans         &trans  &trans  &trans  &trans  &trans
-&trans  &trans          &trans        &trans        &out OUT_USB  &bootloader    &trans  &trans  &trans  &trans  &trans  &trans
-                                      &trans        &trans        &trans         &trans  &trans  &trans
+        &bt BT_CLR_ALL   &bt BT_SEL 2  &bt BT_SEL 1  &bt BT_SEL 0  &bt BT_CLR     &trans  &trans  &trans  &trans  &trans
+        &trans           &trans        &trans        &out OUT_BLE  &trans         &trans  &trans  &trans  &trans  &trans
+&trans  &esc_layerreset  &trans        &trans        &out OUT_USB  &bootloader    &trans  &trans  &trans  &trans  &trans  &trans
+                                       &trans        &trans        &trans         &trans  &trans  &trans
             >;
         };
     };
