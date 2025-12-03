@@ -179,6 +179,27 @@
             bindings = <&kp DE_TILDE &kp SPACE>;
             label = "TILDE";
         };
+
+        M_AE: AE {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp CAPSLOCK &kp DE_A_UMLAUT &kp CAPSLOCK>;
+            label = "AE";
+        };
+
+        M_UE: UE {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp CAPSLOCK &kp DE_U_UMLAUT &kp CAPSLOCK>;
+            label = "UE";
+        };
+
+        M_OE: M_OE {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp CAPSLOCK &kp DE_O_UMLAUT &kp CAPSLOCK>;
+            label = "M_OE";
+        };
     };
 
     behaviors {
@@ -343,6 +364,33 @@
             #binding-cells = <0>;
             mods = <(MOD_LSFT)>;
         };
+
+        B_AE: B_AE {
+            compatible = "zmk,behavior-mod-morph";
+            label = "B_AE";
+            bindings = <&kp DE_A_UMLAUT>, <&M_AE>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT)>;
+        };
+
+        B_UE: B_UE {
+            compatible = "zmk,behavior-mod-morph";
+            label = "B_UE";
+            bindings = <&kp LS(DE_U_UMLAUT)>, <&M_UE>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT)>;
+        };
+
+        B_OE: B_OE {
+            compatible = "zmk,behavior-mod-morph";
+            label = "B_OE";
+            bindings = <&kp LS(DE_O_UMLAUT)>, <&M_OE>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT)>;
+        };
     };
 
     keymap {
@@ -380,10 +428,10 @@
 
         Nav1 {
             bindings = <
-        &kp DE_U_UMLAUT  &kp END          &kp PG_UP  &kp PG_DN  &kp HOME           &kp N1  &trans  &trans  &trans  &trans
-        &kp DE_O_UMLAUT  &kp RIGHT_ARROW  &kp UP     &kp DOWN   &kp LEFT_ARROW     &trans  &trans  &trans  &trans  &trans
-&trans  &kp DE_A_UMLAUT  &kp N9           &kp N8     &kp N7     &kp DE_ASTERISK    &kp N3  &trans  &trans  &trans  &trans  &trans
-                                          &trans     &trans     &trans             &trans  &trans  &trans
+        &B_UE  &kp END          &kp PG_UP  &kp PG_DN  &kp HOME           &kp N1  &trans  &trans  &trans  &trans
+        &B_OE  &kp RIGHT_ARROW  &kp UP     &kp DOWN   &kp LEFT_ARROW     &trans  &trans  &trans  &trans  &trans
+&trans  &B_AE  &kp N9           &kp N8     &kp N7     &kp DE_ASTERISK    &kp N3  &trans  &trans  &trans  &trans  &trans
+                                &trans     &trans     &trans             &trans  &trans  &trans
             >;
         };
 
