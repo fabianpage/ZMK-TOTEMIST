@@ -83,17 +83,17 @@
         };
 
         kpgui {
-            bindings = <&kp LEFT_GUI>;
+            bindings = <&sk LEFT_GUI>;
             key-positions = <4 14>;
         };
 
         kpctrl {
-            bindings = <&kp LCTRL>;
+            bindings = <&sk LCTRL>;
             key-positions = <14 25>;
         };
 
         kpalt {
-            bindings = <&kp LEFT_ALT>;
+            bindings = <&sk LEFT_ALT>;
             key-positions = <3 13>;
         };
 
