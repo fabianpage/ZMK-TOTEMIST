@@ -362,10 +362,10 @@
             //                                     ┗━━━━━━━━━━━┻━━━━━━━━━━━┻━━━━━━━━━━━┛   ┗━━━━━━━━━━━┻━━━━━━━━━━━┻━━━━━━━━━━━┛
 
             bindings = <
-       &kp P       &kp O  &kp I  &kp U           &kp T    &bt BT_SEL 0  &bt BT_SEL 1  &out OUT_TOG    &bootloader  &bt BT_CLR_ALL
-       &lt 3 DE_S  &kp A  &kp E  &kp N           &kp R    &kp H         &kp B         &studio_unlock  &kp B        &mt RGUI O
-&kp Z  &kp D       &kp L  &kp C  &kp F           &kp H    &kp K         &kp M         &kp COMMA       &kp DOT      &kp FSLH        &kp FSLH
-                          &sl 1  &sk LEFT_SHIFT  &sl 2    &lt 0 RET     &kp BSPC      &kp BSPC
+       &kp P       &kp O  &kp I  &kp U           &kp T    &bt BT_SEL 0  &bt BT_SEL 1  &out OUT_TOG  &bootloader  &bt BT_CLR_ALL
+       &lt 3 DE_S  &kp A  &kp E  &kp N           &kp R    &kp H         &kp D         &kp DE_F      &kp B        &mt RGUI O
+&kp Z  &kp D       &kp L  &kp C  &kp F           &kp H    &kp K         &kp M         &kp COMMA     &kp DOT      &kp FSLH        &kp FSLH
+                          &sl 1  &sk LEFT_SHIFT  &sl 2    &kp C         &kp A         &kp B
             >;
         };
 
