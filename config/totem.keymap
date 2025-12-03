@@ -375,10 +375,10 @@
 
         Nav1 {
             bindings = <
-        &kp DE_U_UMLAUT  &kp END   &kp PG_UP  &kp PG_DN  &kp HOME           &kp N1  &trans  &trans  &trans  &trans
-        &kp DE_O_UMLAUT  &kp LEFT  &kp UP     &kp DOWN   &kp RIGHT          &trans  &trans  &trans  &trans  &trans
-&trans  &kp DE_A_UMLAUT  &kp N9    &kp N8     &kp N7     &kp DE_ASTERISK    &kp N3  &trans  &trans  &trans  &trans  &trans
-                                   &trans     &trans     &trans             &trans  &trans  &trans
+        &kp DE_U_UMLAUT  &kp END          &kp PG_UP  &kp PG_DN  &kp HOME           &kp N1  &trans  &trans  &trans  &trans
+        &kp DE_O_UMLAUT  &kp RIGHT_ARROW  &kp UP     &kp DOWN   &kp LEFT_ARROW     &trans  &trans  &trans  &trans  &trans
+&trans  &kp DE_A_UMLAUT  &kp N9           &kp N8     &kp N7     &kp DE_ASTERISK    &kp N3  &trans  &trans  &trans  &trans  &trans
+                                          &trans     &trans     &trans             &trans  &trans  &trans
             >;
         };
 
