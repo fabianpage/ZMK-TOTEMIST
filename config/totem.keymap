@@ -197,7 +197,13 @@
         M_OE: M_OE {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&kp CAPSLOCK &kp DE_O_UMLAUT &kp CAPSLOCK>;
+            bindings =
+                <&kp CAPSLOCK>,
+                <&macro_wait_time 5>,
+                <&kp DE_O_UMLAUT>,
+                <&macro_wait_time 5>,
+                <&kp CAPSLOCK>;
+
             label = "M_OE";
         };
     };
@@ -377,7 +383,7 @@
         B_UE: B_UE {
             compatible = "zmk,behavior-mod-morph";
             label = "B_UE";
-            bindings = <&kp LS(DE_U_UMLAUT)>, <&M_UE>;
+            bindings = <&kp DE_U_UMLAUT>, <&M_UE>;
 
             #binding-cells = <0>;
             mods = <(MOD_LSFT)>;
@@ -386,7 +392,16 @@
         B_OE: B_OE {
             compatible = "zmk,behavior-mod-morph";
             label = "B_OE";
-            bindings = <&kp LS(DE_O_UMLAUT)>, <&M_OE>;
+            bindings = <&kp DE_O_UMLAUT>, <&M_OE>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT)>;
+        };
+
+        new_behavior: new_behavior {
+            compatible = "zmk,behavior-mod-morph";
+            label = "NEW_BEHAVIOR";
+            bindings = <&kp DE_U_UMLAUT>, <&M_UE>;
 
             #binding-cells = <0>;
             mods = <(MOD_LSFT)>;
