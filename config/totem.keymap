@@ -204,6 +204,20 @@
 
             label = "M_OE";
         };
+
+        backtick_macro: backtick_macro {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp DE_GRAVE &kp SPACE>;
+            label = "BACKTICK_MACRO";
+        };
+
+        fronttick_macro: fronttick_macro {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp DE_ACUTE &kp SPACE>;
+            label = "FRONTTICK_MACRO";
+        };
     };
 
     behaviors {
@@ -264,7 +278,7 @@
         back_front_tick: back_front_tick {
             compatible = "zmk,behavior-mod-morph";
             label = "BACK_FRONT_TICK";
-            bindings = <&kp DE_GRAVE>, <&kp DE_ACUTE>;
+            bindings = <&backtick_macro>, <&fronttick_macro>;
 
             #binding-cells = <0>;
             mods = <(MOD_LSFT)>;
