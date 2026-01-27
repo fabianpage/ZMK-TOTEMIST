@@ -418,6 +418,42 @@
             #binding-cells = <0>;
             mods = <(MOD_LSFT)>;
         };
+
+        hCh: hCh {
+            compatible = "zmk,behavior-mod-morph";
+            label = "HCH";
+            bindings = <&kp DE_H>, <&kp LC(DE_H)>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT)>;
+        };
+
+        jCj: jCj {
+            compatible = "zmk,behavior-mod-morph";
+            label = "JCJ";
+            bindings = <&kp DE_J>, <&kp LC(DE_J)>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT)>;
+        };
+
+        kCk: kCk {
+            compatible = "zmk,behavior-mod-morph";
+            label = "KCK";
+            bindings = <&kp DE_K>, <&kp LC(DE_K)>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT)>;
+        };
+
+        lCl: lCl {
+            compatible = "zmk,behavior-mod-morph";
+            label = "LCL";
+            bindings = <&kp DE_L>, <&kp LC(DE_L)>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT)>;
+        };
     };
 
     keymap {
@@ -465,7 +501,7 @@
         Nav2 {
             bindings = <
         &frage_ausrufe_zeichen  &trans             &hash_pipe  &back_front_tick  &double_single_quote    &trans  &trans  &trans  &trans  &trans
-        &at_equal               &kp L              &kp K       &kp J             &kp H                   &trans  &trans  &trans  &trans  &trans
+        &at_equal               &lCl               &kCk        &jCj              &hCh                    &trans  &trans  &trans  &trans  &trans
 &trans  &slash_backslash        &dollar_ampersand  &trans      &prozent_ringli   &daechli_tilde          &trans  &trans  &trans  &trans  &trans  &trans
                                                    &trans      &trans            &trans                  &trans  &trans  &trans
             >;
