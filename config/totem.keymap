@@ -278,13 +278,6 @@
         ue9: ue9 {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&kp DE_U_UMLAUT &kp DE_N8>;
-            label = "UE9";
-        };
-
-        ue9: ue9 {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
             bindings = <&kp DE_U_UMLAUT &kp DE_N9>;
             label = "UE9";
         };
@@ -554,6 +547,15 @@
             compatible = "zmk,behavior-mod-morph";
             label = "N2UE2";
             bindings = <&kp DE_N2>, <&ue2>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT)>;
+        };
+
+        n3ue3: n3ue3 {
+            compatible = "zmk,behavior-mod-morph";
+            label = "N3UE3";
+            bindings = <&kp DE_N3>, <&ue3>;
 
             #binding-cells = <0>;
             mods = <(MOD_LSFT)>;
