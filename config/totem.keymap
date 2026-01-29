@@ -288,6 +288,20 @@
             bindings = <&kp DE_U_UMLAUT &kp DE_N0>;
             label = "UE0";
         };
+
+        tmux_next_window: tmux_next {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp DE_U_UMLAUT &kp DE_N>;
+            label = "TMUX_NEXT";
+        };
+
+        tmux_prev_window: tmux_prev {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp DE_U_UMLAUT &kp DE_P>;
+            label = "TMUX_PREV";
+        };
     };
 
     behaviors {
@@ -614,6 +628,15 @@
             #binding-cells = <0>;
             mods = <(MOD_LSFT)>;
         };
+
+        tmux_next_pre: tmux_next_pre {
+            compatible = "zmk,behavior-mod-morph";
+            label = "TMUX_NEXT_PRE";
+            bindings = <&tmux_next_window>, <&tmux_prev_window>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT)>;
+        };
     };
 
     keymap {
@@ -651,19 +674,19 @@
 
         Nav1 {
             bindings = <
-        &B_UE  &kp END          &kp PG_UP  &kp PG_DN  &kp HOME           &kp N1  &trans  &trans  &trans  &trans
-        &B_OE  &kp RIGHT_ARROW  &kp UP     &kp DOWN   &kp LEFT_ARROW     &trans  &trans  &trans  &trans  &trans
-&trans  &B_AE  &kp N9           &kp N8     &kp N7     &kp DE_ASTERISK    &kp N3  &trans  &trans  &trans  &trans  &trans
-                                &trans     &trans     &trans             &trans  &trans  &trans
+        &B_UE  &kp END          &kp PG_UP             &kp PG_DN         &kp HOME          &kp N1  &trans  &trans  &trans  &trans
+        &B_OE  &kp RIGHT_ARROW  &kp UP                &kp DOWN          &kp LEFT_ARROW    &trans  &trans  &trans  &trans  &trans
+&trans  &B_AE  &kp N9           &double_single_quote  &back_front_tick  &hash_pipe        &kp N3  &trans  &trans  &trans  &trans  &trans
+                                &trans                &trans            &trans            &trans  &trans  &trans
             >;
         };
 
         Nav2 {
             bindings = <
-        &frage_ausrufe_zeichen  &trans             &hash_pipe  &back_front_tick  &double_single_quote    &trans  &trans  &trans  &trans  &trans
-        &at_equal               &lCl               &kCk        &jCj              &hCh                    &trans  &trans  &trans  &trans  &trans
-&trans  &slash_backslash        &dollar_ampersand  &trans      &prozent_ringli   &daechli_tilde          &trans  &trans  &trans  &trans  &trans  &trans
-                                                   &trans      &trans            &trans                  &trans  &trans  &trans
+        &frage_ausrufe_zeichen  &trans             &hash_pipe  &tmux_next_pre   &kp LC(DE_U_UMLAUT)    &trans  &trans  &trans  &trans  &trans
+        &at_equal               &lCl               &kCk        &jCj             &hCh                   &trans  &trans  &trans  &trans  &trans
+&trans  &slash_backslash        &dollar_ampersand  &trans      &prozent_ringli  &daechli_tilde         &trans  &trans  &trans  &trans  &trans  &trans
+                                                   &trans      &trans           &trans                 &trans  &trans  &trans
             >;
         };
 
