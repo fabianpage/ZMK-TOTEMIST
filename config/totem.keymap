@@ -560,6 +560,69 @@
             #binding-cells = <0>;
             mods = <(MOD_LSFT)>;
         };
+
+        n4ue4: n4ue4 {
+            compatible = "zmk,behavior-mod-morph";
+            label = "N4UE4";
+            bindings = <&kp DE_N4>, <&ue4>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT)>;
+        };
+
+        n5ue5: n5ue5 {
+            compatible = "zmk,behavior-mod-morph";
+            label = "N5UE5";
+            bindings = <&kp DE_N5>, <&ue5>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT)>;
+        };
+
+        n6ue6: n6ue6 {
+            compatible = "zmk,behavior-mod-morph";
+            label = "N6UE6";
+            bindings = <&kp DE_N6>, <&ue6>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT)>;
+        };
+
+        n7ue7: n7ue7 {
+            compatible = "zmk,behavior-mod-morph";
+            label = "N7UE7";
+            bindings = <&kp DE_N7>, <&ue7>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT)>;
+        };
+
+        n8ue8: n8ue8 {
+            compatible = "zmk,behavior-mod-morph";
+            label = "N8UE8";
+            bindings = <&kp DE_N8>, <&ue8>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT)>;
+        };
+
+        n9ue9: n9ue9 {
+            compatible = "zmk,behavior-mod-morph";
+            label = "N9UE9";
+            bindings = <&kp DE_N9>, <&ue9>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT)>;
+        };
+
+        n0ue0: n0ue0 {
+            compatible = "zmk,behavior-mod-morph";
+            label = "N0UE0";
+            bindings = <&kp DE_N0>, <&ue0>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT)>;
+        };
     };
 
     keymap {
