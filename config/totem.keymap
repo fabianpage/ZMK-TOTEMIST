@@ -646,6 +646,15 @@
             #binding-cells = <0>;
             mods = <(MOD_LSFT)>;
         };
+
+        mac_prev_next_window: mac_prev_next_window {
+            compatible = "zmk,behavior-mod-morph";
+            label = "MAC_PREV_NEXT_WINDOW";
+            bindings = <&kp LC(F9)>, <&kp LS(LC(F9))>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT)>;
+        };
     };
 
     keymap {
@@ -692,10 +701,10 @@
 
         Nav2 {
             bindings = <
-        &frage_ausrufe_zeichen  &trans             &mac_next_prev_app  &tmux_next_pre   &kp LC(DE_U_UMLAUT)    &trans  &trans  &trans  &trans  &trans
-        &at_equal               &lCl               &kCk                &jCj             &hCh                   &trans  &trans  &trans  &trans  &trans
-&trans  &slash_backslash        &dollar_ampersand  &trans              &prozent_ringli  &daechli_tilde         &trans  &trans  &trans  &trans  &trans  &trans
-                                                   &trans              &trans           &trans                 &trans  &trans  &trans
+        &frage_ausrufe_zeichen  &mac_prev_next_window  &mac_next_prev_app  &tmux_next_pre   &kp LC(DE_U_UMLAUT)    &trans  &trans  &trans  &trans  &trans
+        &at_equal               &lCl                   &kCk                &jCj             &hCh                   &trans  &trans  &trans  &trans  &trans
+&trans  &slash_backslash        &dollar_ampersand      &trans              &prozent_ringli  &daechli_tilde         &trans  &trans  &trans  &trans  &trans  &trans
+                                                       &trans              &trans           &trans                 &trans  &trans  &trans
             >;
         };
 
