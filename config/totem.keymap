@@ -218,6 +218,83 @@
             bindings = <&kp DE_ACUTE &kp SPACE>;
             label = "FRONTTICK_MACRO";
         };
+
+        ue1: ue1 {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp DE_U_UMLAUT &kp DE_N1>;
+            label = "UE1";
+        };
+
+        ue2: ue2 {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp DE_U_UMLAUT &kp DE_N2>;
+            label = "UE2";
+        };
+
+        ue3: ue3 {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp DE_U_UMLAUT &kp DE_N3>;
+            label = "UE3";
+        };
+
+        ue4: ue4 {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp DE_U_UMLAUT &kp DE_N4>;
+            label = "UE4";
+        };
+
+        ue5: ue5 {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp DE_U_UMLAUT &kp DE_N5>;
+            label = "UE5";
+        };
+
+        ue6: ue6 {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp DE_U_UMLAUT &kp DE_N6>;
+            label = "UE6";
+        };
+
+        ue7: ue7 {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp DE_U_UMLAUT &kp DE_N7>;
+            label = "UE7";
+        };
+
+        ue8: ue8 {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp DE_U_UMLAUT &kp DE_N8>;
+            label = "UE8";
+        };
+
+        ue9: ue9 {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp DE_U_UMLAUT &kp DE_N8>;
+            label = "UE9";
+        };
+
+        ue9: ue9 {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp DE_U_UMLAUT &kp DE_N9>;
+            label = "UE9";
+        };
+
+        ue0: ue0 {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp DE_U_UMLAUT &kp DE_N0>;
+            label = "UE0";
+        };
     };
 
     behaviors {
@@ -450,6 +527,33 @@
             compatible = "zmk,behavior-mod-morph";
             label = "LCL";
             bindings = <&kp DE_L>, <&kp LC(DE_L)>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT)>;
+        };
+
+        n0ue0: n0ue0 {
+            compatible = "zmk,behavior-mod-morph";
+            label = "N0UE0";
+            bindings = <&kp DE_N0>, <&ue0>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT)>;
+        };
+
+        n1ue1: n1ue1 {
+            compatible = "zmk,behavior-mod-morph";
+            label = "N1UE1";
+            bindings = <&kp DE_N1>, <&ue1>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT)>;
+        };
+
+        n2ue2: n2ue2 {
+            compatible = "zmk,behavior-mod-morph";
+            label = "N2UE2";
+            bindings = <&kp DE_N2>, <&ue2>;
 
             #binding-cells = <0>;
             mods = <(MOD_LSFT)>;
