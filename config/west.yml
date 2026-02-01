@@ -2,6 +2,8 @@ manifest:
   remotes:
   - name: zmkfirmware
     url-base: https://github.com/zmkfirmware
+  - name: zmk-smart-toggle-base
+    url-base: https://github.com/caksoylar/zmk-smart-toggle
   projects:
   - name: zmk
     remote: zmkfirmware
@@ -11,5 +13,8 @@ manifest:
     url: https://github.com/victorlucachi/zmk-keyboards-totem
     revision: main
     path: modules/zmk-keyboards-totem
+  - name: zmk-smart-toggle
+    remote: zmk-smart-toggle-base
+    revision: main
   self:
     path: config
