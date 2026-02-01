@@ -655,6 +655,13 @@
             #binding-cells = <0>;
             mods = <(MOD_LSFT)>;
         };
+
+        swapper: swapper {
+            compatible = "zmk,behavior-smart-toggle";
+            #binding-cells = <0>;
+            bindings = <&kp LALT>, <&kp TAB>;
+            ignored-key-positions = <1>;
+        };
     };
 
     keymap {
