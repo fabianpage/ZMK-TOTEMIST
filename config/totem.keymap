@@ -184,8 +184,8 @@
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
             bindings =
-                <&macro_release>,
-                <&kp LEFT_SHIFT &kp CAPSLOCK &kp DE_A_UMLAUT &kp CAPSLOCK>;
+                <&macro_release &kp LEFT_SHIFT>,
+                <&kp CAPSLOCK &kp DE_A_UMLAUT &kp CAPSLOCK>;
 
             label = "AE";
             tap-ms = <80>;
