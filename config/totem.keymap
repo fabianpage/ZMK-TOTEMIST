@@ -663,7 +663,7 @@
             #binding-cells = <0>;
             bindings = <&kp LGUI>, <&kp TAB>;
 
-            ignored-key-positions = <1>;
+            ignored-key-positions = <33>;
         };
     };
 
