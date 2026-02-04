@@ -661,7 +661,7 @@
         swapper: swapper {
             compatible = "zmk,behavior-smart-toggle";
             #binding-cells = <0>;
-            bindings = <&kp LALT>, <&kp TAB>;
+            bindings = <&kp LGUI>, <&kp TAB>;
 
             ignored-key-positions = <1>;
         };
