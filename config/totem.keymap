@@ -183,7 +183,10 @@
         M_AE: AE {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&kp CAPSLOCK &kp DE_A_UMLAUT &kp CAPSLOCK>;
+            bindings =
+                <&macro_release>,
+                <&kp LEFT_SHIFT &kp CAPSLOCK &kp DE_A_UMLAUT &kp CAPSLOCK>;
+
             label = "AE";
             tap-ms = <80>;
             wait-ms = <80>;
