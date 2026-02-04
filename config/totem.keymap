@@ -184,8 +184,8 @@
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
             bindings =
-                <&macro_release &kp LEFT_SHIFT>,
-                <&kp CAPSLOCK &kp DE_A_UMLAUT &kp CAPSLOCK>;
+                <&macro_release>,
+                <&kp LEFT_SHIFT &kp CAPSLOCK &kp DE_A_UMLAUT &kp CAPSLOCK>;
 
             label = "AE";
             tap-ms = <80>;
@@ -220,7 +220,7 @@
         fronttick_macro: fronttick_macro {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&kp DE_ACUTE &kp SPACE>;
+            bindings = <&kp RA(EQUAL) &kp SPACE>;
             label = "FRONTTICK_MACRO";
         };
 
@@ -358,7 +358,7 @@
         double_single_quote: double_single_quote {
             compatible = "zmk,behavior-mod-morph";
             label = "DOUBLE_SINGLE_QUOTE";
-            bindings = <&kp DE_DOUBLE_QUOTES>, <&kp SINGLE_QUOTE>;
+            bindings = <&kp DE_DOUBLE_QUOTES>, <&kp DE_QUESTION>;
 
             #binding-cells = <0>;
             mods = <(MOD_LSFT)>;
