@@ -185,8 +185,8 @@
             #binding-cells = <0>;
             bindings = <&kp CAPSLOCK &kp DE_A_UMLAUT &kp CAPSLOCK>;
             label = "AE";
-            tap-ms = <1000>;
-            wait-ms = <1000>;
+            tap-ms = <80>;
+            wait-ms = <80>;
         };
 
         M_UE: UE {
@@ -194,17 +194,17 @@
             #binding-cells = <0>;
             bindings = <&kp CAPSLOCK &kp DE_U_UMLAUT &kp CAPSLOCK>;
             label = "UE";
+            wait-ms = <20>;
+            tap-ms = <20>;
         };
 
         M_OE: M_OE {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings =
-                <&macro_tap_time 50>,
-                <&macro_wait_time 50>,
-                <&kp CAPSLOCK &kp DE_O_UMLAUT &kp CAPSLOCK>;
-
+            bindings = <&kp CAPSLOCK &kp DE_O_UMLAUT &kp CAPSLOCK>;
             label = "M_OE";
+            wait-ms = <100>;
+            tap-ms = <100>;
         };
 
         backtick_macro: backtick_macro {
