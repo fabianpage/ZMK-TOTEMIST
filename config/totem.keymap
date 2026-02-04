@@ -449,7 +449,7 @@
         slash_backslash: slash_backslash {
             compatible = "zmk,behavior-mod-morph";
             label = "SLASH_BACKSLASH";
-            bindings = <&kp DE_SLASH>, <&kp LS(DE_BACKSLASH)>;
+            bindings = <&kp DE_SLASH>, <&kp LS(DE_N7)>;
 
             #binding-cells = <0>;
             mods = <(MOD_LSFT)>;
