@@ -176,7 +176,7 @@
         tilde: tilde {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&kp DE_TILDE &kp SPACE>;
+            bindings = <&kp LA(DE_N) &kp SPACE>;
             label = "TILDE";
         };
 
@@ -409,7 +409,7 @@
         prozent_ringli: prozent_ringli {
             compatible = "zmk,behavior-mod-morph";
             label = "PROZENT_RINGLI";
-            bindings = <&kp DE_PERCENT>, <&kp DE_DEGREE>;
+            bindings = <&kp DE_PERCENT>, <&kp LS(NON_US_BSLH)>;
 
             #binding-cells = <0>;
             mods = <(MOD_LSFT)>;
@@ -445,7 +445,7 @@
         slash_backslash: slash_backslash {
             compatible = "zmk,behavior-mod-morph";
             label = "SLASH_BACKSLASH";
-            bindings = <&kp DE_SLASH>, <&kp DE_BACKSLASH>;
+            bindings = <&kp DE_SLASH>, <&kp LS(DE_BACKSLASH)>;
 
             #binding-cells = <0>;
             mods = <(MOD_LSFT)>;
@@ -491,15 +491,6 @@
             compatible = "zmk,behavior-mod-morph";
             label = "B_OE";
             bindings = <&kp DE_O_UMLAUT>, <&M_OE>;
-
-            #binding-cells = <0>;
-            mods = <(MOD_LSFT)>;
-        };
-
-        new_behavior: new_behavior {
-            compatible = "zmk,behavior-mod-morph";
-            label = "NEW_BEHAVIOR";
-            bindings = <&kp DE_U_UMLAUT>, <&M_UE>;
 
             #binding-cells = <0>;
             mods = <(MOD_LSFT)>;
