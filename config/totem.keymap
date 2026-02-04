@@ -183,10 +183,7 @@
         M_AE: AE {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings =
-                <&macro_release>,
-                <&kp LEFT_SHIFT &kp CAPSLOCK &kp DE_A_UMLAUT &kp CAPSLOCK>;
-
+            bindings = <&kp LEFT_SHIFT &kp CAPSLOCK &kp DE_A_UMLAUT &kp CAPSLOCK>;
             label = "AE";
             tap-ms = <80>;
             wait-ms = <80>;
@@ -358,7 +355,7 @@
         double_single_quote: double_single_quote {
             compatible = "zmk,behavior-mod-morph";
             label = "DOUBLE_SINGLE_QUOTE";
-            bindings = <&kp DE_DOUBLE_QUOTES>, <&kp DE_QUESTION>;
+            bindings = <&kp DE_DOUBLE_QUOTES>, <&kp MINUS>;
 
             #binding-cells = <0>;
             mods = <(MOD_LSFT)>;
