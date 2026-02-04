@@ -660,6 +660,7 @@
             compatible = "zmk,behavior-smart-toggle";
             #binding-cells = <0>;
             bindings = <&kp LALT>, <&kp TAB>;
+
             ignored-key-positions = <1>;
         };
     };
@@ -708,10 +709,10 @@
 
         Nav2 {
             bindings = <
-        &frage_ausrufe_zeichen  &mac_prev_next_window  &mac_next_prev_app  &tmux_next_pre   &kp LC(DE_U_UMLAUT)    &trans  &trans  &trans  &trans  &trans
-        &at_equal               &lCl                   &kCk                &jCj             &hCh                   &trans  &trans  &trans  &trans  &trans
-&trans  &slash_backslash        &dollar_ampersand      &trans              &prozent_ringli  &daechli_tilde         &trans  &trans  &trans  &trans  &trans  &trans
-                                                       &trans              &trans           &trans                 &trans  &trans  &trans
+        &frage_ausrufe_zeichen  &mac_prev_next_window  &swapper  &tmux_next_pre   &kp LC(DE_U_UMLAUT)    &trans  &trans  &trans  &trans  &trans
+        &at_equal               &lCl                   &kCk      &jCj             &hCh                   &trans  &trans  &trans  &trans  &trans
+&trans  &slash_backslash        &dollar_ampersand      &trans    &prozent_ringli  &daechli_tilde         &trans  &trans  &trans  &trans  &trans  &trans
+                                                       &trans    &trans           &trans                 &trans  &trans  &trans
             >;
         };
 
