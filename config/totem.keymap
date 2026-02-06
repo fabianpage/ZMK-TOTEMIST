@@ -158,8 +158,8 @@
         };
 
         ae {
-            bindings = <&M_AE DE_A_UMLAUT>;
-            key-positions = <33 21>;
+            bindings = <&M_UPPER_AEOEUE DE_A_UMLAUT>;
+            key-positions = <33 21 32>;
         };
     };
 
@@ -185,7 +185,7 @@
             label = "TILDE";
         };
 
-        M_AE: AE {
+        M_UPPER_AEOEUE: AE {
             compatible = "zmk,behavior-macro-one-param";
             #binding-cells = <1>;
             bindings =
@@ -481,7 +481,7 @@
         B_AE: B_AE {
             compatible = "zmk,behavior-mod-morph";
             label = "B_AE";
-            bindings = <&kp DE_A_UMLAUT>, <&M_AE DE_A_UMLAUT>;
+            bindings = <&kp DE_A_UMLAUT>, <&M_UPPER_AEOEUE DE_A_UMLAUT>;
 
             #binding-cells = <0>;
             mods = <(MOD_LSFT)>;
