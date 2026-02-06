@@ -156,6 +156,11 @@
             bindings = <&to 4>;
             key-positions = <1 2 3 4>;
         };
+
+        ae {
+            bindings = <&M_AE DE_A_UMLAUT>;
+            key-positions = <33 21>;
+        };
     };
 
     macros {
