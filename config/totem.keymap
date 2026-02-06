@@ -319,7 +319,7 @@
         square_brackets: square_brackets {
             compatible = "zmk,behavior-mod-morph";
             label = "SQUARE_BRACKETS";
-            bindings = <&kp DE_LEFT_BRACKET>, <&kp DE_RIGHT_BRACKET>;
+            bindings = <&kp LA(DE_N5)>, <&kp LA(DE_N6)>;
 
             #binding-cells = <0>;
             mods = <(MOD_LSFT)>;
@@ -328,7 +328,7 @@
         round_brackets: round_brackets {
             compatible = "zmk,behavior-mod-morph";
             label = "ROUND_BRACKETS";
-            bindings = <&kp DE_LEFT_PARENTHESIS>, <&kp DE_RIGHT_PARENTHESIS>;
+            bindings = <&kp LS(DE_N8)>, <&kp LS(DE_N9)>;
 
             #binding-cells = <0>;
             mods = <(MOD_LSFT)>;
@@ -337,7 +337,7 @@
         angled_brackets: angled_brackets {
             compatible = "zmk,behavior-mod-morph";
             label = "ANGLED_BRACKETS";
-            bindings = <&kp DE_LESS_THAN>, <&kp DE_GREATER_THAN>;
+            bindings = <&kp GRAVE>, <&kp LS(GRAVE)>;
 
             #binding-cells = <0>;
             mods = <(MOD_LSFT)>;
@@ -346,7 +346,7 @@
         curly_brackets: curly_brackets {
             compatible = "zmk,behavior-mod-morph";
             label = "CURLY_BRACKETS";
-            bindings = <&kp DE_LEFT_BRACE>, <&kp DE_RIGHT_BRACE>;
+            bindings = <&kp LA(DE_N8)>, <&kp LA(DE_N9)>;
 
             #binding-cells = <0>;
             mods = <(MOD_LSFT)>;
