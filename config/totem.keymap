@@ -702,10 +702,10 @@
 
         Nav1 {
             bindings = <
-        &B_UE  &kp END          &kp PG_UP             &kp PG_DN         &kp HOME          &kp N1  &trans  &trans  &trans  &trans
-        &B_OE  &kp RIGHT_ARROW  &kp UP                &kp DOWN          &kp LEFT_ARROW    &trans  &trans  &trans  &trans  &trans
-&trans  &B_AE  &kp N9           &double_single_quote  &back_front_tick  &hash_pipe        &kp N3  &trans  &trans  &trans  &trans  &trans
-                                &trans                &trans            &trans            &trans  &trans  &trans
+        &B_UE            &kp END          &kp PG_UP             &kp PG_DN         &kp HOME          &kp N1  &trans  &trans  &trans  &trans
+        &B_OE            &kp RIGHT_ARROW  &kp UP                &kp DOWN          &kp LEFT_ARROW    &trans  &trans  &trans  &trans  &trans
+&trans  &kp DE_A_UMLAUT  &kp N9           &double_single_quote  &back_front_tick  &hash_pipe        &kp N3  &trans  &trans  &trans  &trans  &trans
+                                          &trans                &trans            &trans            &trans  &trans  &trans
             >;
         };
 
