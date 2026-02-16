@@ -337,7 +337,7 @@
         angled_brackets: angled_brackets {
             compatible = "zmk,behavior-mod-morph";
             label = "ANGLED_BRACKETS";
-            bindings = <&kp GRAVE>, <&kp LS(GRAVE)>;
+            bindings = <&kp DE_LESS_THAN>, <&kp DE_GREATER_THAN>;
 
             #binding-cells = <0>;
             mods = <(MOD_LSFT)>;
