@@ -4,6 +4,7 @@
 
 (ns generator
   (:require [aero.core :as aero]
+            [babashka.cli :as cli]
             [clojure.string :as str]))
 
 (def default-section-order
@@ -145,23 +146,16 @@
   [path]
   (aero/read-config path))
 
-(defn parse-args
-  [args]
-  (loop [opts {}
-         remaining args]
-    (if (empty? remaining)
-      opts
-      (let [[flag value & more] remaining]
-        (case flag
-          "--config" (recur (assoc opts :config value) more)
-          "--input" (recur (assoc opts :input value) more)
-          "--output" (recur (assoc opts :output value) more)
-          "--help" (recur (assoc opts :help true) more)
-          (throw (ex-info "Unknown CLI flag" {:flag flag})))))))
+(def cli-spec
+  {:config {:require true :desc "Path to the EDN/Aero config"}
+   :input  {:require true :desc "Path to the template .keymap"}
+   :output {:desc "Output path (prints to stdout if omitted)"}})
 
 (defn usage
   []
-  (str "Usage: bb generator.clj --config <config.edn> --input <template.keymap> [--output <out.keymap>]"))
+  (str "Usage: bb generator.clj --config <config.edn> --input <template.keymap> [--output <out.keymap>]\n\n"
+       "Options:\n"
+       (cli/format-opts {:spec cli-spec})))
 
 (defn write-output!
   [{:keys [config input output]}]
@@ -173,18 +167,9 @@
 
 (defn -main
   [& args]
-  (let [{:keys [help config input] :as opts} (parse-args args)]
-    (cond
-      help
-      (println (usage))
-
-      (or (nil? config) (nil? input))
-      (throw (ex-info "Missing required CLI flags"
-                      {:usage (usage)
-                       :opts opts}))
-
-      :else
-      (write-output! opts))))
+  (if (some #{"--help" "-h"} args)
+    (println (usage))
+    (write-output! (cli/parse-opts args {:spec cli-spec}))))
 
 (comment
   (generate-keymap (slurp "examples/1_in.keymap")
