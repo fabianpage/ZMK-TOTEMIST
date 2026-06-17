@@ -1,5 +1,9 @@
+(require '[babashka.deps :as deps])
+
+(deps/add-deps '{:deps {aero/aero {:mvn/version "1.1.6"}}})
+
 (ns generator
-  (:require [clojure.edn :as edn]
+  (:require [aero.core :as aero]
             [clojure.string :as str]))
 
 (def default-section-order
@@ -139,7 +143,7 @@
 
 (defn load-config
   [path]
-  (-> path slurp edn/read-string))
+  (aero/read-config path))
 
 (defn parse-args
   [args]
