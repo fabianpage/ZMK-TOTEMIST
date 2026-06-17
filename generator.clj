@@ -157,6 +157,13 @@
        "Options:\n"
        (cli/format-opts {:spec cli-spec})))
 
+(defn cli-error
+  [{:keys [msg]}]
+  (binding [*out* *err*]
+    (println (str "Error: " msg "\n"))
+    (println (usage)))
+  (System/exit 1))
+
 (defn write-output!
   [{:keys [config input output]}]
   (let [generated (generate-keymap (slurp input) (load-config config))]
@@ -169,7 +176,8 @@
   [& args]
   (if (some #{"--help" "-h"} args)
     (println (usage))
-    (write-output! (cli/parse-opts args {:spec cli-spec}))))
+    (write-output! (cli/parse-opts args {:spec cli-spec
+                                         :error-fn cli-error}))))
 
 (comment
   (generate-keymap (slurp "examples/1_in.keymap")
