@@ -22,37 +22,26 @@
     combos {
         compatible = "zmk,combos";
 
-        kpz {
-            bindings = <&kp DE_Z>;
-            key-positions = <4 3>;
-        };
-
+        // BEGIN combos
+        // END combos
     };
 
     macros {
-        tmux_prev_window: tmux_prev {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&kp DE_U_UMLAUT &kp DE_P>;
-        };
+        // BEGIN macros
+        // END macros
     };
 
     behaviors {
-        swapper: swapper {
-            compatible = "zmk,behavior-smart-toggle";
-            #binding-cells = <0>;
-            bindings = <&kp LGUI>, <&kp TAB>;
-
-            ignored-key-positions = <33>;
-        };
+        // BEGIN behaviors
+        // END behaviors
     };
 
     keymap {
         compatible = "zmk,keymap";
 
 
-        // BEGIN KEYMAP
-        // END KEYMAP
+        // BEGIN keymap
+        // END keymap
 
         Nav1 {
             bindings = <

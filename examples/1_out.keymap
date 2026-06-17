@@ -22,6 +22,7 @@
     combos {
         compatible = "zmk,combos";
 
+        // BEGIN combos
         kpz {
             bindings = <&kp DE_Z>;
             key-positions = <4 3>;
@@ -161,9 +162,11 @@
             bindings = <&M_UPPER_AEOEUE DE_A_UMLAUT>;
             key-positions = <33 21 32>;
         };
+        // END combos
     };
 
     macros {
+        // BEGIN macros
         esc_layerreset: esc_layerreset {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
@@ -293,9 +296,11 @@
             #binding-cells = <0>;
             bindings = <&kp DE_U_UMLAUT &kp DE_P>;
         };
+        // END macros
     };
 
     behaviors {
+        // BEGIN behaviors
         square_brackets: square_brackets {
             compatible = "zmk,behavior-mod-morph";
             bindings = <&kp LA(DE_N5)>, <&kp LA(DE_N6)>;
@@ -607,13 +612,14 @@
 
             ignored-key-positions = <33>;
         };
+        // END behaviors
     };
 
     keymap {
         compatible = "zmk,keymap";
 
 
-        // BEGIN KEYMAP
+        // BEGIN keymap
         base_layer {
             display-name = "BASE";
             bindings = <
@@ -623,7 +629,7 @@
                              &sl 1  &sk LEFT_SHIFT  &sl 2    &kp C         &kp A         &kp B
             >;
         };
-        // END KEYMAP
+        // END keymap
 
         Nav1 {
             bindings = <
@@ -671,3 +677,4 @@
         };
     };
 };
+

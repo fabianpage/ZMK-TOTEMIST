@@ -9,12 +9,13 @@
     (is (= expected
            (generator/generate-keymap template config)))))
 
-(deftest missing-keymap-markers-throws
-  (let [config {:keymap {:nodes [{:name "base_layer"
-                                  :body ["display-name = \"BASE\";"]}]}}]
+(deftest missing-markers-throws
+  (let [config {:regions [[:keymap {:raw-body? true
+                                    :nodes [{:name "base_layer"
+                                             :body ["    display-name = \"BASE\";"]}]}]]}]
     (is (thrown-with-msg?
          clojure.lang.ExceptionInfo
-         #"Could not find keymap markers"
+         #"Could not find markers in template"
          (generator/generate-keymap "keymap {}" config)))))
 
 (defn run
