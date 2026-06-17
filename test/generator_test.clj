@@ -18,6 +18,22 @@
          #"Could not find markers in template"
          (generator/generate-keymap "keymap {}" config)))))
 
+(deftest binding-dsl-compiles-cells
+  (is (= "&kp P" (generator/binding->str :P)))
+  (is (= "&lt 3 DE_S" (generator/binding->str [:lt 3 :DE_S])))
+  (is (= "&bt BT_SEL 0" (generator/binding->str [:bt :BT_SEL 0])))
+  (is (= "&trans" (generator/binding->str [:trans]))))
+
+(deftest layer-generates-display-name-from-name
+  (let [rendered (generator/render-layer {:name "BASE"
+                                          :bindings [[:P :O]
+                                                     [[:lt 3 :DE_S] :A]]}
+                                         2)]
+    (is (re-find #"BASE \{" rendered))
+    (is (re-find #"display-name = \"BASE\";" rendered))
+    (is (re-find #"&kp P &kp O" rendered))
+    (is (re-find #"&lt 3 DE_S &kp A" rendered))))
+
 (defn run
   []
   (let [{:keys [fail error] :as result} (run-tests 'generator-test)]

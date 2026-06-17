@@ -514,14 +514,10 @@
        ""
        "ignored-key-positions = <33>;"]}]}]
   [:keymap
-   {:raw-body? true,
-    :nodes
-    [{:name "base_layer",
-      :body
-      ["            display-name = \"BASE\";"
-       "            bindings = <"
-       "          &kp P       &kp O  &kp I  &kp U           &kp T    &bt BT_SEL 0  &bt BT_SEL 1  &out OUT_TOG  &bootloader  &bt BT_CLR_ALL"
-       "          &lt 3 DE_S  &kp A  &kp E  &kp N           &kp R    &kp H         &kp D         &kp DE_F      &kp DE_H     &mt RGUI O"
-       "&kp DE_G  &kp D       &kp L  &kp C  &kp F           &kp H    &kp K         &kp M         &kp COMMA     &kp DOT      &kp FSLH        &kp FSLH"
-       "                             &sl 1  &sk LEFT_SHIFT  &sl 2    &kp C         &kp A         &kp B"
-       "            >;"]}]}]]}
+   {:nodes
+    [{:name "BASE"
+      :bindings
+      [[:P            :O :I :U :T            [:bt :BT_SEL 0] [:bt :BT_SEL 1] [:out :OUT_TOG] [:bootloader] [:bt :BT_CLR_ALL]]
+       [[:lt 3 :DE_S] :A :E :N :R            :H              :D              :DE_F           :DE_H         [:mt :RGUI :O]]
+       [:DE_G :D      :L :C :F               :H              :K              :M              :COMMA :DOT :FSLH :FSLH]
+       [[:sl 1]       [:sk :LEFT_SHIFT] [:sl 2] :C :A :B]]}]}]]}

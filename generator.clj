@@ -18,19 +18,58 @@
     ""
     (str (indent level) line)))
 
-(defn render-node
-  [{:keys [name label body]} level raw-body?]
+(defn token->str
+  [token]
+  (if (keyword? token)
+    (name token)
+    (str token)))
+
+(defn binding->str
+  "Compile one keymap cell into a ZMK binding string.
+   :P              -> &kp P
+   [:lt 3 :DE_S]   -> &lt 3 DE_S
+   [:bt :BT_SEL 0] -> &bt BT_SEL 0"
+  [cell]
+  (cond
+    (vector? cell)
+    (str "&" (token->str (first cell))
+         (when (seq (rest cell))
+           (str " " (str/join " " (map token->str (rest cell))))))
+
+    (keyword? cell)
+    (str "&kp " (name cell))
+
+    :else
+    (str cell)))
+
+(defn render-layer
+  "Render a keymap layer node. The :name doubles as the DT node id and the
+   generated display-name. :bindings is a vector of rows, each a vector of cells."
+  [{:keys [name bindings]} level]
   (str/join
    "\n"
-   (concat [(str (indent level)
-                 name
-                 (when label
-                   (str ": " label))
-                 " {")]
-           (if raw-body?
-             body
-             (map #(render-line (inc level) %) body))
-           [(str (indent level) "};")])))
+   (concat [(str (indent level) name " {")
+            (str (indent (inc level)) "display-name = \"" name "\";")
+            (str (indent (inc level)) "bindings = <")]
+           (map (fn [row] (str/join " " (map binding->str row))) bindings)
+           [(str (indent (inc level)) ">;")
+            (str (indent level) "};")])))
+
+(defn render-node
+  [{:keys [name label body bindings] :as node} level raw-body?]
+  (if bindings
+    (render-layer node level)
+    (str/join
+     "\n"
+     (concat [(str (indent level)
+                   name
+                   (when label
+                     (str ": " label))
+                   " {")]
+             (if raw-body?
+               body
+               (map #(render-line (inc level) %) body))
+             [(str (indent level) "};")]))))
 
 (defn render-nodes
   [nodes level raw-body?]
