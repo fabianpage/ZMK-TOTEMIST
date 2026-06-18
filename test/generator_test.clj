@@ -22,7 +22,8 @@
   (is (= "&kp P" (generator/binding->str :P)))
   (is (= "&lt 3 DE_S" (generator/binding->str [:lt 3 :DE_S])))
   (is (= "&bt BT_SEL 0" (generator/binding->str [:bt :BT_SEL 0])))
-  (is (= "&trans" (generator/binding->str [:trans]))))
+  (is (= "&trans" (generator/binding->str :trans)))
+  (is (= "&none" (generator/binding->str :none))))
 
 (deftest layer-generates-display-name-from-name
   (let [rendered (generator/render-layer {:name "BASE"

@@ -28,7 +28,7 @@
   "Compile one keymap cell into a ZMK binding string.
    :P              -> &kp P
    [:lt 3 :DE_S]   -> &lt 3 DE_S
-   [:bt :BT_SEL 0] -> &bt BT_SEL 0"
+   :trans/:none  -> &trans / &none (special case)"
   [cell]
   (cond
     (vector? cell)
@@ -37,7 +37,10 @@
            (str " " (str/join " " (map token->str (rest cell))))))
 
     (keyword? cell)
-    (str "&kp " (name cell))
+    (case cell
+      :trans "&trans"
+      :none "&none"
+      (str "&kp " (name cell)))
 
     :else
     (str cell)))
