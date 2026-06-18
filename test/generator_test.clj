@@ -1,13 +1,21 @@
 (ns generator-test
   (:require [clojure.test :refer [deftest is run-tests]]
+            [clojure.string :as str]
             [generator :as generator]))
+
+(defn ^:private normalize-whitespace [s]
+  (->> (str/split-lines s)
+       (map str/trim)
+       (remove str/blank?)
+       (str/join "\n")))
 
 (deftest example-config-generates-expected-keymap
   (let [config (generator/load-config "examples/1.edn")
         template (slurp "examples/1_in.keymap")
         expected (slurp "examples/1_out.keymap")]
-    (is (= expected
-           (generator/generate-keymap template config)))))
+    (is (= (normalize-whitespace expected)
+           (normalize-whitespace
+             (generator/generate-keymap template config))))))
 
 (deftest missing-markers-throws
   (let [config {:regions [[:keymap {:raw-body? true

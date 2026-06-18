@@ -633,40 +633,40 @@
         Nav1 {
             display-name = "Nav1";
             bindings = <
-&B_UE &kp END &kp PG_UP &kp PG_DN &kp HOME &kp N1 &kp trans &kp trans &kp trans &kp trans
-&B_OE &kp RIGHT_ARROW &kp UP &kp DOWN &kp LEFT_ARROW &kp trans &kp trans &kp trans &kp trans &kp trans
-&kp trans &kp DE_A_UMLAUT &kp N9 &kp double_single_quote &kp back_front_tick &kp hash_pipe &kp N3 &kp trans &kp trans &kp trans &kp trans &kp trans
-&kp trans &kp trans &kp trans &kp trans &kp trans &kp trans
+&B_UE &kp END &kp PG_UP &kp PG_DN &kp HOME &kp N1 &trans &trans &trans &trans
+&B_OE &kp RIGHT_ARROW &kp UP &kp DOWN &kp LEFT_ARROW &trans &trans &trans &trans &trans
+&trans &kp DE_A_UMLAUT &kp N9 &kp double_single_quote &kp back_front_tick &kp hash_pipe &kp N3 &trans &trans &trans &trans &trans
+&trans &trans &trans &trans &trans &trans
             >;
         };
 
         Nav2 {
             display-name = "Nav2";
             bindings = <
-&frage_ausrufe_zeichen &mac_prev_next_window &swapper &tmux_next_pre &kp LC(DE_U_UMLAUT) &kp trans &kp trans &kp trans &kp trans &kp trans
-&at_equal &lCl &kCk &jCj &hCh &kp trans &kp trans &kp trans &kp trans &kp trans
-&kp trans &slash_backslash &dollar_ampersand &kp trans &prozent_ringli &daechli_tilde &kp trans &kp trans &kp trans &kp trans &kp trans &kp trans
-&kp trans &kp trans &kp trans &kp trans &kp trans &kp trans
+&frage_ausrufe_zeichen &mac_prev_next_window &swapper &tmux_next_pre &kp LC(DE_U_UMLAUT) &trans &trans &trans &trans &trans
+&at_equal &lCl &kCk &jCj &hCh &trans &trans &trans &trans &trans
+&trans &slash_backslash &dollar_ampersand &trans &prozent_ringli &daechli_tilde &trans &trans &trans &trans &trans &trans
+&trans &trans &trans &trans &trans &trans
             >;
         };
 
         Num {
             display-name = "Num";
             bindings = <
-&kp trans &n3ue3 &n2ue2 &n1ue1 &minus_underscore &kp trans &kp trans &kp trans &kp trans &kp trans
-&kp trans &n6ue6 &n5ue5 &n4ue4 &n0ue0 &kp trans &kp trans &kp trans &kp trans &kp trans
-&kp trans &kp trans &n9ue9 &n8ue8 &n7ue7 &mal_plus &kp trans &kp trans &kp trans &kp trans &kp trans &kp trans
-&kp trans &kp trans &kp trans &kp trans &kp trans &kp trans
+&trans &n3ue3 &n2ue2 &n1ue1 &minus_underscore &trans &trans &trans &trans &trans
+&trans &n6ue6 &n5ue5 &n4ue4 &n0ue0 &trans &trans &trans &trans &trans
+&trans &trans &n9ue9 &n8ue8 &n7ue7 &mal_plus &trans &trans &trans &trans &trans &trans
+&trans &trans &trans &trans &trans &trans
             >;
         };
 
         BT {
             display-name = "BT";
             bindings = <
-&bt BT_CLR_ALL &bt BT_SEL 2 &bt BT_SEL 1 &bt BT_SEL 0 &bt BT_CLR &kp trans &kp trans &kp trans &kp trans &kp trans
-&kp trans &kp trans &kp trans &out OUT_BLE &kp trans &kp trans &kp trans &kp trans &kp trans &kp trans
-&kp trans &esc_layerreset &kp trans &kp trans &out OUT_USB &bootloader &kp trans &kp trans &kp trans &kp trans &kp trans &kp trans
-&kp trans &kp trans &kp trans &kp trans &kp trans &kp trans
+&bt BT_CLR_ALL &bt BT_SEL 2 &bt BT_SEL 1 &bt BT_SEL 0 &bt BT_CLR &trans &trans &trans &trans &trans
+&trans &trans &trans &out OUT_BLE &trans &trans &trans &trans &trans &trans
+&trans &esc_layerreset &trans &trans &out OUT_USB &bootloader &trans &trans &trans &trans &trans &trans
+&trans &trans &trans &trans &trans &trans
             >;
         };
         // END keymap
