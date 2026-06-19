@@ -1,21 +1,42 @@
 (ns generator-test
   (:require [clojure.test :refer [deftest is run-tests]]
             [clojure.string :as str]
+            [clojure.java.io :as io]
             [generator :as generator]))
 
-(defn ^:private normalize-whitespace [s]
-  (->> (str/split-lines s)
-       (map str/trim)
-       (remove str/blank?)
-       (str/join "\n")))
+(defn ^:private tokenize
+  "Split a string on any whitespace, returning a sequence of non-empty tokens.";
+  [s]
+  (->> (str/split s #"\s+")
+       (remove str/blank?)))
 
-(deftest example-config-generates-expected-keymap
-  (let [config (generator/load-config "examples/1.edn")
-        template (slurp "examples/1_in.keymap")
-        expected (slurp "examples/1_out.keymap")]
-    (is (= (normalize-whitespace expected)
-           (normalize-whitespace
-             (generator/generate-keymap template config))))))
+(defn ^:private discover-examples
+  "Find all example configs in examples/ and return a seq of
+   {:num <n> :config <path> :in <path> :out <path>} maps.";
+  []
+  (let [dir (io/file "examples")
+        edn-files (sort (.listFiles dir
+                         (reify java.io.FilenameFilter
+                           (accept [_ _ name]
+                             (.endsWith name ".edn")))))]
+    (for [f edn-files
+          :let [name (.getName f)
+                num-str (first (str/split name #"\."))
+                num (parse-long num-str)]]
+      {:num num
+       :config (.getPath f)
+       :in (str "examples/" num "_in.keymap")
+       :out (str "examples/" num "_out.keymap")})))
+
+(deftest all-examples-generate-expected-keymaps
+  (doseq [{:keys [config in out]} (discover-examples)]
+    (let [cfg (generator/load-config config)
+          template (slurp in)
+          expected (slurp out)
+          generated (generator/generate-keymap template cfg)]
+      (is (= (tokenize expected)
+             (tokenize generated))
+          (str "Example " config " did not generate expected output (whitespace-agnostic comparison)")))))
 
 (deftest missing-markers-throws
   (let [config {:regions [[:keymap {:raw-body? true
