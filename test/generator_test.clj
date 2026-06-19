@@ -2,7 +2,8 @@
   (:require [clojure.test :refer [deftest is run-tests]]
             [clojure.string :as str]
             [clojure.java.io :as io]
-            [generator :as generator]))
+            [generator :as generator]
+            [com.mjdowney.rich-comment-tests.test-runner :as test-runner]))
 
 (defn ^:private tokenize
   "Split a string on any whitespace, returning a sequence of non-empty tokens.";
@@ -52,7 +53,22 @@
   (is (= "&lt 3 DE_S" (generator/binding->str [:lt 3 :DE_S])))
   (is (= "&bt BT_SEL 0" (generator/binding->str [:bt :BT_SEL 0])))
   (is (= "&trans" (generator/binding->str :trans)))
-  (is (= "&none" (generator/binding->str :none))))
+     (is (= "&none" (generator/binding->str :none))))
+
+(deftest resolve-alias-expands-keywords-recursively
+  (let [aliases {:_ :trans :trans :none :S [:lt 3 :DE_S]}]
+    (is (= :none (generator/resolve-alias aliases :_)))
+    (is (= [:lt 3 :DE_S] (generator/resolve-alias aliases :S)))
+    (is (= :P (generator/resolve-alias aliases :P)))))
+
+(deftest aliases-expand-in-keymap-bindings
+  (let [template "    // BEGIN keymap\n    // END keymap\n"
+        config {:aliases {:_ :trans :S [:lt 3 :DE_S]}
+                :regions [[:keymap {:nodes [{:name "BASE"
+                                             :bindings [[:S :A :_]]}]}]]}]
+    (is (re-find #"BASE \{" (generator/generate-keymap template config)))
+    (is (re-find #"&lt 3 DE_S &kp A &trans"
+                 (generator/generate-keymap template config)))))
 
 (deftest layer-generates-display-name-from-name
   (let [rendered (generator/render-layer {:name "BASE"
@@ -64,9 +80,19 @@
     (is (re-find #"&kp P &kp O" rendered))
     (is (re-find #"&lt 3 DE_S &kp A" rendered))))
 
+; (deftest rich-comment-tests
+ ; (test-runner/run-tests-in-file-tree! :dirs #{"./"} ))
+
+
+
+
 (defn run
   []
   (let [{:keys [fail error] :as result} (run-tests 'generator-test)]
     (when (pos? (+ fail error))
       (throw (ex-info "Tests failed" result)))
     result))
+
+(comment
+  (run)
+  )

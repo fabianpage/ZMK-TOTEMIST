@@ -24,6 +24,38 @@
     (name token)
     (str token)))
 
+(defn resolve-alias
+  "Recursively resolve a binding cell through the aliases map.
+   :_ -> :trans -> &trans (one or more levels). Vectors and non-alias keywords are returned as-is."
+  [aliases cell]
+  (if (and (keyword? cell) (contains? aliases cell))
+    (recur aliases (get aliases cell))
+    cell))
+
+(defn expand-aliases
+  "Walk the config and expand alias keywords inside :bindings vectors of layer nodes.
+   Other node types (raw :body strings) are left untouched."
+  [config]
+  (if-let [aliases (not-empty (:aliases config))]
+    (letfn [(resolve [cell] (resolve-alias aliases cell))]
+      (update config :regions
+              (fn [regions]
+                (mapv (fn [[region spec]]
+                        [region
+                         (update spec :nodes
+                                 (fn [nodes]
+                                   (mapv (fn [node]
+                                           (if (:bindings node)
+                                             (update node :bindings
+                                                     (fn [rows]
+                                                       (mapv (fn [row]
+                                                               (mapv resolve row))
+                                                             rows)))
+                                             node))
+                                         nodes)))])
+                      regions))))
+    config))
+
 (defn binding->str
   "Compile one keymap cell into a ZMK binding string.
    :P              -> &kp P
@@ -97,13 +129,14 @@
             bol end)))))
 
 (defn generate-keymap
-  [template {:keys [regions]}]
-  (str/replace
-   (reduce (fn [text [region {:keys [nodes raw-body?]}]]
-             (replace-between-markers text region nodes raw-body?))
-           template
-           regions)
-   #"\n*\z" "\n"))
+  [template config]
+  (let [{:keys [regions]} (expand-aliases config)]
+    (str/replace
+     (reduce (fn [text [region {:keys [nodes raw-body?]}]]
+               (replace-between-markers text region nodes raw-body?))
+             template
+             regions)
+     #"\n*\z" "\n")))
 
 (defn load-config
   [path]
@@ -142,9 +175,12 @@
     (write-output! (cli/parse-opts args {:spec cli-spec
                                          :error-fn cli-error}))))
 
+^:rct/test
 (comment
-  (generate-keymap (slurp "examples/1_in.keymap")
-                   (load-config "examples/1.edn"))
+  (binding->str :P) ;=> "&kp P"
+
+  (binding->str :X) ;=> "&kp X"
+
   :rcf)
 
 (when (= *file* (System/getProperty "babashka.file"))
