@@ -56,6 +56,37 @@
                       regions))))
     config))
 
+(defn extract-layer-indexes
+  "Build a map from layer name string to its 0-based index,
+   by scanning the :keymap region nodes in the config."
+  [config]
+  (if-let [keymap-region (some (fn [[region spec]]
+                                 (when (= region :keymap) spec))
+                               (:regions config))]
+    (into {} (map-indexed (fn [idx node]
+                            [(name (:name node)) idx])
+                           (:nodes keymap-region)))
+    {}))
+
+(defn combo-positions
+  "Given row-widths, a pattern of [[row-off col-off] ...], and a base [row col],
+   return the absolute ZMK key-positions in pattern order, or nil if any
+   offset is out of bounds."
+  [row-widths pattern [base-r base-c]]
+  (let [num-rows (count row-widths)
+        prefix-sums (reductions + 0 row-widths)]
+    (when (every? (fn [[r-off c-off]]
+                    (let [r (+ base-r r-off)
+                          c (+ base-c c-off)]
+                      (and (>= r 0) (< r num-rows)
+                           (>= c 0) (< c (nth row-widths r)))))
+                  pattern)
+      (map (fn [[r-off c-off]]
+             (let [r (+ base-r r-off)
+                   c (+ base-c c-off)]
+               (+ c (nth prefix-sums r))))
+           pattern))))
+
 (defn binding->str
   "Compile one keymap cell into a ZMK binding string.
    :P              -> &kp P
@@ -87,31 +118,68 @@
             (str (indent (inc level)) "display-name = \"" name "\";")
             (str (indent (inc level)) "bindings = <")]
            (map (fn [row] (str/join " " (map binding->str row))) bindings)
-           [(str (indent (inc level)) ">;")
-            (str (indent level) "};")])))
+            [(str (indent (inc level)) ">;")
+             (str (indent level) "};")])))
+
+(defn render-combo-layer
+  "Render a :combo-layer node into one or more ZMK combo DT nodes.
+   :row-widths is required. :pattern defines relative offsets.
+   :bindings uses the normal binding DSL. :layers can be keywords
+   (resolved against the keymap) or raw numbers."
+  [{:keys [name row-widths pattern bindings layers] :as node} level {:keys [layer-index-map]}]
+  (when-not row-widths
+    (throw (ex-info ":row-widths is required for :combo-layer" {:node node})))
+  (let [layer-nums (when (seq layers)
+                       (map (fn [layer]
+                              (if (keyword? layer)
+                                (if-let [idx (get layer-index-map (clojure.core/name layer))]
+                                  idx
+                                  (throw (ex-info (str "Unknown layer name: " layer)
+                                                  {:layer layer :available (keys layer-index-map)})))
+                                layer))
+                             layers))
+        layer-line (when (seq layer-nums)
+                     (str (indent (inc level)) "layers = <" (str/join " " layer-nums) ">;"))
+        combos (for [r (range (count bindings))
+                     c (range (count (nth bindings r)))
+                     :let [cell (get-in bindings [r c])
+                           positions (combo-positions row-widths pattern [r c])]
+                     :when (and positions
+                                (not (#{:none :trans} cell)))]
+                 (let [combo-name (str name "_" r "_" c)]
+                   (str/join
+                    "\n"
+                    (concat [(str (indent level) combo-name " {")
+                             (str (indent (inc level)) "bindings = <" (binding->str cell) ">;")
+                             (str (indent (inc level)) "key-positions = <" (str/join " " positions) ">;")]
+                            (when layer-line [layer-line])
+                            [(str (indent level) "};")]))))]
+    (str/join "\n\n" combos)))
 
 (defn render-node
-  [{:keys [name label body bindings] :as node} level raw-body?]
-  (if bindings
-    (render-layer node level)
-    (str/join
-     "\n"
-     (concat [(str (indent level)
-                   name
-                   (when label
-                     (str ": " label))
-                   " {")]
-             (if raw-body?
-               body
-               (map #(render-line (inc level) %) body))
-             [(str (indent level) "};")]))))
+  [{:keys [type] :as node} level raw-body? opts]
+  (case type
+    :combo-layer (render-combo-layer node level opts)
+    (if (:bindings node)
+      (render-layer node level)
+      (str/join
+       "\n"
+       (concat [(str (indent level)
+                     (:name node)
+                     (when (:label node)
+                       (str ": " (:label node)))
+                     " {")]
+               (if raw-body?
+                 (:body node)
+                 (map #(render-line (inc level) %) (:body node)))
+               [(str (indent level) "};")])))))
 
 (defn render-nodes
-  [nodes level raw-body?]
-  (str/join "\n" (interpose "" (map #(render-node % level raw-body?) nodes))))
+  [nodes level raw-body? opts]
+  (str/join "\n" (interpose "" (map #(render-node % level raw-body? opts) nodes))))
 
 (defn replace-between-markers
-  [text region nodes raw-body?]
+  [text region nodes raw-body? opts]
   (let [begin (str "// BEGIN " (name region))
         end (str "// END " (name region))
         pattern (re-pattern (str "(?sm)^([ \\t]*)" (Pattern/quote begin)
@@ -121,7 +189,7 @@
       (throw (ex-info "Could not find markers in template"
                       {:region region})))
     (let [[whole bol] match
-          rendered (when (seq nodes) (render-nodes nodes 2 raw-body?))]
+          rendered (when (seq nodes) (render-nodes nodes 2 raw-body? opts))]
       (str/replace-first
        text whole
        (str bol begin "\n"
@@ -130,12 +198,14 @@
 
 (defn generate-keymap
   [template config]
-  (let [{:keys [regions]} (expand-aliases config)]
+  (let [config (expand-aliases config)
+        layer-index-map (extract-layer-indexes config)
+        opts {:layer-index-map layer-index-map}]
     (str/replace
      (reduce (fn [text [region {:keys [nodes raw-body?]}]]
-               (replace-between-markers text region nodes raw-body?))
+               (replace-between-markers text region nodes raw-body? opts))
              template
-             regions)
+             (:regions config))
      #"\n*\z" "\n")))
 
 (defn load-config
