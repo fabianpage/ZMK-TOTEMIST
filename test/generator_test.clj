@@ -29,15 +29,22 @@
        :in (str "examples/" num "_in.keymap")
        :out (str "examples/" num "_out.keymap")})))
 
-(deftest all-examples-generate-expected-keymaps
-  (doseq [{:keys [config in out]} (discover-examples)]
-    (let [cfg (generator/load-config config)
-          template (slurp in)
-          expected (slurp out)
-          generated (generator/generate-keymap template cfg)]
-      (is (= (tokenize expected)
-             (tokenize generated))
-          (str "Example " config " did not generate expected output (whitespace-agnostic comparison)")))))
+(defmacro ^:private deftest-examples
+  "Generate one deftest per discovered example at macro-expansion time."
+  []
+  `(do
+     ~@(for [{:keys [num config in out]} (discover-examples)
+             :let [test-name (symbol (str "example-" num "-generates-expected-keymap"))]]
+         `(deftest ~test-name
+            (let [cfg# (generator/load-config ~config)
+                  template# (slurp ~in)
+                  expected# (slurp ~out)
+                  generated# (generator/generate-keymap template# cfg#)]
+              (is (= (tokenize expected#)
+                     (tokenize generated#))
+                                     (str "Example " ~config " did not generate expected output (whitespace-agnostic comparison)")))))))
+
+(deftest-examples)
 
 (deftest missing-markers-throws
   (let [config {:regions [[:keymap {:raw-body? true
