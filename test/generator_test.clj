@@ -80,6 +80,148 @@
     (is (re-find #"&kp P &kp O" rendered))
     (is (re-find #"&lt 3 DE_S &kp A" rendered))))
 
+(deftest combo-layer-generates-combos
+  (let [template "    // BEGIN combos
+    // END combos
+    // BEGIN keymap
+    // END keymap
+"
+        config {:regions [[:combos
+                           {:nodes [{:name "diag"
+                                      :type :combo-layer
+                                      :row-widths [3 3]
+                                      :pattern [[0 0] [1 1]]
+                                      :bindings [[:Q :W :E]
+                                                 [:A :S :D]]}]}]
+                          [:keymap
+                           {:nodes [{:name "BASE"
+                                     :bindings [[:Q :W :E]
+                                                [:A :S :D]]}]}]]}
+        generated (generator/generate-keymap template config)]
+    (is (str/includes? generated "diag_0_0"))
+    (is (str/includes? generated "key-positions = <0 4>;"))
+    (is (str/includes? generated "bindings = <&kp Q>;"))
+    (is (str/includes? generated "diag_0_1"))
+    (is (str/includes? generated "key-positions = <1 5>;"))
+    (is (str/includes? generated "bindings = <&kp W>;"))
+    (is (not (str/includes? generated "diag_1_0")))
+    (is (not (str/includes? generated "diag_1_1")))
+    (is (not (str/includes? generated "diag_0_2")))
+    (is (not (str/includes? generated "diag_1_2")))))
+
+(deftest combo-layer-skips-none-and-trans
+  (let [template "    // BEGIN combos
+    // END combos
+    // BEGIN keymap
+    // END keymap
+"
+        config {:regions [[:combos
+                           {:nodes [{:name "diag"
+                                      :type :combo-layer
+                                      :row-widths [3 3]
+                                      :pattern [[0 0] [1 1]]
+                                      :bindings [[:Q :none :trans]
+                                                 [:trans :S :none]]}]}]
+                          [:keymap
+                           {:nodes [{:name "BASE"
+                                     :bindings [[:Q :none :trans]
+                                                [:trans :S :none]]}]}]]}
+        generated (generator/generate-keymap template config)]
+    (is (str/includes? generated "diag_0_0"))
+    (is (not (str/includes? generated "diag_0_1")))
+    (is (not (str/includes? generated "diag_0_2")))
+    (is (not (str/includes? generated "diag_1_0")))
+    (is (not (str/includes? generated "diag_1_1")))
+    (is (not (str/includes? generated "diag_1_2")))))
+
+(deftest combo-layer-resolves-layer-names
+  (let [template "    // BEGIN combos
+    // END combos
+    // BEGIN keymap
+    // END keymap
+"
+        config {:regions [[:combos
+                           {:nodes [{:name "diag"
+                                      :type :combo-layer
+                                      :row-widths [3 3]
+                                      :pattern [[0 0] [1 1]]
+                                      :bindings [[:Q :W :E]
+                                                 [:A :S :D]]
+                                      :layers [:BASE]}]}]
+                          [:keymap
+                           {:nodes [{:name "BASE"
+                                     :bindings [[:Q :W :E]
+                                                [:A :S :D]]}]}]]}
+        generated (generator/generate-keymap template config)]
+    (is (str/includes? generated "layers = <0>;"))))
+
+(deftest combo-layer-skips-out-of-bounds
+  (let [template "    // BEGIN combos\n    // END combos\n    // BEGIN keymap\n    // END keymap\n"
+        config {:regions [[:combos
+                           {:nodes [{:name "diag"
+                                      :type :combo-layer
+                                      :row-widths [3 3 3]
+                                      :pattern [[0 0] [1 1] [2 2]]
+                                      :bindings [[:Q :W :E]
+                                                 [:A :S :D]
+                                                 [:Z :X :C]]}]}]
+                          [:keymap
+                           {:nodes [{:name "BASE"
+                                     :bindings [[:Q :W :E]
+                                                [:A :S :D]
+                                                [:Z :X :C]]}]}]]}
+        generated (generator/generate-keymap template config)]
+    (is (str/includes? generated "diag_0_0"))
+    (is (not (str/includes? generated "diag_0_1")))
+    (is (not (str/includes? generated "diag_0_2")))
+    (is (not (str/includes? generated "diag_1_0")))
+    (is (not (str/includes? generated "diag_1_1")))
+    (is (not (str/includes? generated "diag_1_2")))
+    (is (not (str/includes? generated "diag_2_0")))
+    (is (not (str/includes? generated "diag_2_1")))
+    (is (not (str/includes? generated "diag_2_2")))))
+
+(deftest combo-layer-expands-aliases
+  (let [template "    // BEGIN combos
+    // END combos
+    // BEGIN keymap
+    // END keymap
+"
+        config {:aliases {:_ :trans}
+                :regions [[:combos
+                           {:nodes [{:name "diag"
+                                      :type :combo-layer
+                                      :row-widths [3 3]
+                                      :pattern [[0 0] [1 1]]
+                                      :bindings [[:Q :_ :E]
+                                                 [:A :S :D]]}]}]
+                          [:keymap
+                           {:nodes [{:name "BASE"
+                                     :bindings [[:Q :W :E]
+                                                [:A :S :D]]}]}]]}
+        generated (generator/generate-keymap template config)]
+    (is (str/includes? generated "diag_0_0"))
+    (is (not (str/includes? generated "diag_0_1")))))
+
+(deftest combo-layer-requires-row-widths
+  (let [template "    // BEGIN combos
+    // END combos
+    // BEGIN keymap
+    // END keymap
+"
+        config {:regions [[:combos
+                           {:nodes [{:name "diag"
+                                      :type :combo-layer
+                                      :pattern [[0 0] [1 1]]
+                                      :bindings [[:Q]]}]}]
+                          [:keymap
+                           {:nodes [{:name "BASE"
+                                     :bindings [[:Q]]}]}]]}]
+    (is (thrown-with-msg?
+         clojure.lang.ExceptionInfo
+         #":row-widths is required"
+         (generator/generate-keymap template config)))))
+
 ; (deftest rich-comment-tests
  ; (test-runner/run-tests-in-file-tree! :dirs #{"./"} ))
 
