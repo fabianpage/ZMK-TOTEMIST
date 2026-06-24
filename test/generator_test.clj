@@ -468,6 +468,82 @@
     ;; A->col1, B->col2, C->col3 (oob clipped), D->col4 (oob clipped)
     (is (re-find #"&trans &kp A &kp B" generated))))
 
+(deftest combo-layer-with-placements-builds-from-tiles
+  (let [template "    // BEGIN combos\n    // END combos\n    // BEGIN keymap\n    // END keymap\n"
+        config {:tiles {:alpha {:bindings [[:Q :W :E]
+                                            [:A :S :D]]}}
+                :regions [[:combos
+                           {:nodes [{:name "diag"
+                                      :type :combo-layer
+                                      :row-widths [3 3]
+                                      :pattern [[0 0] [1 1]]
+                                      :placements [{:tile :alpha :pos [0 0]}]}]}]
+                          [:keymap
+                           {:nodes [{:name "BASE"
+                                     :bindings [[:Q :W :E]
+                                                [:A :S :D]]}]}]]}
+        generated (generator/generate-keymap template config)]
+    (is (str/includes? generated "diag_0_0"))
+    (is (str/includes? generated "key-positions = <0 4>;"))
+    (is (str/includes? generated "bindings = <&kp Q>;"))
+    (is (str/includes? generated "diag_0_1"))
+    (is (str/includes? generated "key-positions = <1 5>;"))
+    (is (str/includes? generated "bindings = <&kp W>;"))))
+
+(deftest combo-layer-placements-respect-mirror-and-clip
+  (let [template "    // BEGIN combos\n    // END combos\n    // BEGIN keymap\n    // END keymap\n"
+        config {:tiles {:left  {:bindings [[:Q :W] [:A :S]]}
+                         :right {:bindings [[:O :P] [:L :X]]}}
+                :regions [[:combos
+                           {:nodes [{:name "diag"
+                                      :type :combo-layer
+                                      :row-widths [4 4]
+                                      :pattern [[0 0] [1 1]]
+                                      :placements [{:tile :left  :pos [0 0]}
+                                                   {:tile :right :pos [2 0] :mirror :horizontal :clip? true}]}]}]
+                          [:keymap
+                           {:nodes [{:name "BASE"
+                                     :bindings [[:Q :W :O :P]
+                                                [:A :S :L :X]]}]}]]}
+        generated (generator/generate-keymap template config)]
+    ;; left:   [[Q W] [A S]] at col 0
+    ;; right:  mirrored from [[O P] [L X]] -> [[P O] [X L]] at col 2
+    ;; assembled grid: row0 [Q W P O], row1 [A S X L]
+    ;; clipping: nothing OOB because right is only 2 cols wide at col 2
+    ;; diag_0_0 (Q), diag_0_1 (W+X), diag_0_2 (P+L)
+    (is (str/includes? generated "diag_0_0"))
+    (is (str/includes? generated "diag_0_1"))
+    (is (str/includes? generated "diag_0_2"))
+    (is (str/includes? generated "bindings = <&kp P>;"))
+    (is (str/includes? generated "key-positions = <2 7>;"))))
+
+(deftest combo-layer-placements-overlap-last-wins
+  (let [template "    // BEGIN combos\n    // END combos\n    // BEGIN keymap\n    // END keymap\n"
+        config {:tiles {:left  {:bindings [[:Q :W] [:A :S]]}
+                         :right {:bindings [[:O :P] [:L :X]]}}
+                :regions [[:combos
+                           {:nodes [{:name "diag"
+                                      :type :combo-layer
+                                      :row-widths [4 4]
+                                      :pattern [[0 0] [1 1]]
+                                      :placements [{:tile :left  :pos [0 0]}
+                                                   {:tile :right :pos [1 0]}]}]}]
+                          [:keymap
+                           {:nodes [{:name "BASE"
+                                     :bindings [[:Q :W :O :P]
+                                                [:A :S :L :X]]}]}]]}
+        generated (generator/generate-keymap template config)]
+    ;; left at [0 0]: row0 [Q W . .], right at [1 0]: row0 [O P . .] starting at col 1
+    ;; overlap at col 1: O overwrites W, P overwrites trans
+    ;; assembled grid: row0 [Q O P trans], row1 [A L X trans]
+    ;; Combos are generated for non-trans cells
+    (is (str/includes? generated "diag_0_0"))
+    (is (str/includes? generated "diag_0_1"))
+    (is (str/includes? generated "diag_0_2"))
+    ;; O won the overlap at [0,1], so combo uses O not W
+    (is (str/includes? generated "bindings = <&kp O>;"))
+    (is (not (str/includes? generated "bindings = <&kp W>;")))))
+
 ; (deftest rich-comment-tests
  ; (test-runner/run-tests-in-file-tree! :dirs #{"./"} ))
 
