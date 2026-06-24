@@ -1,0 +1,52 @@
+/ {
+    keymap {
+        compatible = "zmk,keymap";
+
+        // BEGIN combos
+        diag_0_0 {
+            bindings = <&kp Q>;
+            key-positions = <0 9>;
+        };
+
+        diag_0_1 {
+            bindings = <&kp W>;
+            key-positions = <1 10>;
+        };
+
+        diag_0_2 {
+            bindings = <&kp E>;
+            key-positions = <2 11>;
+        };
+
+        diag_0_3 {
+            bindings = <&kp R>;
+            key-positions = <3 12>;
+        };
+
+        diag_0_4 {
+            bindings = <&kp R>;
+            key-positions = <4 13>;
+        };
+
+        diag_0_5 {
+            bindings = <&kp E>;
+            key-positions = <5 14>;
+        };
+
+        diag_0_6 {
+            bindings = <&kp W>;
+            key-positions = <6 15>;
+        };
+        // END combos
+
+        // BEGIN keymap
+        BASE {
+            display-name = "BASE";
+            bindings = <
+&kp Q &kp W &kp E &kp R &kp R &kp E &kp W &kp Q
+&kp A &kp S &kp D &kp F &kp F &kp D &kp S &kp A
+            >;
+        };
+        // END keymap
+    };
+};
