@@ -8,7 +8,7 @@
       :row-widths [3 3]
       :pattern [[0 0] [1 1]]
       :bindings
-      [[:F :W :E]
+      [[:Q :W :E]
        [:A :S :D]]
       :layers [:BASE]}]}]
   [:keymap
