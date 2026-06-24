@@ -1,0 +1,12 @@
+{:tiles
+ {:l-col {:bindings [[:A] [:Q]]}
+  :r-col {:bindings [[:S] [:W]]}
+  :half  {:row-widths [2 2]
+          :placements [{:tile :l-col :pos [0 0]}
+                       {:tile :r-col :pos [1 0]}]}}
+ :regions
+ [[:keymap
+   {:nodes [{:name "BASE"
+             :row-widths [4 4]
+             :placements [{:tile :half :pos [0 0]}
+                          {:tile :half :pos [2 0] :mirror :horizontal}]}]}]]}
