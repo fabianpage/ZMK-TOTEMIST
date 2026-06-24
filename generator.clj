@@ -5,7 +5,8 @@
 (ns generator
   (:require [aero.core :as aero]
             [babashka.cli :as cli]
-            [clojure.string :as str])
+            [clojure.string :as str]
+            [clojure.walk :as walk])
   (:import [java.util.regex Pattern]))
 
 (defn indent
@@ -33,27 +34,14 @@
     cell))
 
 (defn expand-aliases
-  "Walk the config and expand alias keywords inside :bindings vectors of layer nodes.
-   Other node types (raw :body strings) are left untouched."
+  "Recursively walk the full config map and expand alias keywords at every level.
+   Previously this only expanded inside :bindings vectors of layer nodes."
   [config]
   (if-let [aliases (not-empty (:aliases config))]
-    (letfn [(resolve [cell] (resolve-alias aliases cell))]
-      (update config :regions
-              (fn [regions]
-                (mapv (fn [[region spec]]
-                        [region
-                         (update spec :nodes
-                                 (fn [nodes]
-                                   (mapv (fn [node]
-                                           (if (:bindings node)
-                                             (update node :bindings
-                                                     (fn [rows]
-                                                       (mapv (fn [row]
-                                                               (mapv resolve row))
-                                                             rows)))
-                                             node))
-                                         nodes)))])
-                      regions))))
+    (walk/postwalk
+      (fn [x]
+        (resolve-alias aliases x))
+      config)
     config))
 
 (defn extract-layer-indexes
