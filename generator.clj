@@ -61,16 +61,23 @@
   [row-widths empty-cell]
   (mapv (fn [w] (vec (repeat w empty-cell))) row-widths))
 
+(defn mirror-tile
+  "Apply mirroring to a tile's bindings.
+   :horizontal reverses the column order within each row."
+  [mirror tile-bindings]
+  (if (= mirror :horizontal)
+    (mapv (comp vec reverse) tile-bindings)
+    tile-bindings))
+
 (defn assemble-placements
   "Resolve placements into a flat bindings grid.
 
-   placements  - vector of {:tile <keyword> :pos [col row]}
+   placements  - vector of {:tile <keyword> :pos [col row] :mirror ... :clip? ...}
    row-widths  - vector of row widths for the target grid
    tiles       - map of {<keyword> {:bindings <grid>}}
    opts        - optional map:
                 :empty  - fill value for empty cells (default :trans)
-                :clip?  - if true, silently skip out-of-bounds writes;
-                          if false (default), throw"
+                :clip?  - default clip behavior for placements without their own :clip?"
   [placements row-widths tiles {:keys [empty clip?] :or {empty :trans}}]
   (let [num-rows (count row-widths)]
     ;; Validate all placements reference existing tiles
@@ -83,8 +90,11 @@
 
     ;; Build the grid by pasting each placement in order
     (reduce
-     (fn [current-grid {:keys [tile pos] :as placement}]
-       (let [tile-bindings (get-in tiles [tile :bindings])
+     (fn [current-grid {:keys [tile pos mirror] :as placement}]
+       (let [tile-bindings (mirror-tile mirror (get-in tiles [tile :bindings]))
+             effective-clip? (if (contains? placement :clip?)
+                               (boolean (:clip? placement))
+                               clip?)
              [start-col start-row] pos]
          (when-not (and (vector? pos) (= 2 (count pos)))
            (throw (ex-info ":pos must be a vector of [col row]"
@@ -96,7 +106,7 @@
               (cond
                 ;; Row out of bounds
                 (or (< target-row 0) (>= target-row num-rows))
-                (if clip?
+                (if effective-clip?
                   g
                   (throw (ex-info "Tile placement out of bounds: row outside grid"
                                   {:tile tile
@@ -106,7 +116,7 @@
 
                 ;; Col out of bounds for this row
                 (or (< target-col 0) (>= target-col (nth row-widths target-row)))
-                (if clip?
+                (if effective-clip?
                   g
                   (throw (ex-info "Tile placement out of bounds: col exceeds row width"
                                   {:tile tile

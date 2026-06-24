@@ -188,6 +188,60 @@
     (is (not (str/includes? generated "diag_2_1")))
     (is (not (str/includes? generated "diag_2_2")))))
 
+(deftest placements-mirror-horizontal
+  (let [template "    // BEGIN keymap\n    // END keymap\n"
+        config {:tiles {:alpha {:bindings [[:A :B :C]
+                                            [:D :E :F]]}}
+                :regions [[:keymap
+                           {:nodes [{:name "BASE"
+                                     :row-widths [6 6]
+                                     :placements [{:tile :alpha :pos [0 0]}
+                                                  {:tile :alpha :pos [3 0] :mirror :horizontal}]}]}]]}
+        generated (generator/generate-keymap template config)]
+    (is (re-find #"&kp A &kp B &kp C &kp C &kp B &kp A" generated))
+    (is (re-find #"&kp D &kp E &kp F &kp F &kp E &kp D" generated))))
+
+(deftest placements-clip-per-placement
+  (let [template "    // BEGIN keymap\n    // END keymap\n"
+        config {:tiles {:alpha {:bindings [[:A :B :C]]}}
+                :regions [[:keymap
+                           {:nodes [{:name "BASE"
+                                     :row-widths [4]
+                                     :placements [{:tile :alpha :pos [2 0] :mirror :horizontal :clip? true}]}]}]]}
+        generated (generator/generate-keymap template config)]
+    ;; mirrored [:C :B :A] placed at col 2: C at 2, B at 3, A at 4 (oob clipped)
+    (is (re-find #"&trans &trans &kp C &kp B" generated))))
+
+(deftest placements-clip-at-placement-overrides-node
+  (let [template "    // BEGIN keymap\n    // END keymap\n"
+        config {:tiles {:alpha {:bindings [[:A :B :C]]}}
+                :regions [[:keymap
+                           {:nodes [{:name "BASE"
+                                     :row-widths [2]
+                                     :clip? false
+                                     :placements [{:tile :alpha :pos [0 0] :clip? true}]}]}]]}
+        generated (generator/generate-keymap template config)]
+    (is (re-find #"&kp A &kp B" generated))
+    (is (not (re-find #"&kp C" generated)))))
+
+(deftest placements-mirror-and-clip-compose
+  (let [template "    // BEGIN keymap\n    // END keymap\n"
+        config {:tiles {:alpha {:bindings [[:A :B :C]
+                                            [:D :E :F]]}}
+                :regions [[:keymap
+                           {:nodes [{:name "BASE"
+                                     :row-widths [4 4]
+                                     :placements [{:tile :alpha :pos [0 0]}
+                                                  {:tile :alpha :pos [2 0] :mirror :horizontal :clip? true}]}]}]]}
+        generated (generator/generate-keymap template config)]
+    ;; first alpha: A B C trans
+    ;; second mirrored alpha [:C :B :A] at col 2: C at 2, B at 3, A at 4 (oob clipped)
+    ;; row 0 result: A B C B
+    (is (re-find #"&kp A &kp B &kp C &kp B" generated))
+    ;; row 1: D E F from first, mirrored row 1 [:F :E :D]: F at 2, E at 3, D at 4 (clipped)
+    ;; row 1 result: D E F E
+    (is (re-find #"&kp D &kp E &kp F &kp E" generated))))
+
 (deftest combo-layer-expands-aliases
   (let [template "    // BEGIN combos
     // END combos
