@@ -380,6 +380,94 @@
          #":row-widths is required"
          (generator/generate-keymap template config)))))
 
+(deftest tiles-can-be-composed-recursively
+  ;; :alpha is a simple tile, :beta is a tile made OF tiles
+  (let [template "    // BEGIN keymap\n    // END keymap\n"
+        config {:tiles {:alpha {:bindings [[:A :B]]}
+                         :beta  {:row-widths [4]
+                                 :placements [{:tile :alpha :pos [0 0]}
+                                              {:tile :alpha :pos [2 0] :mirror :horizontal}]}}
+                :regions [[:keymap
+                           {:nodes [{:name "BASE"
+                                     :row-widths [4]
+                                     :placements [{:tile :beta :pos [0 0]}]}]}]]}
+        generated (generator/generate-keymap template config)]
+    ;; beta = [A B] + mirrored [A B] = [A B B A]
+    ;; layer places beta at [0 0] -> row is A B B A
+    (is (re-find #"&kp A &kp B &kp B &kp A" generated))))
+
+(deftest tile-cycle-throws
+  ;; :a references :b, :b references :a — infinite recursion
+  (let [template "    // BEGIN keymap\n    // END keymap\n"
+        config {:tiles {:a {:row-widths [2]
+                            :placements [{:tile :b :pos [0 0]}]}
+                         :b {:row-widths [2]
+                            :placements [{:tile :a :pos [0 0]}]}}
+                :regions [[:keymap
+                           {:nodes [{:name "BASE"
+                                     :row-widths [2]
+                                     :placements [{:tile :a :pos [0 0]}]}]}]]}]
+    (is (thrown-with-msg?
+         clojure.lang.ExceptionInfo
+         #"Tile cycle detected"
+         (generator/generate-keymap template config)))))
+
+(deftest tile-direct-self-reference-throws
+  (let [template "    // BEGIN keymap\n    // END keymap\n"
+        config {:tiles {:a {:row-widths [1]
+                            :placements [{:tile :a :pos [0 0]}]}}
+                :regions [[:keymap
+                           {:nodes [{:name "BASE"
+                                     :row-widths [1]
+                                     :placements [{:tile :a :pos [0 0]}]}]}]]}]
+    (is (thrown-with-msg?
+         clojure.lang.ExceptionInfo
+         #"Tile cycle detected"
+         (generator/generate-keymap template config)))))
+
+(deftest tiles-deep-nesting-works
+  (let [template "    // BEGIN keymap\n    // END keymap\n"
+        config {:tiles {:col1 {:bindings [[:A]]}
+                         :col2 {:bindings [[:B]]}
+                         :half {:row-widths [2]
+                                :placements [{:tile :col1 :pos [0 0]}
+                                             {:tile :col2 :pos [1 0]}]}
+                         :full {:row-widths [4]
+                                :placements [{:tile :half :pos [0 0]}
+                                             {:tile :half :pos [2 0] :mirror :horizontal}]}}
+                :regions [[:keymap
+                           {:nodes [{:name "BASE"
+                                     :row-widths [4]
+                                     :placements [{:tile :full :pos [0 0]}]}]}]]}]
+    (is (re-find #"&kp A &kp B &kp B &kp A"
+                 (generator/generate-keymap template config)))))
+
+(deftest recursive-tile-missing-row-widths-throws
+  (let [template "    // BEGIN keymap\n    // END keymap\n"
+        config {:tiles {:bad {:placements [{:tile :ignore :pos [0 0]}]}}
+                :regions [[:keymap
+                           {:nodes [{:name "BASE"
+                                     :row-widths [1]
+                                     :placements [{:tile :bad :pos [0 0]}]}]}]]}]
+    (is (thrown-with-msg?
+         clojure.lang.ExceptionInfo
+         #":placements but no :row-widths"
+         (generator/generate-keymap template config)))))
+
+(deftest recursive-tile-clip-respected
+  (let [template "    // BEGIN keymap\n    // END keymap\n"
+        config {:tiles {:alpha {:bindings [[:A :B :C :D]]}
+                         :beta  {:row-widths [3]
+                                 :placements [{:tile :alpha :pos [1 0] :clip? true}]}}
+                :regions [[:keymap
+                           {:nodes [{:name "BASE"
+                                     :row-widths [3]
+                                     :placements [{:tile :beta :pos [0 0]}]}]}]]}
+        generated (generator/generate-keymap template config)]
+    ;; beta places [:A :B :C :D] starting at col 1 in a width-3 grid:
+    ;; A->col1, B->col2, C->col3 (oob clipped), D->col4 (oob clipped)
+    (is (re-find #"&trans &kp A &kp B" generated))))
+
 ; (deftest rich-comment-tests
  ; (test-runner/run-tests-in-file-tree! :dirs #{"./"} ))
 
