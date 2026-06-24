@@ -56,6 +56,109 @@
                            (:nodes keymap-region)))
     {}))
 
+(defn make-empty-grid
+  "Create a grid of the given dimensions filled with empty-cell."
+  [row-widths empty-cell]
+  (mapv (fn [w] (vec (repeat w empty-cell))) row-widths))
+
+(defn assemble-placements
+  "Resolve placements into a flat bindings grid.
+
+   placements  - vector of {:tile <keyword> :pos [col row]}
+   row-widths  - vector of row widths for the target grid
+   tiles       - map of {<keyword> {:bindings <grid>}}
+   opts        - optional map:
+                :empty  - fill value for empty cells (default :trans)
+                :clip?  - if true, silently skip out-of-bounds writes;
+                          if false (default), throw"
+  [placements row-widths tiles {:keys [empty clip?] :or {empty :trans}}]
+  (let [num-rows (count row-widths)]
+    ;; Validate all placements reference existing tiles
+    (doseq [[idx {:keys [tile]}] (map-indexed vector placements)]
+      (when-not (get tiles tile)
+        (throw (ex-info (str "Unknown tile: " tile)
+                        {:tile tile
+                         :placement-idx idx
+                         :available (keys tiles)}))))
+
+    ;; Build the grid by pasting each placement in order
+    (reduce
+     (fn [current-grid {:keys [tile pos] :as placement}]
+       (let [tile-bindings (get-in tiles [tile :bindings])
+             [start-col start-row] pos]
+         (when-not (and (vector? pos) (= 2 (count pos)))
+           (throw (ex-info ":pos must be a vector of [col row]"
+                           {:placement placement})))
+         (reduce
+          (fn [g [row-idx col-idx cell]]
+            (let [target-row (+ start-row row-idx)
+                  target-col (+ start-col col-idx)]
+              (cond
+                ;; Row out of bounds
+                (or (< target-row 0) (>= target-row num-rows))
+                (if clip?
+                  g
+                  (throw (ex-info "Tile placement out of bounds: row outside grid"
+                                  {:tile tile
+                                   :pos pos
+                                   :target-row target-row
+                                   :num-rows num-rows})))
+
+                ;; Col out of bounds for this row
+                (or (< target-col 0) (>= target-col (nth row-widths target-row)))
+                (if clip?
+                  g
+                  (throw (ex-info "Tile placement out of bounds: col exceeds row width"
+                                  {:tile tile
+                                   :pos pos
+                                   :target-col target-col
+                                   :row-width (nth row-widths target-row)
+                                   :target-row target-row})))
+
+                ;; In bounds: place the cell (last placement wins)
+                :else (assoc-in g [target-row target-col] cell))))
+          current-grid
+          (for [row-idx (range (count tile-bindings))
+                col-idx (range (count (nth tile-bindings row-idx)))
+                :let [cell (get-in tile-bindings [row-idx col-idx])]]
+            [row-idx col-idx cell]))))
+     (make-empty-grid row-widths empty)
+     placements)))
+
+(defn- resolve-placements-node
+  "If node has :placements but no :bindings, assemble a flat :bindings grid.
+   Otherwise return node unchanged."
+  [tiles node]
+  (if (and (:placements node) (not (:bindings node)))
+    (do
+      (when-not (:row-widths node)
+        (throw (ex-info ":row-widths is required when using :placements"
+                        {:node node})))
+      (let [row-widths (:row-widths node)
+            empty-cell (or (:empty node) :trans)
+            clip? (boolean (:clip? node))
+            assembled (assemble-placements (:placements node) row-widths tiles
+                                             {:empty empty-cell :clip? clip?})]
+        (-> node
+            (dissoc :placements :empty :clip?)
+            (assoc :bindings assembled))))
+    node))
+
+(defn resolve-placements
+  "Walk config regions and resolve :placements → :bindings for any node
+   that has :placements but not :bindings. This is a pure preprocessing
+   step so render-layer and render-combo-layer require zero changes."
+  [config]
+  (let [tiles (:tiles config)]
+    (update config :regions
+            (fn [regions]
+              (mapv (fn [[region spec]]
+                      [region (update spec :nodes
+                                      (fn [nodes]
+                                        (mapv (partial resolve-placements-node tiles)
+                                              nodes)))])
+                    regions)))))
+
 (defn combo-positions
   "Given row-widths, a pattern of [[row-off col-off] ...], and a base [row col],
    return the absolute ZMK key-positions in pattern order, or nil if any
@@ -186,7 +289,9 @@
 
 (defn generate-keymap
   [template config]
-  (let [config (expand-aliases config)
+  (let [config (-> config
+                   expand-aliases
+                   resolve-placements)
         layer-index-map (extract-layer-indexes config)
         opts {:layer-index-map layer-index-map}]
     (str/replace

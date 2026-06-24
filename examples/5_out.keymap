@@ -1,0 +1,17 @@
+/ {
+    keymap {
+        compatible = "zmk,keymap";
+
+        // BEGIN keymap
+        BASE {
+            display-name = "BASE";
+            bindings = <
+&kp A &kp N1 &kp N2
+&kp D &kp N3 &kp N4
+&trans &trans &trans
+            >;
+        };
+        // END keymap
+    };
+};
+

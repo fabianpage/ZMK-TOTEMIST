@@ -1,0 +1,9 @@
+{:tiles {:alpha {:bindings [[:A :B :C]
+                             [:D :E :F]]}
+         :num   {:bindings [[:N1 :N2]
+                             [:N3 :N4]]}}
+ :regions [[:keymap
+            {:nodes [{:name "BASE"
+                      :row-widths [3 3 3]
+                      :placements [{:tile :alpha :pos [0 0]}
+                                   {:tile :num   :pos [1 0]}]}]}]]}

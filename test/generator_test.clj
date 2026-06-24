@@ -210,6 +210,103 @@
     (is (str/includes? generated "diag_0_0"))
     (is (not (str/includes? generated "diag_0_1")))))
 
+(deftest placements-assemble-layer-bindings
+  (let [template "    // BEGIN keymap\n    // END keymap\n"
+        config {:tiles {:alpha {:bindings [[:A :B]
+                                            [:C :D]]}
+                         :num   {:bindings [[:N1]]}}
+                :regions [[:keymap
+                           {:nodes [{:name "BASE"
+                                     :row-widths [3 3]
+                                     :placements [{:tile :alpha :pos [0 0]}
+                                                  {:tile :num :pos [2 1]}]}]}]]}
+        generated (generator/generate-keymap template config)]
+    (is (re-find #"BASE \{" generated))
+    (is (re-find #"&kp A &kp B &trans" generated))
+    (is (re-find #"&kp C &kp D &kp N1" generated))))
+
+(deftest placements-overlap-last-wins
+  (let [template "    // BEGIN keymap\n    // END keymap\n"
+        config {:tiles {:alpha {:bindings [[:A :B :C]]}
+                         :beta  {:bindings [[:X :Y]]}}
+                :regions [[:keymap
+                           {:nodes [{:name "BASE"
+                                     :row-widths [3]
+                                     :placements [{:tile :alpha :pos [0 0]}
+                                                  {:tile :beta  :pos [1 0]}]}]}]]}
+        generated (generator/generate-keymap template config)]
+    (is (re-find #"&kp A &kp X &kp Y" generated))))
+
+(deftest placements-oob-throws
+  (let [template "    // BEGIN keymap\n    // END keymap\n"
+        config {:tiles {:alpha {:bindings [[:A :B :C]]}}
+                :regions [[:keymap
+                           {:nodes [{:name "BASE"
+                                     :row-widths [2]
+                                     :placements [{:tile :alpha :pos [0 0]}]}]}]]}]
+    (is (thrown-with-msg?
+         clojure.lang.ExceptionInfo
+         #"out of bounds"
+         (generator/generate-keymap template config)))))
+
+(deftest placements-clip-skips-oob
+  (let [template "    // BEGIN keymap\n    // END keymap\n"
+        config {:tiles {:alpha {:bindings [[:A :B :C]]}}
+                :regions [[:keymap
+                           {:nodes [{:name "BASE"
+                                     :row-widths [2]
+                                     :clip? true
+                                     :placements [{:tile :alpha :pos [0 0]}]}]}]]}
+        generated (generator/generate-keymap template config)]
+    (is (re-find #"&kp A &kp B" generated))
+    (is (not (re-find #"&kp C" generated)))))
+
+(deftest placements-empty-defaults-to-trans
+  (let [template "    // BEGIN keymap\n    // END keymap\n"
+        config {:tiles {:alpha {:bindings [[:A]]}}
+                :regions [[:keymap
+                           {:nodes [{:name "BASE"
+                                     :row-widths [2 2]
+                                     :placements [{:tile :alpha :pos [0 0]}]}]}]]}
+        generated (generator/generate-keymap template config)]
+    (is (re-find #"&kp A &trans" generated))
+    (is (re-find #"&trans &trans" generated))))
+
+(deftest placements-empty-custom
+  (let [template "    // BEGIN keymap\n    // END keymap\n"
+        config {:tiles {:alpha {:bindings [[:A]]}}
+                :regions [[:keymap
+                           {:nodes [{:name "BASE"
+                                     :row-widths [2 2]
+                                     :empty :none
+                                     :placements [{:tile :alpha :pos [0 0]}]}]}]]}
+        generated (generator/generate-keymap template config)]
+    (is (re-find #"&kp A &none" generated))
+    (is (re-find #"&none &none" generated))))
+
+(deftest placements-unknown-tile-throws
+  (let [template "    // BEGIN keymap\n    // END keymap\n"
+        config {:tiles {}
+                :regions [[:keymap
+                           {:nodes [{:name "BASE"
+                                     :row-widths [2]
+                                     :placements [{:tile :alpha :pos [0 0]}]}]}]]}]
+    (is (thrown-with-msg?
+         clojure.lang.ExceptionInfo
+         #"Unknown tile"
+         (generator/generate-keymap template config)))))
+
+(deftest placements-requires-row-widths
+  (let [template "    // BEGIN keymap\n    // END keymap\n"
+        config {:tiles {:alpha {:bindings [[:A :B]]}}
+                :regions [[:keymap
+                           {:nodes [{:name "BASE"
+                                     :placements [{:tile :alpha :pos [0 0]}]}]}]]}]
+    (is (thrown-with-msg?
+         clojure.lang.ExceptionInfo
+         #":row-widths is required"
+         (generator/generate-keymap template config)))))
+
 (deftest combo-layer-requires-row-widths
   (let [template "    // BEGIN combos
     // END combos
