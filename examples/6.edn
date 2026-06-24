@@ -1,0 +1,11 @@
+{:tiles
+ {:left
+  {:bindings [[:A :B :C]
+              [:D :E :F]]}}
+ :regions
+ [[:keymap
+   {:nodes
+    [{:name "BASE"
+      :row-widths [6 6]
+      :placements [{:tile :left :pos [0 0]}
+                   {:tile :left :pos [3 0] :mirror :horizontal}]}]}]]}
