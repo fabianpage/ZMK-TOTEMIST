@@ -35,3 +35,22 @@ Do **not** modify firmware config files in `config/` or `build.yaml` unless expl
 - CI builds via `.github/workflows/build.yml` using upstream `build-user-config.yml@v0.3`.
 - `build.yaml` defines the build matrix; `config/west.yml` fetches external modules.
 - `zephyr/module.yml` points `board_root` to `.` for local shield lookup.
+
+## Git Workflow
+
+- **Prefer small, focused commits.** After each successful unit of work (a keymap fix, a new plugin wired up, a config tweak, etc.), `git add` the relevant files and commit with a concise message.
+- Do not bulk all changes into a single commit; atomic commits make debugging and reverting easier.
+- Before committing, verify the change works (by running tesa, or manual test).
+- **Do not push unless explicitly asked.** Commit locally and stop.
+
+## Agent Communication Guidelines
+
+- **Always ask before making assumptions.** If you are uncertain about the user's intent, preferences, or the correct approach, stop and ask clarifying questions rather than guessing.
+- **Never proceed on unclear requirements.** When instructions are ambiguous, incomplete, or could be interpreted in multiple ways, request clarification before taking action.
+- **Err on the side of over-communication.** It is better to confirm details with the user than to silently make a choice they did not intend.
+- **Explain trade-offs and present options.** When there are multiple valid approaches, do not unilaterally pick one. Instead, explain the trade-offs involved and present the available options to the user for a decision.
+
+## For Clojure codebase exploration
+- Read /Users/fabian/projects/clj-surgeon/skill.md — it teaches you when and how to use clj-surgeon for Clojure structural operations.
+- ALWAYS use /clj-surgeon outline before spawning Explore agents or reading .clj files. Measured: 150x more token-efficient than Explore agents (5 files, ~5000 lines mapped in ~1000 tokens vs ~150K tokens). Returns in milliseconds vs ~100 seconds. Use :ls for form boundaries (~50 tokens per file), then Read only the specific line ranges you need. Only spawn Explore agents for targeted follow-up questions with specific file paths.
+
