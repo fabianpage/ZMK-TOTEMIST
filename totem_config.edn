@@ -1,0 +1,367 @@
+{:regions
+ [[:combos
+   {:nodes
+    [{:name "kpz", :body ["bindings = <&kp DE_Z>;" "key-positions = <4 3>;"]}
+     {:name "kpm", :body ["bindings = <&kp DE_M>;" "key-positions = <3 2>;"]}
+     {:name "kpw", :body ["bindings = <&kp DE_W>;" "key-positions = <1 2>;"]}
+     {:name "kpx", :body ["bindings = <&kp DE_X>;" "key-positions = <0 1>;"]}
+     {:name "kpg", :body ["bindings = <&kp DE_G>;" "key-positions = <13 14>;"]}
+     {:name "kpv", :body ["bindings = <&kp DE_V>;" "key-positions = <13 12>;"]}
+     {:name "kptap", :body ["bindings = <&kp TAB>;" "key-positions = <11 12>;"]}
+     {:name "kpq", :body ["bindings = <&kp DE_Q>;" "key-positions = <10 11>;"]}
+     {:name "kpb", :body ["bindings = <&kp DE_B>;" "key-positions = <25 24>;"]}
+     {:name "kpj", :body ["bindings = <&kp DE_J>;" "key-positions = <24 23>;"]}
+     {:name "kpk", :body ["bindings = <&kp DE_K>;" "key-positions = <22 23>;"]}
+     {:name "kpy", :body ["bindings = <&kp DE_Y>;" "key-positions = <21 22>;"]}
+     {:name "kpgui", :body ["bindings = <&sk LEFT_GUI>;" "key-positions = <4 14>;"]}
+     {:name "kpctrl", :body ["bindings = <&sk LCTRL>;" "key-positions = <14 25>;"]}
+     {:name "kpalt", :body ["bindings = <&sk LEFT_ALT>;" "key-positions = <3 13>;"]}
+     {:name "kpcapsword", :body ["bindings = <&caps_word>;" "key-positions = <13 24>;"]}
+     {:name "kpesc", :body ["bindings = <&esc_layerreset>;" "key-positions = <2 12>;"]}
+     {:name "kpspace", :body ["bindings = <&kp SPACE>;" "key-positions = <23 12>;"]}
+     {:name "round_brackets", :body ["bindings = <&round_brackets>;" "key-positions = <1 11>;"]}
+     {:name "square_brackets", :body ["bindings = <&square_brackets>;" "key-positions = <11 22>;"]}
+     {:name "backspace_delete", :body ["bindings = <&backspace_delete>;" "key-positions = <0 10>;"]}
+     {:name "enter", :body ["bindings = <&kp ENTER>;" "key-positions = <10 21>;"]}
+     {:name "curly_brackets", :body ["bindings = <&curly_brackets>;" "key-positions = <14 3>;"]}
+     {:name "angled_brackets", :body ["bindings = <&angled_brackets>;" "key-positions = <25 13>;"]}
+     {:name "punkt_doppelpunkt", :body ["bindings = <&punkt_doppelpunkt>;" "key-positions = <2 13>;"]}
+     {:name "komma_strichpunkt", :body ["bindings = <&komma_strickpunkt>;" "key-positions = <24 12>;"]}
+     {:name "toBT", :body ["bindings = <&to 4>;" "key-positions = <1 2 3 4>;"]}
+     {:name "ae", :body ["bindings = <&M_UPPER_AEOEUE DE_A_UMLAUT>;" "key-positions = <33 21 32>;"]}]}]
+  [:macros
+   {:nodes
+    [{:name "esc_layerreset", :label "esc_layerreset",
+      :body ["compatible = \"zmk,behavior-macro\";" "#binding-cells = <0>;" "bindings = <&kp ESCAPE &to 0>;"]}
+     {:name "daechli", :label "daechli",
+      :body ["compatible = \"zmk,behavior-macro\";" "#binding-cells = <0>;" "bindings = <&kp DE_CARET &kp SPACE>;"]}
+     {:name "tilde", :label "tilde",
+      :body ["compatible = \"zmk,behavior-macro\";" "#binding-cells = <0>;" "bindings = <&kp LA(DE_N) &kp SPACE>;"]}
+     {:name "M_UPPER_AEOEUE", :label "AE",
+      :body ["compatible = \"zmk,behavior-macro-one-param\";"
+              "#binding-cells = <1>;"
+              "bindings ="
+              "    <&kp CAPSLOCK>,"
+              "    <&macro_pause_for_release>,"
+              "    <&macro_param_1to1 &kp MACRO_PLACEHOLDER &kp CAPSLOCK>;"
+              ""
+              "tap-ms = <80>;"
+              "wait-ms = <80>;"]}
+     {:name "M_UE", :label "UE",
+      :body ["compatible = \"zmk,behavior-macro\";" "#binding-cells = <0>;"
+              "bindings = <&kp CAPSLOCK &kp DE_U_UMLAUT &kp CAPSLOCK>;"
+              "wait-ms = <20>;" "tap-ms = <20>;"]}
+     {:name "M_OE", :label "M_OE",
+      :body ["compatible = \"zmk,behavior-macro\";" "#binding-cells = <0>;"
+              "bindings = <&kp CAPSLOCK &kp DE_O_UMLAUT &kp CAPSLOCK>;"
+              "wait-ms = <100>;" "tap-ms = <100>;"]}
+     {:name "backtick_macro", :label "backtick_macro",
+      :body ["compatible = \"zmk,behavior-macro\";" "#binding-cells = <0>;"
+              "bindings = <&kp DE_GRAVE &kp SPACE>;"]}
+     {:name "fronttick_macro", :label "fronttick_macro",
+      :body ["compatible = \"zmk,behavior-macro\";" "#binding-cells = <0>;"
+              "bindings = <&kp RA(EQUAL) &kp SPACE>;"]}
+     {:name "ue1", :label "ue1",
+      :body ["compatible = \"zmk,behavior-macro\";" "#binding-cells = <0>;"
+              "bindings = <&kp DE_U_UMLAUT &kp DE_N1>;"]}
+     {:name "ue2", :label "ue2",
+      :body ["compatible = \"zmk,behavior-macro\";" "#binding-cells = <0>;"
+              "bindings = <&kp DE_U_UMLAUT &kp DE_N2>;"]}
+     {:name "ue3", :label "ue3",
+      :body ["compatible = \"zmk,behavior-macro\";" "#binding-cells = <0>;"
+              "bindings = <&kp DE_U_UMLAUT &kp DE_N3>;"]}
+     {:name "ue4", :label "ue4",
+      :body ["compatible = \"zmk,behavior-macro\";" "#binding-cells = <0>;"
+              "bindings = <&kp DE_U_UMLAUT &kp DE_N4>;"]}
+     {:name "ue5", :label "ue5",
+      :body ["compatible = \"zmk,behavior-macro\";" "#binding-cells = <0>;"
+              "bindings = <&kp DE_U_UMLAUT &kp DE_N5>;"]}
+     {:name "ue6", :label "ue6",
+      :body ["compatible = \"zmk,behavior-macro\";" "#binding-cells = <0>;"
+              "bindings = <&kp DE_U_UMLAUT &kp DE_N6>;"]}
+     {:name "ue7", :label "ue7",
+      :body ["compatible = \"zmk,behavior-macro\";" "#binding-cells = <0>;"
+              "bindings = <&kp DE_U_UMLAUT &kp DE_N7>;"]}
+     {:name "ue8", :label "ue8",
+      :body ["compatible = \"zmk,behavior-macro\";" "#binding-cells = <0>;"
+              "bindings = <&kp DE_U_UMLAUT &kp DE_N8>;"]}
+     {:name "ue9", :label "ue9",
+      :body ["compatible = \"zmk,behavior-macro\";" "#binding-cells = <0>;"
+              "bindings = <&kp DE_U_UMLAUT &kp DE_N9>;"]}
+     {:name "ue0", :label "ue0",
+      :body ["compatible = \"zmk,behavior-macro\";" "#binding-cells = <0>;"
+              "bindings = <&kp DE_U_UMLAUT &kp DE_N0>;"]}
+     {:name "tmux_next_window", :label "tmux_next",
+      :body ["compatible = \"zmk,behavior-macro\";" "#binding-cells = <0>;"
+              "bindings = <&kp DE_U_UMLAUT &kp DE_N>;"]}
+     {:name "tmux_prev_window", :label "tmux_prev",
+      :body ["compatible = \"zmk,behavior-macro\";" "#binding-cells = <0>;"
+              "bindings = <&kp DE_U_UMLAUT &kp DE_P>;"]}]}]
+  [:behaviors
+   {:nodes
+    [{:name "square_brackets", :label "square_brackets",
+      :body ["compatible = \"zmk,behavior-mod-morph\";"
+              "bindings = <&kp LA(DE_N5)>, <&kp LA(DE_N6)>;"
+              ""
+              "#binding-cells = <0>;"
+              "mods = <(MOD_LSFT)>;"]}
+     {:name "round_brackets", :label "round_brackets",
+      :body ["compatible = \"zmk,behavior-mod-morph\";"
+              "bindings = <&kp LS(DE_N8)>, <&kp LS(DE_N9)>;"
+              ""
+              "#binding-cells = <0>;"
+              "mods = <(MOD_LSFT)>;"]}
+     {:name "angled_brackets", :label "angled_brackets",
+      :body ["compatible = \"zmk,behavior-mod-morph\";"
+              "bindings = <&kp DE_LESS_THAN>, <&kp DE_GREATER_THAN>;"
+              ""
+              "#binding-cells = <0>;"
+              "mods = <(MOD_LSFT)>;"]}
+     {:name "curly_brackets", :label "curly_brackets",
+      :body ["compatible = \"zmk,behavior-mod-morph\";"
+              "bindings = <&kp LA(DE_N8)>, <&kp LA(DE_N9)>;"
+              ""
+              "#binding-cells = <0>;"
+              "mods = <(MOD_LSFT)>;"]}
+     {:name "backspace_delete", :label "backspace_delete",
+      :body ["compatible = \"zmk,behavior-mod-morph\";"
+              "bindings = <&kp BACKSPACE>, <&kp DELETE>;"
+              ""
+              "#binding-cells = <0>;"
+              "mods = <(MOD_LSFT)>;"]}
+     {:name "double_single_quote", :label "double_single_quote",
+      :body ["compatible = \"zmk,behavior-mod-morph\";"
+              "bindings = <&kp DE_DOUBLE_QUOTES>, <&kp MINUS>;"
+              ""
+              "#binding-cells = <0>;"
+              "mods = <(MOD_LSFT)>;"]}
+     {:name "back_front_tick", :label "back_front_tick",
+      :body ["compatible = \"zmk,behavior-mod-morph\";"
+              "bindings = <&backtick_macro>, <&fronttick_macro>;"
+              ""
+              "#binding-cells = <0>;"
+              "mods = <(MOD_LSFT)>;"]}
+     {:name "punkt_doppelpunkt", :label "punkt_doppelpunkt",
+      :body ["compatible = \"zmk,behavior-mod-morph\";"
+              "bindings = <&kp DE_DOT>, <&kp DE_COLON>;"
+              ""
+              "#binding-cells = <0>;"
+              "mods = <(MOD_LSFT)>;"]}
+     {:name "komma_strickpunkt", :label "komma_strickpunkt",
+      :body ["compatible = \"zmk,behavior-mod-morph\";"
+              "bindings = <&kp DE_COMMA>, <&kp DE_SEMICOLON>;"
+              ""
+              "#binding-cells = <0>;"
+              "mods = <(MOD_LSFT)>;"]}
+     {:name "frage_ausrufe_zeichen", :label "frage_ausrufe_zeichen",
+      :body ["compatible = \"zmk,behavior-mod-morph\";"
+              "bindings = <&kp DE_QUESTION>, <&kp DE_EXCLAMATION>;"
+              ""
+              "#binding-cells = <0>;"
+              "mods = <(MOD_LSFT)>;"]}
+     {:name "daechli_tilde", :label "daechli_tilde",
+      :body ["compatible = \"zmk,behavior-mod-morph\";"
+              "bindings = <&daechli>, <&tilde>;"
+              ""
+              "#binding-cells = <0>;"
+              "mods = <(MOD_LSFT)>;"]}
+     {:name "prozent_ringli", :label "prozent_ringli",
+      :body ["compatible = \"zmk,behavior-mod-morph\";"
+              "bindings = <&kp DE_PERCENT>, <&kp LS(NON_US_BSLH)>;"
+              ""
+              "#binding-cells = <0>;"
+              "mods = <(MOD_LSFT)>;"]}
+     {:name "hash_pipe", :label "hash_pipe",
+      :body ["compatible = \"zmk,behavior-mod-morph\";"
+              "bindings = <&kp DE_HASH>, <&kp DE_PIPE>;"
+              ""
+              "#binding-cells = <0>;"
+              "mods = <(MOD_LSFT)>;"]}
+     {:name "at_equal", :label "at_equal",
+      :body ["compatible = \"zmk,behavior-mod-morph\";"
+              "bindings = <&kp LA(DE_G)>, <&kp DE_EQUAL>;"
+              ""
+              "#binding-cells = <0>;"
+              "mods = <(MOD_LSFT)>;"]}
+     {:name "dollar_ampersand", :label "dollar_ampersand",
+      :body ["compatible = \"zmk,behavior-mod-morph\";"
+              "bindings = <&kp DE_DOLLAR>, <&kp DE_AMPERSAND>;"
+              ""
+              "#binding-cells = <0>;"
+              "mods = <(MOD_LSFT)>;"]}
+     {:name "slash_backslash", :label "slash_backslash",
+      :body ["compatible = \"zmk,behavior-mod-morph\";"
+              "bindings = <&kp DE_SLASH>, <&kp LS(LA(DE_N7))>;"
+              ""
+              "#binding-cells = <0>;"
+              "mods = <(MOD_LSFT)>;"]}
+     {:name "mal_plus", :label "mal_plus",
+      :body ["compatible = \"zmk,behavior-mod-morph\";"
+              "bindings = <&kp DE_ASTERISK>, <&kp DE_PLUS>;"
+              ""
+              "#binding-cells = <0>;"
+              "mods = <(MOD_LSFT)>;"]}
+     {:name "minus_underscore", :label "minus_underscore",
+      :body ["compatible = \"zmk,behavior-mod-morph\";"
+              "bindings = <&kp DE_MINUS>, <&kp DE_UNDER>;"
+              ""
+              "#binding-cells = <0>;"
+              "mods = <(MOD_LSFT)>;"]}
+     {:name "B_AE", :label "B_AE",
+      :body ["compatible = \"zmk,behavior-mod-morph\";"
+              "bindings = <&kp DE_A_UMLAUT>, <&M_UPPER_AEOEUE DE_A_UMLAUT>;"
+              ""
+              "#binding-cells = <0>;"
+              "mods = <(MOD_LSFT)>;"]}
+     {:name "B_UE", :label "B_UE",
+      :body ["compatible = \"zmk,behavior-mod-morph\";"
+              "bindings = <&kp DE_U_UMLAUT>, <&M_UE>;"
+              ""
+              "#binding-cells = <0>;"
+              "mods = <(MOD_LSFT)>;"]}
+     {:name "B_OE", :label "B_OE",
+      :body ["compatible = \"zmk,behavior-mod-morph\";"
+              "bindings = <&kp DE_O_UMLAUT>, <&M_OE>;"
+              ""
+              "#binding-cells = <0>;"
+              "mods = <(MOD_LSFT)>;"]}
+     {:name "hCh", :label "hCh",
+      :body ["compatible = \"zmk,behavior-mod-morph\";"
+              "bindings = <&kp DE_H>, <&kp LC(DE_H)>;"
+              ""
+              "#binding-cells = <0>;"
+              "mods = <(MOD_LSFT)>;"]}
+     {:name "jCj", :label "jCj",
+      :body ["compatible = \"zmk,behavior-mod-morph\";"
+              "bindings = <&kp DE_J>, <&kp LC(DE_J)>;"
+              ""
+              "#binding-cells = <0>;"
+              "mods = <(MOD_LSFT)>;"]}
+     {:name "kCk", :label "kCk",
+      :body ["compatible = \"zmk,behavior-mod-morph\";"
+              "bindings = <&kp DE_K>, <&kp LC(DE_K)>;"
+              ""
+              "#binding-cells = <0>;"
+              "mods = <(MOD_LSFT)>;"]}
+     {:name "lCl", :label "lCl",
+      :body ["compatible = \"zmk,behavior-mod-morph\";"
+              "bindings = <&kp DE_L>, <&kp LC(DE_L)>;"
+              ""
+              "#binding-cells = <0>;"
+              "mods = <(MOD_LSFT)>;"]}
+     {:name "n0ue0", :label "n0ue0",
+      :body ["compatible = \"zmk,behavior-mod-morph\";"
+              "bindings = <&kp DE_N0>, <&ue0>;"
+              ""
+              "#binding-cells = <0>;"
+              "mods = <(MOD_LSFT)>;"]}
+     {:name "n1ue1", :label "n1ue1",
+      :body ["compatible = \"zmk,behavior-mod-morph\";"
+              "bindings = <&kp DE_N1>, <&ue1>;"
+              ""
+              "#binding-cells = <0>;"
+              "mods = <(MOD_LSFT)>;"]}
+     {:name "n2ue2", :label "n2ue2",
+      :body ["compatible = \"zmk,behavior-mod-morph\";"
+              "bindings = <&kp DE_N2>, <&ue2>;"
+              ""
+              "#binding-cells = <0>;"
+              "mods = <(MOD_LSFT)>;"]}
+     {:name "n3ue3", :label "n3ue3",
+      :body ["compatible = \"zmk,behavior-mod-morph\";"
+              "bindings = <&kp DE_N3>, <&ue3>;"
+              ""
+              "#binding-cells = <0>;"
+              "mods = <(MOD_LSFT)>;"]}
+     {:name "n4ue4", :label "n4ue4",
+      :body ["compatible = \"zmk,behavior-mod-morph\";"
+              "bindings = <&kp DE_N4>, <&ue4>;"
+              ""
+              "#binding-cells = <0>;"
+              "mods = <(MOD_LSFT)>;"]}
+     {:name "n5ue5", :label "n5ue5",
+      :body ["compatible = \"zmk,behavior-mod-morph\";"
+              "bindings = <&kp DE_N5>, <&ue5>;"
+              ""
+              "#binding-cells = <0>;"
+              "mods = <(MOD_LSFT)>;"]}
+     {:name "n6ue6", :label "n6ue6",
+      :body ["compatible = \"zmk,behavior-mod-morph\";"
+              "bindings = <&kp DE_N6>, <&ue6>;"
+              ""
+              "#binding-cells = <0>;"
+              "mods = <(MOD_LSFT)>;"]}
+     {:name "n7ue7", :label "n7ue7",
+      :body ["compatible = \"zmk,behavior-mod-morph\";"
+              "bindings = <&kp DE_N7>, <&ue7>;"
+              ""
+              "#binding-cells = <0>;"
+              "mods = <(MOD_LSFT)>;"]}
+     {:name "n8ue8", :label "n8ue8",
+      :body ["compatible = \"zmk,behavior-mod-morph\";"
+              "bindings = <&kp DE_N8>, <&ue8>;"
+              ""
+              "#binding-cells = <0>;"
+              "mods = <(MOD_LSFT)>;"]}
+     {:name "n9ue9", :label "n9ue9",
+      :body ["compatible = \"zmk,behavior-mod-morph\";"
+              "bindings = <&kp DE_N9>, <&ue9>;"
+              ""
+              "#binding-cells = <0>;"
+              "mods = <(MOD_LSFT)>;"]}
+     {:name "tmux_next_pre", :label "tmux_next_pre",
+      :body ["compatible = \"zmk,behavior-mod-morph\";"
+              "bindings = <&tmux_next_window>, <&tmux_prev_window>;"
+              ""
+              "#binding-cells = <0>;"
+              "mods = <(MOD_LSFT)>;"]}
+     {:name "mac_next_prev_app", :label "mac_next_prev_app",
+      :body ["compatible = \"zmk,behavior-mod-morph\";"
+              "bindings = <&kp LG(TAB)>, <&kp LG(LS(TAB))>;"
+              ""
+              "#binding-cells = <0>;"
+              "mods = <(MOD_LSFT)>;"]}
+     {:name "mac_prev_next_window", :label "mac_prev_next_window",
+      :body ["compatible = \"zmk,behavior-mod-morph\";"
+              "bindings = <&kp LC(F9)>, <&kp LS(LC(F9))>;"
+              ""
+              "#binding-cells = <0>;"
+              "mods = <(MOD_LSFT)>;"]}
+     {:name "swapper", :label "swapper",
+      :body ["compatible = \"zmk,behavior-smart-toggle\";"
+              "#binding-cells = <0>;"
+              "bindings = <&kp LGUI>, <&kp TAB>;"
+              ""
+              "ignored-key-positions = <33>;"]}]}]
+  [:keymap
+   {:nodes
+    [{:name "BASE"
+      :bindings
+      [[:P :O :I :U :T [:bt :BT_SEL 0] [:bt :BT_SEL 1] [:out :OUT_TOG] [:bootloader] [:bt :BT_CLR_ALL]]
+       [[:lt 3 :DE_S] :A :E :N :R :H :D :DE_F :DE_H [:mt :RGUI :O]]
+       [:DE_G :D :L :C :F :H :K :M :COMMA :DOT :FSLH :FSLH]
+       [[:sl 1] [:sk :LEFT_SHIFT] [:sl 2] :C :A :B]]}
+     {:name "Nav1"
+      :bindings
+      [[[:B_UE] :END :PG_UP :PG_DN :HOME :N1 :trans :trans :trans :trans]
+       [[:B_OE] :RIGHT_ARROW :UP :DOWN :LEFT_ARROW :trans :trans :trans :trans :trans]
+       [:trans :DE_A_UMLAUT :N9 [:double_single_quote] [:back_front_tick] [:hash_pipe] :N3 :trans :trans :trans :trans :trans]
+       [:trans :trans :trans :trans :trans :trans]]}
+     {:name "Nav2"
+      :bindings
+      [[[:frage_ausrufe_zeichen] [:mac_prev_next_window] [:swapper] [:tmux_next_pre] [:kp "LC(DE_U_UMLAUT)"] :trans :trans :trans :trans :trans]
+       [[:at_equal] [:lCl] [:kCk] [:jCj] [:hCh] :trans :trans :trans :trans :trans]
+       [:trans [:slash_backslash] [:dollar_ampersand] :trans [:prozent_ringli] [:daechli_tilde] :trans :trans :trans :trans :trans :trans]
+       [:trans :trans :trans :trans :trans :trans]]}
+     {:name "Num"
+      :bindings
+      [[:trans [:n3ue3] [:n2ue2] [:n1ue1] [:minus_underscore] :trans :trans :trans :trans :trans]
+       [:trans [:n6ue6] [:n5ue5] [:n4ue4] [:n0ue0] :trans :trans :trans :trans :trans]
+       [:trans :trans [:n9ue9] [:n8ue8] [:n7ue7] [:mal_plus] :trans :trans :trans :trans :trans :trans]
+       [:trans :trans :trans :trans :trans :trans]]}
+     {:name "BT"
+      :bindings
+      [[[:bt :BT_CLR_ALL] [:bt :BT_SEL 2] [:bt :BT_SEL 1] [:bt :BT_SEL 0] [:bt :BT_CLR] :trans :trans :trans :trans :trans]
+       [:trans :trans :trans [:out :OUT_BLE] :trans :trans :trans :trans :trans :trans]
+       [:trans [:esc_layerreset] :trans :trans [:out :OUT_USB] [:bootloader] :trans :trans :trans :trans :trans :trans]
+       [:trans :trans :trans :trans :trans :trans]]}]}]]}
