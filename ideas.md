@@ -1,0 +1,2 @@
+- mali validation of .edn
+- warn on unused tiles, macros, behaviours etc

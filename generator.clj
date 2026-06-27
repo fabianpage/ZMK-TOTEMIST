@@ -1,3 +1,5 @@
+#!/usr/bin/env bb
+
 (require '[babashka.deps :as deps])
 
 (deps/add-deps '{:deps {aero/aero {:mvn/version "1.1.6"}}})
@@ -24,6 +26,22 @@
   (if (keyword? token)
     (name token)
     (str token)))
+
+(defn replace-placeholder
+  "Recursively walk a binding expression and replace :_placeholder with :MACRO_PLACEHOLDER."
+  [cell]
+  (cond
+    (keyword? cell)
+    (if (= cell :_placeholder) :MACRO_PLACEHOLDER cell)
+    (vector? cell)
+    (mapv replace-placeholder cell)
+    :else cell))
+
+(defn param-step?
+  "Check if a cell is a param-forwarding wrapper."
+  [cell]
+  (and (vector? cell)
+       (#{:param-1to1 :param-1to2 :param-2to1 :param-2to2} (first cell))))
 
 (defn resolve-alias
   "Recursively resolve a binding cell through the aliases map.
@@ -249,22 +267,94 @@
   "Compile one keymap cell into a ZMK binding string.
    :P              -> &kp P
    [:lt 3 :DE_S]   -> &lt 3 DE_S
+   [:press :A]    -> &macro_press &kp A
+   [:release :B]  -> &macro_release &kp B
+   [:tap :C]      -> &macro_tap &kp C
+   [:wait 30]     -> &macro_wait_time 30
+   [:tap-time 50] -> &macro_tap_time 50
+   [:pause]       -> &macro_pause_for_release
    :trans/:none  -> &trans / &none (special case)"
   [cell]
   (cond
     (vector? cell)
-    (str "&" (token->str (first cell))
-         (when (seq (rest cell))
-           (str " " (str/join " " (map token->str (rest cell))))))
+    (let [op (first cell)]
+      (case op
+        (:press :release :tap)
+        (str "&macro_" (name op) " " (binding->str (second cell)))
+        :wait
+        (str "&macro_wait_time " (second cell))
+        :tap-time
+        (str "&macro_tap_time " (second cell))
+        :pause
+        "&macro_pause_for_release"
+        (:param-1to1 :param-1to2 :param-2to1 :param-2to2)
+        (str "&macro_param_" (subs (name op) 6))
+        (str "&" (token->str op)
+             (when (seq (rest cell))
+               (str " " (str/join " " (map token->str (rest cell))))))))
 
     (keyword? cell)
     (case cell
       :trans "&trans"
       :none "&none"
+      (:param-1to1 :param-1to2 :param-2to1 :param-2to2)
+      (str "&macro_param_" (subs (name cell) 6))
       (str "&kp " (name cell)))
 
     :else
     (str cell)))
+
+(defn macro-binding-groups
+  "Expand a macro body into a seq of <...> group contents.
+   Most cells become one group. Param wrappers become two groups:
+   the param control behavior, and the resolved binding with
+   :_placeholder replaced by :MACRO_PLACEHOLDER."
+  [body]
+  (mapcat
+    (fn [cell]
+      (if (param-step? cell)
+        (let [[param-op inner-binding] cell]
+          [(str "&macro_param_" (subs (name param-op) 6))
+           (binding->str (replace-placeholder inner-binding))])
+        [(binding->str cell)]))
+    body))
+
+(defn render-macro
+  "Render a declarative ZMK macro node.
+   :name     — DT node id
+   :label    — optional display name (defaults to :name)
+   :type     — :macro, :macro-one-param, or :macro-two-param
+   :body     — flat vector of binding expressions (compiled via binding->str)
+   :wait-ms  — optional, emitted as wait-ms = <N>;
+   :tap-ms   — optional, emitted as tap-ms = <N>;"
+  [{:keys [name type body wait-ms tap-ms label] :as node} level]
+  (let [compat-str (case type
+                     :macro "zmk,behavior-macro"
+                     :macro-one-param "zmk,behavior-macro-one-param"
+                     :macro-two-param "zmk,behavior-macro-two-param"
+                     (throw (ex-info (str "Unknown macro type: " type) {:node node})))
+        binding-cells (case type
+                        :macro 0
+                        :macro-one-param 1
+                        :macro-two-param 2)
+        display-name (or label name)
+        bindings-line (if (#{:macro-one-param :macro-two-param} type)
+                        (let [groups (macro-binding-groups body)]
+                          (str (indent (inc level)) "bindings =\n"
+                               (str/join ",\n"
+                                         (map #(str (indent (inc level)) "    <" % ">")
+                                              groups))
+                               ";"))
+                        (str (indent (inc level)) "bindings = <" (str/join " " (map binding->str body)) ">;"))]
+    (str/join
+     "\n"
+     (concat [(str (indent level) name ": " display-name " {")
+              (str (indent (inc level)) "compatible = \"" compat-str "\";")
+              (str (indent (inc level)) "#binding-cells = <" binding-cells ">;")
+              bindings-line]
+             (when wait-ms [(str (indent (inc level)) "wait-ms = <" wait-ms ">;")])
+             (when tap-ms  [(str (indent (inc level)) "tap-ms = <" tap-ms ">;")])
+             [(str (indent level) "};")]))))
 
 (defn render-layer
   "Render a keymap layer node. The :name doubles as the DT node id and the
@@ -318,6 +408,7 @@
   [{:keys [type] :as node} level raw-body? opts]
   (case type
     :combo-layer (render-combo-layer node level opts)
+    (:macro :macro-one-param :macro-two-param) (render-macro node level)
     (if (:bindings node)
       (render-layer node level)
       (str/join

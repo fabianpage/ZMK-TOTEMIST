@@ -2,5 +2,30 @@ name: Build ZMK firmware
 on: [push, pull_request, workflow_dispatch]
 
 jobs:
+  verify-keymap:
+    name: Verify generated keymap is up-to-date
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Babashka
+        uses: DeLaGuardo/setup-clojure@12.5
+        with:
+          bb: latest
+
+      - name: Regenerate keymap
+        run: bb generate
+
+      - name: Check for drift
+        run: |
+          if [ -n "$(git diff config/totem.keymap)" ]; then
+            echo "::error::config/totem.keymap is out of sync with generator"
+            echo "Run 'bb generate' locally and commit the result"
+            git diff config/totem.keymap
+            exit 1
+          fi
+
   build:
+    needs: verify-keymap
     uses: zmkfirmware/zmk/.github/workflows/build-user-config.yml@v0.3
