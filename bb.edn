@@ -1,6 +1,15 @@
 {:paths ["." "test"]
  :tasks
- {test {:doc "Run Babashka tests"
+ {generate {:doc "Generate config/totem.keymap from totem_config.edn + totem_template.keymap"
+            :task (let [exit (:exit (clojure.java.shell/sh
+                                     "bb" "generator.clj"
+                                     "--config" "totem_config.edn"
+                                     "--input" "totem_template.keymap"
+                                     "--output" "config/totem.keymap"))]
+                    (if (zero? exit)
+                      (println "Generated config/totem.keymap")
+                      (throw (ex-info "Generator failed" {:exit exit}))))}
+  test {:doc "Run Babashka tests"
         :extra-deps {io.github.matthewdowney/rich-comment-tests {:git/url "https://github.com/matthewdowney/rich-comment-tests.git"
                                                                   :git/tag "v1.0.3"
                                                                   :git/sha "a8711e9"}}
