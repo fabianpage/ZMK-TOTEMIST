@@ -8,12 +8,16 @@ This slice makes the later implementation issues independently grabbable by givi
 
 ## Acceptance criteria
 
-- [ ] The target config location for the real combo migration is confirmed before editing it.
-- [ ] Every existing combo in the target config is listed exactly once in a migration inventory.
-- [ ] The inventory identifies the intended destination for each combo: horizontal Combo-layer, vertical Combo-layer, diagonal down-right Combo-layer, or retained irregular raw combo.
-- [ ] The inventory captures each combo's current BASE binding and key positions so later slices can preserve BASE behavior.
-- [ ] The inventory explicitly marks Nav, Num, and BT-specific combo additions as out of scope.
-- [ ] The inventory respects the generator boundary and does not require firmware, board, shield, or build configuration changes.
+- [x] The target config location for the real combo migration is confirmed before editing it.
+- [x] Every existing combo in the target config is listed exactly once in a migration inventory.
+- [x] The inventory identifies the intended destination for each combo: horizontal Combo-layer, vertical Combo-layer, diagonal down-right Combo-layer, or retained irregular raw combo.
+- [x] The inventory captures each combo's current BASE binding and key positions so later slices can preserve BASE behavior.
+- [x] The inventory explicitly marks Nav, Num, and BT-specific combo additions as out of scope.
+- [x] The inventory respects the generator boundary and does not require firmware, board, shield, or build configuration changes.
+
+## Delivered artifact
+
+- Migration inventory: `docs/base-combo-migration-inventory.md`
 
 ## Blocked by
 
