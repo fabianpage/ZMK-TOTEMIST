@@ -34,6 +34,31 @@
   (let [pattern (re-pattern (str "(?s)\\n\\s*" (java.util.regex.Pattern/quote node-name) " \\{.*?\\n\\s*\\};"))]
     (re-find pattern rendered)))
 
+(defn ^:private region-body
+  [region rendered]
+  (let [quoted-region (java.util.regex.Pattern/quote (name region))
+        pattern (re-pattern (str "(?s)// BEGIN " quoted-region "\\n(.*?)\\n\\s*// END " quoted-region))]
+    (second (re-find pattern rendered))))
+
+(defn ^:private combo-node-blocks
+  [rendered]
+  (let [body (region-body :combos rendered)
+        pattern #"(?ms)^\s*([A-Za-z0-9_]+)\s+\{.*?^\s*\};"]
+    (into {}
+          (map (fn [[block name]] [name block]))
+          (re-seq pattern body))))
+
+(defn ^:private balanced-braces?
+  [s]
+  (zero? (reduce (fn [depth ch]
+                   (cond
+                     (neg? depth) (reduced depth)
+                     (= ch \{) (inc depth)
+                     (= ch \}) (dec depth)
+                     :else depth))
+                 0
+                 s)))
+
 (defmacro ^:private deftest-examples
   "Generate one deftest per discovered example at macro-expansion time."
   []
@@ -366,6 +391,64 @@
         (is (str/includes? block binding) (str name " preserves binding"))
         (is (str/includes? block key-positions) (str name " preserves key positions"))
         (is (str/includes? block "layers = <0>;") (str name " is scoped to BASE only"))))))
+
+(deftest complete-base-scoped-combo-migration-renders-only-inventory-combos
+  (let [generated (generator/generate-keymap (slurp "examples/1_in.keymap")
+                                             (generator/load-config "examples/1.edn"))
+        expected-combos [{:name "horizontal_rtl_0_4" :group :horizontal :binding "bindings = <&kp DE_Z>;" :key-positions "key-positions = <4 3>;"}
+                         {:name "horizontal_rtl_0_3" :group :horizontal :binding "bindings = <&kp DE_M>;" :key-positions "key-positions = <3 2>;"}
+                         {:name "horizontal_ltr_0_1" :group :horizontal :binding "bindings = <&kp DE_W>;" :key-positions "key-positions = <1 2>;"}
+                         {:name "horizontal_ltr_0_0" :group :horizontal :binding "bindings = <&kp DE_X>;" :key-positions "key-positions = <0 1>;"}
+                         {:name "horizontal_ltr_1_3" :group :horizontal :binding "bindings = <&kp DE_G>;" :key-positions "key-positions = <13 14>;"}
+                         {:name "horizontal_rtl_1_3" :group :horizontal :binding "bindings = <&kp DE_V>;" :key-positions "key-positions = <13 12>;"}
+                         {:name "horizontal_ltr_1_1" :group :horizontal :binding "bindings = <&kp TAB>;" :key-positions "key-positions = <11 12>;"}
+                         {:name "horizontal_ltr_1_0" :group :horizontal :binding "bindings = <&kp DE_Q>;" :key-positions "key-positions = <10 11>;"}
+                         {:name "horizontal_rtl_2_5" :group :horizontal :binding "bindings = <&kp DE_B>;" :key-positions "key-positions = <25 24>;"}
+                         {:name "horizontal_rtl_2_4" :group :horizontal :binding "bindings = <&kp DE_J>;" :key-positions "key-positions = <24 23>;"}
+                         {:name "horizontal_ltr_2_2" :group :horizontal :binding "bindings = <&kp DE_K>;" :key-positions "key-positions = <22 23>;"}
+                         {:name "horizontal_ltr_2_1" :group :horizontal :binding "bindings = <&kp DE_Y>;" :key-positions "key-positions = <21 22>;"}
+                         {:name "vertical_0_4" :group :vertical :binding "bindings = <&sk LEFT_GUI>;" :key-positions "key-positions = <4 14>;"}
+                         {:name "vertical_0_3" :group :vertical :binding "bindings = <&sk LEFT_ALT>;" :key-positions "key-positions = <3 13>;"}
+                         {:name "vertical_0_2" :group :vertical :binding "bindings = <&esc_layerreset>;" :key-positions "key-positions = <2 12>;"}
+                         {:name "vertical_0_1" :group :vertical :binding "bindings = <&round_brackets>;" :key-positions "key-positions = <1 11>;"}
+                         {:name "vertical_0_0" :group :vertical :binding "bindings = <&backspace_delete>;" :key-positions "key-positions = <0 10>;"}
+                         {:name "diagonal_down_right_1_4" :group :diagonal :binding "bindings = <&sk LCTRL>;" :key-positions "key-positions = <14 25>;"}
+                         {:name "diagonal_down_right_1_3" :group :diagonal :binding "bindings = <&caps_word>;" :key-positions "key-positions = <13 24>;"}
+                         {:name "diagonal_down_right_reverse_2_3" :group :diagonal :binding "bindings = <&kp SPACE>;" :key-positions "key-positions = <23 12>;"}
+                         {:name "diagonal_down_right_1_1" :group :diagonal :binding "bindings = <&square_brackets>;" :key-positions "key-positions = <11 22>;"}
+                         {:name "diagonal_down_right_1_0" :group :diagonal :binding "bindings = <&kp ENTER>;" :key-positions "key-positions = <10 21>;"}
+                         {:name "diagonal_down_right_reverse_1_4" :group :diagonal :binding "bindings = <&curly_brackets>;" :key-positions "key-positions = <14 3>;"}
+                         {:name "diagonal_down_right_0_2" :group :diagonal :binding "bindings = <&punkt_doppelpunkt>;" :key-positions "key-positions = <2 13>;"}
+                         {:name "angled_brackets" :group :raw :binding "bindings = <&angled_brackets>;" :key-positions "key-positions = <25 13>;"}
+                         {:name "komma_strichpunkt" :group :raw :binding "bindings = <&komma_strickpunkt>;" :key-positions "key-positions = <24 12>;"}
+                         {:name "toBT" :group :raw :binding "bindings = <&to 4>;" :key-positions "key-positions = <1 2 3 4>;"}
+                         {:name "ae" :group :raw :binding "bindings = <&M_UPPER_AEOEUE DE_A_UMLAUT>;" :key-positions "key-positions = <33 21 32>;"}]
+        combo-blocks (combo-node-blocks generated)
+        expected-names (set (map :name expected-combos))
+        generated-names (set (keys combo-blocks))
+        generated-combo-names (remove #(= :raw (:group %)) expected-combos)
+        raw-combo-names (->> expected-combos (filter #(= :raw (:group %))) (map :name) set)]
+    (is (balanced-braces? generated) "rendered keymap has balanced devicetree braces")
+    (is (= 28 (count combo-blocks)) "rendered combos match the 28-combo migration inventory count")
+    (is (= expected-names generated-names) "rendered combos contain the migration inventory and no extras")
+    (is (= #{"angled_brackets" "komma_strichpunkt" "toBT" "ae"}
+           raw-combo-names)
+        "retained irregular raw combos preserve semantic node names")
+    (doseq [{:keys [name group binding key-positions]} expected-combos]
+      (let [block (get combo-blocks name)]
+        (is block (str name " is rendered"))
+        (is (str/includes? block binding) (str name " preserves the inventory binding"))
+        (is (str/includes? block key-positions) (str name " preserves the inventory key positions"))
+        (is (str/includes? block "layers = <0>;") (str name " is scoped to BASE"))
+        (is (not (re-find #"layers\s*=\s*<\s*>" block)) (str name " is not global"))
+        (case group
+          :horizontal (is (str/starts-with? name "horizontal_") (str name " uses a horizontal group prefix"))
+          :vertical (is (str/starts-with? name "vertical_") (str name " uses a vertical group prefix"))
+          :diagonal (is (str/starts-with? name "diagonal_") (str name " uses a diagonal group prefix"))
+          :raw (is (contains? raw-combo-names name) (str name " remains a retained raw combo")))))
+    (is (= 24 (count generated-combo-names)) "horizontal, vertical, and diagonal Combo-layers account for 24 generated combos")
+    (is (empty? (filter #(re-find #"(?i)^(nav|num|bt)[_-]" (:name %)) generated-combo-names))
+        "no Nav-, Num-, or BT-specific generated Combo-layer names are introduced")))
 
 (deftest combo-layer-skips-out-of-bounds
   (let [template "    // BEGIN combos\n    // END combos\n    // BEGIN keymap\n    // END keymap\n"
