@@ -1,30 +1,24 @@
 {:regions
  [[:combos
    {:nodes
-    [{:name "kpz",
-      :body ["bindings = <&kp DE_Z>;" "key-positions = <4 3>;"]}
-     {:name "kpm",
-      :body ["bindings = <&kp DE_M>;" "key-positions = <3 2>;"]}
-     {:name "kpw",
-      :body ["bindings = <&kp DE_W>;" "key-positions = <1 2>;"]}
-     {:name "kpx",
-      :body ["bindings = <&kp DE_X>;" "key-positions = <0 1>;"]}
-     {:name "kpg",
-      :body ["bindings = <&kp DE_G>;" "key-positions = <13 14>;"]}
-     {:name "kpv",
-      :body ["bindings = <&kp DE_V>;" "key-positions = <13 12>;"]}
-     {:name "kptap",
-      :body ["bindings = <&kp TAB>;" "key-positions = <11 12>;"]}
-     {:name "kpq",
-      :body ["bindings = <&kp DE_Q>;" "key-positions = <10 11>;"]}
-     {:name "kpb",
-      :body ["bindings = <&kp DE_B>;" "key-positions = <25 24>;"]}
-     {:name "kpj",
-      :body ["bindings = <&kp DE_J>;" "key-positions = <24 23>;"]}
-     {:name "kpk",
-      :body ["bindings = <&kp DE_K>;" "key-positions = <22 23>;"]}
-     {:name "kpy",
-      :body ["bindings = <&kp DE_Y>;" "key-positions = <21 22>;"]}
+    [{:name "horizontal_ltr"
+      :type :combo-layer
+      :row-widths [10 10 12 6]
+      :pattern [[0 0] [0 1]]
+      :layers [:BASE]
+      :bindings [[:DE_X :DE_W :none :none :none :none :none :none :none :none]
+                 [:DE_Q :TAB :none :DE_G :none :none :none :none :none :none]
+                 [:none :DE_Y :DE_K :none :none :none :none :none :none :none :none :none]
+                 [:none :none :none :none :none :none]]}
+     {:name "horizontal_rtl"
+      :type :combo-layer
+      :row-widths [10 10 12 6]
+      :pattern [[0 0] [0 -1]]
+      :layers [:BASE]
+      :bindings [[:none :none :none :DE_M :DE_Z :none :none :none :none :none]
+                 [:none :none :none :DE_V :none :none :none :none :none :none]
+                 [:none :none :none :none :DE_J :DE_B :none :none :none :none :none :none]
+                 [:none :none :none :none :none :none]]}
      {:name "kpgui",
       :body ["bindings = <&sk LEFT_GUI>;" "key-positions = <4 14>;"]}
      {:name "kpctrl",

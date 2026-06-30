@@ -23,64 +23,76 @@
         compatible = "zmk,combos";
 
         // BEGIN combos
-        kpz {
-            bindings = <&kp DE_Z>;
-            key-positions = <4 3>;
-        };
-
-        kpm {
-            bindings = <&kp DE_M>;
-            key-positions = <3 2>;
-        };
-
-        kpw {
-            bindings = <&kp DE_W>;
-            key-positions = <1 2>;
-        };
-
-        kpx {
+        horizontal_ltr_0_0 {
             bindings = <&kp DE_X>;
             key-positions = <0 1>;
+            layers = <0>;
         };
 
-        kpg {
-            bindings = <&kp DE_G>;
-            key-positions = <13 14>;
+        horizontal_ltr_0_1 {
+            bindings = <&kp DE_W>;
+            key-positions = <1 2>;
+            layers = <0>;
         };
 
-        kpv {
-            bindings = <&kp DE_V>;
-            key-positions = <13 12>;
-        };
-
-        kptap {
-            bindings = <&kp TAB>;
-            key-positions = <11 12>;
-        };
-
-        kpq {
+        horizontal_ltr_1_0 {
             bindings = <&kp DE_Q>;
             key-positions = <10 11>;
+            layers = <0>;
         };
 
-        kpb {
-            bindings = <&kp DE_B>;
-            key-positions = <25 24>;
+        horizontal_ltr_1_1 {
+            bindings = <&kp TAB>;
+            key-positions = <11 12>;
+            layers = <0>;
         };
 
-        kpj {
-            bindings = <&kp DE_J>;
-            key-positions = <24 23>;
+        horizontal_ltr_1_3 {
+            bindings = <&kp DE_G>;
+            key-positions = <13 14>;
+            layers = <0>;
         };
 
-        kpk {
-            bindings = <&kp DE_K>;
-            key-positions = <22 23>;
-        };
-
-        kpy {
+        horizontal_ltr_2_1 {
             bindings = <&kp DE_Y>;
             key-positions = <21 22>;
+            layers = <0>;
+        };
+
+        horizontal_ltr_2_2 {
+            bindings = <&kp DE_K>;
+            key-positions = <22 23>;
+            layers = <0>;
+        };
+
+        horizontal_rtl_0_3 {
+            bindings = <&kp DE_M>;
+            key-positions = <3 2>;
+            layers = <0>;
+        };
+
+        horizontal_rtl_0_4 {
+            bindings = <&kp DE_Z>;
+            key-positions = <4 3>;
+            layers = <0>;
+        };
+
+        horizontal_rtl_1_3 {
+            bindings = <&kp DE_V>;
+            key-positions = <13 12>;
+            layers = <0>;
+        };
+
+        horizontal_rtl_2_4 {
+            bindings = <&kp DE_J>;
+            key-positions = <24 23>;
+            layers = <0>;
+        };
+
+        horizontal_rtl_2_5 {
+            bindings = <&kp DE_B>;
+            key-positions = <25 24>;
+            layers = <0>;
         };
 
         kpgui {

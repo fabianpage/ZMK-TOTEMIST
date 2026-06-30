@@ -223,6 +223,59 @@
          #"Unknown layer name"
          (generator/generate-keymap template config)))))
 
+(deftest horizontal-base-combos-render-from-base-scoped-combo-layers
+  (let [generated (generator/generate-keymap (slurp "examples/1_in.keymap")
+                                             (generator/load-config "examples/1.edn"))
+        horizontal-combos [{:name "horizontal_rtl_0_4"
+                            :binding "bindings = <&kp DE_Z>;"
+                            :key-positions "key-positions = <4 3>;"}
+                           {:name "horizontal_rtl_0_3"
+                            :binding "bindings = <&kp DE_M>;"
+                            :key-positions "key-positions = <3 2>;"}
+                           {:name "horizontal_ltr_0_1"
+                            :binding "bindings = <&kp DE_W>;"
+                            :key-positions "key-positions = <1 2>;"}
+                           {:name "horizontal_ltr_0_0"
+                            :binding "bindings = <&kp DE_X>;"
+                            :key-positions "key-positions = <0 1>;"}
+                           {:name "horizontal_ltr_1_3"
+                            :binding "bindings = <&kp DE_G>;"
+                            :key-positions "key-positions = <13 14>;"}
+                           {:name "horizontal_rtl_1_3"
+                            :binding "bindings = <&kp DE_V>;"
+                            :key-positions "key-positions = <13 12>;"}
+                           {:name "horizontal_ltr_1_1"
+                            :binding "bindings = <&kp TAB>;"
+                            :key-positions "key-positions = <11 12>;"}
+                           {:name "horizontal_ltr_1_0"
+                            :binding "bindings = <&kp DE_Q>;"
+                            :key-positions "key-positions = <10 11>;"}
+                           {:name "horizontal_rtl_2_5"
+                            :binding "bindings = <&kp DE_B>;"
+                            :key-positions "key-positions = <25 24>;"}
+                           {:name "horizontal_rtl_2_4"
+                            :binding "bindings = <&kp DE_J>;"
+                            :key-positions "key-positions = <24 23>;"}
+                           {:name "horizontal_ltr_2_2"
+                            :binding "bindings = <&kp DE_K>;"
+                            :key-positions "key-positions = <22 23>;"}
+                           {:name "horizontal_ltr_2_1"
+                            :binding "bindings = <&kp DE_Y>;"
+                            :key-positions "key-positions = <21 22>;"}]
+        old-raw-names ["kpz" "kpm" "kpw" "kpx" "kpg" "kpv"
+                       "kptap" "kpq" "kpb" "kpj" "kpk" "kpy"]]
+    (doseq [{:keys [name binding key-positions]} horizontal-combos]
+      (let [block (node-block name generated)]
+        (is (str/starts-with? name "horizontal_") (str name " has horizontal-oriented prefix"))
+        (is block (str name " generated combo node is present"))
+        (when block
+          (is (str/includes? block binding) (str name " renders the expected binding"))
+          (is (str/includes? block key-positions) (str name " preserves key positions"))
+          (is (str/includes? block "layers = <0>;") (str name " is scoped to BASE only")))))
+    (doseq [old-name old-raw-names]
+      (is (nil? (node-block old-name generated))
+          (str old-name " old raw horizontal combo node is not rendered")))))
+
 (deftest retained-irregular-combos-render-as-base-scoped-raw-nodes
   (let [generated (generator/generate-keymap (slurp "examples/1_in.keymap")
                                              (generator/load-config "examples/1.edn"))
