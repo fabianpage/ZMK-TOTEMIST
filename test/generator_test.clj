@@ -276,6 +276,37 @@
       (is (nil? (node-block old-name generated))
           (str old-name " old raw horizontal combo node is not rendered")))))
 
+(deftest vertical-base-combos-render-from-base-scoped-combo-layer
+  (let [generated (generator/generate-keymap (slurp "examples/1_in.keymap")
+                                             (generator/load-config "examples/1.edn"))
+        vertical-combos [{:name "vertical_0_4"
+                          :binding "bindings = <&sk LEFT_GUI>;"
+                          :key-positions "key-positions = <4 14>;"}
+                         {:name "vertical_0_3"
+                          :binding "bindings = <&sk LEFT_ALT>;"
+                          :key-positions "key-positions = <3 13>;"}
+                         {:name "vertical_0_2"
+                          :binding "bindings = <&esc_layerreset>;"
+                          :key-positions "key-positions = <2 12>;"}
+                         {:name "vertical_0_1"
+                          :binding "bindings = <&round_brackets>;"
+                          :key-positions "key-positions = <1 11>;"}
+                         {:name "vertical_0_0"
+                          :binding "bindings = <&backspace_delete>;"
+                          :key-positions "key-positions = <0 10>;"}]
+        old-raw-names ["kpgui" "kpalt" "kpesc" "round_brackets" "backspace_delete"]]
+    (doseq [{:keys [name binding key-positions]} vertical-combos]
+      (let [block (node-block name generated)]
+        (is (str/starts-with? name "vertical_") (str name " has vertical-oriented prefix"))
+        (is block (str name " generated combo node is present"))
+        (when block
+          (is (str/includes? block binding) (str name " renders the expected binding"))
+          (is (str/includes? block key-positions) (str name " preserves key positions"))
+          (is (str/includes? block "layers = <0>;") (str name " is scoped to BASE only")))))
+    (doseq [old-name old-raw-names]
+      (is (nil? (node-block old-name generated))
+          (str old-name " old raw vertical combo node is not rendered")))))
+
 (deftest retained-irregular-combos-render-as-base-scoped-raw-nodes
   (let [generated (generator/generate-keymap (slurp "examples/1_in.keymap")
                                              (generator/load-config "examples/1.edn"))

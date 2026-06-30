@@ -95,9 +95,34 @@
             layers = <0>;
         };
 
-        kpgui {
+        vertical_0_0 {
+            bindings = <&backspace_delete>;
+            key-positions = <0 10>;
+            layers = <0>;
+        };
+
+        vertical_0_1 {
+            bindings = <&round_brackets>;
+            key-positions = <1 11>;
+            layers = <0>;
+        };
+
+        vertical_0_2 {
+            bindings = <&esc_layerreset>;
+            key-positions = <2 12>;
+            layers = <0>;
+        };
+
+        vertical_0_3 {
+            bindings = <&sk LEFT_ALT>;
+            key-positions = <3 13>;
+            layers = <0>;
+        };
+
+        vertical_0_4 {
             bindings = <&sk LEFT_GUI>;
             key-positions = <4 14>;
+            layers = <0>;
         };
 
         kpctrl {
@@ -105,19 +130,9 @@
             key-positions = <14 25>;
         };
 
-        kpalt {
-            bindings = <&sk LEFT_ALT>;
-            key-positions = <3 13>;
-        };
-
         kpcapsword {
             bindings = <&caps_word>;
             key-positions = <13 24>;
-        };
-
-        kpesc {
-            bindings = <&esc_layerreset>;
-            key-positions = <2 12>;
         };
 
         kpspace {
@@ -125,19 +140,9 @@
             key-positions = <23 12>;
         };
 
-        round_brackets {
-            bindings = <&round_brackets>;
-            key-positions = <1 11>;
-        };
-
         square_brackets {
             bindings = <&square_brackets>;
             key-positions = <11 22>;
-        };
-
-        backspace_delete {
-            bindings = <&backspace_delete>;
-            key-positions = <0 10>;
         };
 
         enter {

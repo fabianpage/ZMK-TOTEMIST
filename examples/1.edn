@@ -19,28 +19,24 @@
                  [:none :none :none :DE_V :none :none :none :none :none :none]
                  [:none :none :none :none :DE_J :DE_B :none :none :none :none :none :none]
                  [:none :none :none :none :none :none]]}
-     {:name "kpgui",
-      :body ["bindings = <&sk LEFT_GUI>;" "key-positions = <4 14>;"]}
+     {:name "vertical"
+      :type :combo-layer
+      :row-widths [10 10 12 6]
+      :pattern [[0 0] [1 0]]
+      :layers [:BASE]
+      :bindings [[[:backspace_delete] [:round_brackets] [:esc_layerreset] [:sk :LEFT_ALT] [:sk :LEFT_GUI] :none :none :none :none :none]
+                 [:none :none :none :none :none :none :none :none :none :none]
+                 [:none :none :none :none :none :none :none :none :none :none :none :none]
+                 [:none :none :none :none :none :none]]}
      {:name "kpctrl",
       :body ["bindings = <&sk LCTRL>;" "key-positions = <14 25>;"]}
-     {:name "kpalt",
-      :body ["bindings = <&sk LEFT_ALT>;" "key-positions = <3 13>;"]}
      {:name "kpcapsword",
       :body ["bindings = <&caps_word>;" "key-positions = <13 24>;"]}
-     {:name "kpesc",
-      :body
-      ["bindings = <&esc_layerreset>;" "key-positions = <2 12>;"]}
      {:name "kpspace",
       :body ["bindings = <&kp SPACE>;" "key-positions = <23 12>;"]}
-     {:name "round_brackets",
-      :body
-      ["bindings = <&round_brackets>;" "key-positions = <1 11>;"]}
      {:name "square_brackets",
       :body
       ["bindings = <&square_brackets>;" "key-positions = <11 22>;"]}
-     {:name "backspace_delete",
-      :body
-      ["bindings = <&backspace_delete>;" "key-positions = <0 10>;"]}
      {:name "enter",
       :body ["bindings = <&kp ENTER>;" "key-positions = <10 21>;"]}
      {:name "curly_brackets",
