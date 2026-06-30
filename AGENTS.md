@@ -37,7 +37,3 @@ Do **not** modify firmware config files in `config/` or `build.yaml` unless expl
 - `zephyr/module.yml` points `board_root` to `.` for local shield lookup.
 
 
-## For Clojure codebase exploration
-- Read /Users/fabian/projects/clj-surgeon/skill.md — it teaches you when and how to use clj-surgeon for Clojure structural operations.
-- ALWAYS use /clj-surgeon outline before spawning Explore agents or reading .clj files. Use :ls for form boundaries, then Read only the specific line ranges you need. Only spawn Explore agents for targeted follow-up questions with specific file paths.
-
