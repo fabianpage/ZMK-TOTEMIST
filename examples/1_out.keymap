@@ -141,6 +141,7 @@
         angled_brackets {
             bindings = <&angled_brackets>;
             key-positions = <25 13>;
+            layers = <0>;
         };
 
         punkt_doppelpunkt {
@@ -151,16 +152,19 @@
         komma_strichpunkt {
             bindings = <&komma_strickpunkt>;
             key-positions = <24 12>;
+            layers = <0>;
         };
 
         toBT {
             bindings = <&to 4>;
             key-positions = <1 2 3 4>;
+            layers = <0>;
         };
 
         ae {
             bindings = <&M_UPPER_AEOEUE DE_A_UMLAUT>;
             key-positions = <33 21 32>;
+            layers = <0>;
         };
         // END combos
     };

@@ -29,6 +29,11 @@
        :in (str "examples/" num "_in.keymap")
        :out (str "examples/" num "_out.keymap")})))
 
+(defn ^:private node-block
+  [node-name rendered]
+  (let [pattern (re-pattern (str "(?s)\\n\\s*" (java.util.regex.Pattern/quote node-name) " \\{.*?\\n\\s*\\};"))]
+    (re-find pattern rendered)))
+
 (defmacro ^:private deftest-examples
   "Generate one deftest per discovered example at macro-expansion time."
   []
@@ -217,6 +222,28 @@
          clojure.lang.ExceptionInfo
          #"Unknown layer name"
          (generator/generate-keymap template config)))))
+
+(deftest retained-irregular-combos-render-as-base-scoped-raw-nodes
+  (let [generated (generator/generate-keymap (slurp "examples/1_in.keymap")
+                                             (generator/load-config "examples/1.edn"))
+        retained-combos [{:name "angled_brackets"
+                          :binding "bindings = <&angled_brackets>;"
+                          :key-positions "key-positions = <25 13>;"}
+                         {:name "komma_strichpunkt"
+                          :binding "bindings = <&komma_strickpunkt>;"
+                          :key-positions "key-positions = <24 12>;"}
+                         {:name "toBT"
+                          :binding "bindings = <&to 4>;"
+                          :key-positions "key-positions = <1 2 3 4>;"}
+                         {:name "ae"
+                          :binding "bindings = <&M_UPPER_AEOEUE DE_A_UMLAUT>;"
+                          :key-positions "key-positions = <33 21 32>;"}]]
+    (doseq [{:keys [name binding key-positions]} retained-combos]
+      (let [block (node-block name generated)]
+        (is block (str name " raw combo node is present"))
+        (is (str/includes? block binding) (str name " preserves binding"))
+        (is (str/includes? block key-positions) (str name " preserves key positions"))
+        (is (str/includes? block "layers = <0>;") (str name " is scoped to BASE only"))))))
 
 (deftest combo-layer-skips-out-of-bounds
   (let [template "    // BEGIN combos\n    // END combos\n    // BEGIN keymap\n    // END keymap\n"

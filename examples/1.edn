@@ -53,17 +53,21 @@
       :body
       ["bindings = <&curly_brackets>;" "key-positions = <14 3>;"]}
      {:name "angled_brackets",
+      :layers [:BASE]
       :body
       ["bindings = <&angled_brackets>;" "key-positions = <25 13>;"]}
      {:name "punkt_doppelpunkt",
       :body
       ["bindings = <&punkt_doppelpunkt>;" "key-positions = <2 13>;"]}
      {:name "komma_strichpunkt",
+      :layers [:BASE]
       :body
       ["bindings = <&komma_strickpunkt>;" "key-positions = <24 12>;"]}
      {:name "toBT",
+      :layers [:BASE]
       :body ["bindings = <&to 4>;" "key-positions = <1 2 3 4>;"]}
      {:name "ae",
+      :layers [:BASE]
       :body
       ["bindings = <&M_UPPER_AEOEUE DE_A_UMLAUT>;"
        "key-positions = <33 21 32>;"]}]}]
