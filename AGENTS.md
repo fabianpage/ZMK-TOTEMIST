@@ -36,6 +36,6 @@ Do **not** modify firmware config files in `config/` or `build.yaml` unless expl
 - `build.yaml` defines the build matrix; `config/west.yml` fetches external modules.
 - `zephyr/module.yml` points `board_root` to `.` for local shield lookup.
 
-## Clojure
+## Clojure (all files which end with .clj)
  - use the clj-surgeon skill to list/analyze and edit clojure files. Berofe reading a clojure file start at least with clj-surgeon :op :ls :file filename
  - use the brepl skill to run clojure code
