@@ -307,6 +307,44 @@
       (is (nil? (node-block old-name generated))
           (str old-name " old raw vertical combo node is not rendered")))))
 
+(deftest diagonal-base-combos-render-from-base-scoped-combo-layers
+  (let [generated (generator/generate-keymap (slurp "examples/1_in.keymap")
+                                             (generator/load-config "examples/1.edn"))
+        diagonal-combos [{:name "diagonal_down_right_1_4"
+                          :binding "bindings = <&sk LCTRL>;"
+                          :key-positions "key-positions = <14 25>;"}
+                         {:name "diagonal_down_right_1_3"
+                          :binding "bindings = <&caps_word>;"
+                          :key-positions "key-positions = <13 24>;"}
+                         {:name "diagonal_down_right_reverse_2_3"
+                          :binding "bindings = <&kp SPACE>;"
+                          :key-positions "key-positions = <23 12>;"}
+                         {:name "diagonal_down_right_1_1"
+                          :binding "bindings = <&square_brackets>;"
+                          :key-positions "key-positions = <11 22>;"}
+                         {:name "diagonal_down_right_1_0"
+                          :binding "bindings = <&kp ENTER>;"
+                          :key-positions "key-positions = <10 21>;"}
+                         {:name "diagonal_down_right_reverse_1_4"
+                          :binding "bindings = <&curly_brackets>;"
+                          :key-positions "key-positions = <14 3>;"}
+                         {:name "diagonal_down_right_0_2"
+                          :binding "bindings = <&punkt_doppelpunkt>;"
+                          :key-positions "key-positions = <2 13>;"}]
+        old-raw-names ["kpctrl" "kpcapsword" "kpspace" "square_brackets"
+                       "enter" "curly_brackets" "punkt_doppelpunkt"]]
+    (doseq [{:keys [name binding key-positions]} diagonal-combos]
+      (let [block (node-block name generated)]
+        (is (str/starts-with? name "diagonal_") (str name " has diagonal-oriented prefix"))
+        (is block (str name " generated combo node is present"))
+        (when block
+          (is (str/includes? block binding) (str name " renders the expected binding"))
+          (is (str/includes? block key-positions) (str name " preserves key positions"))
+          (is (str/includes? block "layers = <0>;") (str name " is scoped to BASE only")))))
+    (doseq [old-name old-raw-names]
+      (is (nil? (node-block old-name generated))
+          (str old-name " old raw diagonal combo node is not rendered")))))
+
 (deftest retained-irregular-combos-render-as-base-scoped-raw-nodes
   (let [generated (generator/generate-keymap (slurp "examples/1_in.keymap")
                                              (generator/load-config "examples/1.edn"))

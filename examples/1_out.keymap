@@ -125,45 +125,52 @@
             layers = <0>;
         };
 
-        kpctrl {
-            bindings = <&sk LCTRL>;
-            key-positions = <14 25>;
+        diagonal_down_right_0_2 {
+            bindings = <&punkt_doppelpunkt>;
+            key-positions = <2 13>;
+            layers = <0>;
         };
 
-        kpcapsword {
-            bindings = <&caps_word>;
-            key-positions = <13 24>;
-        };
-
-        kpspace {
-            bindings = <&kp SPACE>;
-            key-positions = <23 12>;
-        };
-
-        square_brackets {
-            bindings = <&square_brackets>;
-            key-positions = <11 22>;
-        };
-
-        enter {
+        diagonal_down_right_1_0 {
             bindings = <&kp ENTER>;
             key-positions = <10 21>;
+            layers = <0>;
         };
 
-        curly_brackets {
+        diagonal_down_right_1_1 {
+            bindings = <&square_brackets>;
+            key-positions = <11 22>;
+            layers = <0>;
+        };
+
+        diagonal_down_right_1_3 {
+            bindings = <&caps_word>;
+            key-positions = <13 24>;
+            layers = <0>;
+        };
+
+        diagonal_down_right_1_4 {
+            bindings = <&sk LCTRL>;
+            key-positions = <14 25>;
+            layers = <0>;
+        };
+
+        diagonal_down_right_reverse_1_4 {
             bindings = <&curly_brackets>;
             key-positions = <14 3>;
+            layers = <0>;
+        };
+
+        diagonal_down_right_reverse_2_3 {
+            bindings = <&kp SPACE>;
+            key-positions = <23 12>;
+            layers = <0>;
         };
 
         angled_brackets {
             bindings = <&angled_brackets>;
             key-positions = <25 13>;
             layers = <0>;
-        };
-
-        punkt_doppelpunkt {
-            bindings = <&punkt_doppelpunkt>;
-            key-positions = <2 13>;
         };
 
         komma_strichpunkt {
