@@ -162,6 +162,62 @@
         generated (generator/generate-keymap template config)]
     (is (str/includes? generated "layers = <0>;"))))
 
+(deftest raw-node-resolves-layer-names
+  (let [template "    // BEGIN combos
+    // END combos
+    // BEGIN keymap
+    // END keymap
+"
+        config {:regions [[:combos
+                           {:raw-body? true
+                            :nodes [{:name "raw_combo"
+                                     :body ["bindings = <&kp ESC>;"
+                                            "key-positions = <0 1>;"
+                                            "timeout-ms = <30>;"]
+                                     :layers [:BASE]}]}]
+                          [:keymap
+                           {:nodes [{:name "BASE"
+                                     :bindings [[:Q :W :E]
+                                                [:A :S :D]]}]}]]}
+        generated (generator/generate-keymap template config)]
+    (is (str/includes? generated "raw_combo {"))
+    (is (str/includes? generated "bindings = <&kp ESC>;"))
+    (is (str/includes? generated "layers = <0>;"))))
+
+(deftest raw-node-without-layers-remains-supported
+  (let [template "    // BEGIN combos
+    // END combos
+"
+        config {:regions [[:combos
+                           {:raw-body? true
+                            :nodes [{:name "raw_combo"
+                                     :body ["bindings = <&kp ESC>;"
+                                            "key-positions = <0 1>;"
+                                            "timeout-ms = <30>;"]}]}]]}
+        generated (generator/generate-keymap template config)]
+    (is (str/includes? generated "bindings = <&kp ESC>;"))
+    (is (not (str/includes? generated "layers = <")))))
+
+(deftest raw-node-unknown-layer-name-throws
+  (let [template "    // BEGIN combos
+    // END combos
+    // BEGIN keymap
+    // END keymap
+"
+        config {:regions [[:combos
+                           {:raw-body? true
+                            :nodes [{:name "raw_combo"
+                                     :body ["bindings = <&kp ESC>;"
+                                            "key-positions = <0 1>;"]
+                                     :layers [:NOT_A_LAYER]}]}]
+                          [:keymap
+                           {:nodes [{:name "BASE"
+                                     :bindings [[:Q :W :E]]}]}]]}]
+    (is (thrown-with-msg?
+         clojure.lang.ExceptionInfo
+         #"Unknown layer name"
+         (generator/generate-keymap template config)))))
+
 (deftest combo-layer-skips-out-of-bounds
   (let [template "    // BEGIN combos\n    // END combos\n    // BEGIN keymap\n    // END keymap\n"
         config {:regions [[:combos

@@ -222,6 +222,20 @@
             [(str (indent (inc level)) ">;")
              (str (indent level) "};")])))
 
+(defn resolve-layer-nums
+  "Resolve layer references (keywords or raw indexes) into numeric indexes.
+   Keywords are resolved via layer-index-map and unknown names throw." 
+  [layers layer-index-map]
+  (when (seq layers)
+    (map (fn [layer]
+           (if (keyword? layer)
+             (if-let [idx (get layer-index-map (clojure.core/name layer))]
+               idx
+               (throw (ex-info (str "Unknown layer name: " layer)
+                               {:layer layer :available (keys layer-index-map)})))
+             layer))
+         layers)))
+
 (defn render-combo-layer
   "Render a :combo-layer node into one or more ZMK combo DT nodes.
    :row-widths is required. :pattern defines relative offsets.
@@ -230,15 +244,7 @@
   [{:keys [name row-widths pattern bindings layers] :as node} level {:keys [layer-index-map]}]
   (when-not row-widths
     (throw (ex-info ":row-widths is required for :combo-layer" {:node node})))
-  (let [layer-nums (when (seq layers)
-                       (map (fn [layer]
-                              (if (keyword? layer)
-                                (if-let [idx (get layer-index-map (clojure.core/name layer))]
-                                  idx
-                                  (throw (ex-info (str "Unknown layer name: " layer)
-                                                  {:layer layer :available (keys layer-index-map)})))
-                                layer))
-                             layers))
+  (let [layer-nums (resolve-layer-nums layers layer-index-map)
         layer-line (when (seq layer-nums)
                      (str (indent (inc level)) "layers = <" (str/join " " layer-nums) ">;"))
         combos (for [r (range (count bindings))
@@ -258,23 +264,26 @@
     (str/join "\n\n" combos)))
 
 (defn render-node
-  [{:keys [type] :as node} level raw-body? opts]
+  [{:keys [type layers] :as node} level raw-body? {:keys [layer-index-map] :as opts}]
   (case type
     :combo-layer (render-combo-layer node level opts)
     (if (:bindings node)
       (render-layer node level)
-      (str/join
-       "\n"
-       (concat [(str (indent level)
-                     (:name node)
-                     (when (:label node)
-                       (str ": " (:label node)))
-                     " {")]
-               (if raw-body?
-                 (:body node)
-                 (map #(render-line (inc level) %) (:body node)))
-               [(str (indent level) "};")])))))
-
+      (let [layer-nums (resolve-layer-nums layers layer-index-map)
+            layer-line (when (seq layer-nums)
+                         (str (indent (inc level)) "layers = <" (str/join " " layer-nums) ">;"))]
+        (str/join
+         "\n"
+         (concat [(str (indent level)
+                       (:name node)
+                       (when (:label node)
+                         (str ": " (:label node)))
+                       " {")]
+                 (if raw-body?
+                   (:body node)
+                   (map #(render-line (inc level) %) (:body node)))
+                 (when layer-line [layer-line])
+                 [(str (indent level) "};")]))))))
 (defn render-nodes
   [nodes level raw-body? opts]
   (str/join "\n" (interpose "" (map #(render-node % level raw-body? opts) nodes))))
