@@ -15,3 +15,6 @@ devenv.local.yaml
 
 # pre-commit
 .pre-commit-config.yaml
+
+# Local automation logs
+logs/issue-runner/
