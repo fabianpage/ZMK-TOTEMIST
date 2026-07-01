@@ -40,6 +40,34 @@
   :left-thumb-nav2
   {:bindings [[:trans :trans :trans]]}
   :right-thumb-nav2
+  {:bindings [[:trans :trans :trans]]}
+  :left-main-num-rows-0-1
+  {:bindings [[:trans [:n3ue3] [:n2ue2] [:n1ue1] [:minus_underscore]]
+              [:trans [:n6ue6] [:n5ue5] [:n4ue4] [:n0ue0]]]}
+  :right-main-num-rows-0-1
+  {:bindings [[:trans :trans :trans :trans :trans]
+              [:trans :trans :trans :trans :trans]]}
+  :left-main-num-row-2
+  {:bindings [[:trans :trans [:n9ue9] [:n8ue8] [:n7ue7] [:mal_plus]]]}
+  :right-main-num-row-2
+  {:bindings [[:trans :trans :trans :trans :trans :trans]]}
+  :left-thumb-num
+  {:bindings [[:trans :trans :trans]]}
+  :right-thumb-num
+  {:bindings [[:trans :trans :trans]]}
+  :left-main-bt-rows-0-1
+  {:bindings [[[:bt :BT_CLR_ALL] [:bt :BT_SEL 2] [:bt :BT_SEL 1] [:bt :BT_SEL 0] [:bt :BT_CLR]]
+              [:trans :trans :trans [:out :OUT_BLE] :trans]]}
+  :right-main-bt-rows-0-1
+  {:bindings [[:trans :trans :trans :trans :trans]
+              [:trans :trans :trans :trans :trans]]}
+  :left-main-bt-row-2
+  {:bindings [[:trans [:esc_layerreset] :trans :trans [:out :OUT_USB] [:bootloader]]]}
+  :right-main-bt-row-2
+  {:bindings [[:trans :trans :trans :trans :trans :trans]]}
+  :left-thumb-bt
+  {:bindings [[:trans :trans :trans]]}
+  :right-thumb-bt
   {:bindings [[:trans :trans :trans]]}}
  :regions
  [[:combos
@@ -425,14 +453,18 @@
                    {:tile :left-thumb-nav2 :pos [0 3]}
                    {:tile :right-thumb-nav2 :pos [3 3]}]}
      {:name "Num"
-      :bindings
-      [[:trans [:n3ue3] [:n2ue2] [:n1ue1] [:minus_underscore] :trans :trans :trans :trans :trans]
-       [:trans [:n6ue6] [:n5ue5] [:n4ue4] [:n0ue0] :trans :trans :trans :trans :trans]
-       [:trans :trans [:n9ue9] [:n8ue8] [:n7ue7] [:mal_plus] :trans :trans :trans :trans :trans :trans]
-       [:trans :trans :trans :trans :trans :trans]]}
+      :row-widths [10 10 12 6]
+      :placements [{:tile :left-main-num-rows-0-1 :pos [0 0]}
+                   {:tile :right-main-num-rows-0-1 :pos [5 0]}
+                   {:tile :left-main-num-row-2 :pos [0 2]}
+                   {:tile :right-main-num-row-2 :pos [6 2]}
+                   {:tile :left-thumb-num :pos [0 3]}
+                   {:tile :right-thumb-num :pos [3 3]}]}
      {:name "BT"
-      :bindings
-      [[[:bt :BT_CLR_ALL] [:bt :BT_SEL 2] [:bt :BT_SEL 1] [:bt :BT_SEL 0] [:bt :BT_CLR] :trans :trans :trans :trans :trans]
-       [:trans :trans :trans [:out :OUT_BLE] :trans :trans :trans :trans :trans :trans]
-       [:trans [:esc_layerreset] :trans :trans [:out :OUT_USB] [:bootloader] :trans :trans :trans :trans :trans :trans]
-       [:trans :trans :trans :trans :trans :trans]]}]}]]}
+      :row-widths [10 10 12 6]
+      :placements [{:tile :left-main-bt-rows-0-1 :pos [0 0]}
+                   {:tile :right-main-bt-rows-0-1 :pos [5 0]}
+                   {:tile :left-main-bt-row-2 :pos [0 2]}
+                   {:tile :right-main-bt-row-2 :pos [6 2]}
+                   {:tile :left-thumb-bt :pos [0 3]}
+                   {:tile :right-thumb-bt :pos [3 3]}]}]}]]}
