@@ -46,6 +46,14 @@
 
 (deftest-examples)
 
+(deftest totem-config-generates-captured-baseline
+  (let [config (generator/load-config "totem_config.edn")
+        template (slurp "totem_template.keymap")
+        expected (slurp "examples/totem_generated_baseline.keymap")
+        generated (generator/generate-keymap template config)]
+    (is (= expected generated)
+        "totem_config.edn + totem_template.keymap must regenerate the captured pre-refactor keymap baseline exactly.")))
+
 (deftest missing-markers-throws
   (let [config {:regions [[:keymap {:raw-body? true
                                     :nodes [{:name "base_layer"
