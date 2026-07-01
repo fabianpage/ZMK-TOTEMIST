@@ -12,7 +12,35 @@
   :left-thumb-base
   {:bindings [[[:sl 1] [:sk :LEFT_SHIFT] [:sl 2]]]}
   :right-thumb-base
-  {:bindings [[:C :A :B]]}}
+  {:bindings [[:C :A :B]]}
+  :left-main-nav1-rows-0-1
+  {:bindings [[[:B_UE] :END :PG_UP :PG_DN :HOME]
+              [[:B_OE] :RIGHT_ARROW :UP :DOWN :LEFT_ARROW]]}
+  :right-main-nav1-rows-0-1
+  {:bindings [[:N1 :trans :trans :trans :trans]
+              [:trans :trans :trans :trans :trans]]}
+  :left-main-nav1-row-2
+  {:bindings [[:trans :DE_A_UMLAUT :N9 [:double_single_quote] [:back_front_tick] [:hash_pipe]]]}
+  :right-main-nav1-row-2
+  {:bindings [[:N3 :trans :trans :trans :trans :trans]]}
+  :left-thumb-nav1
+  {:bindings [[:trans :trans :trans]]}
+  :right-thumb-nav1
+  {:bindings [[:trans :trans :trans]]}
+  :left-main-nav2-rows-0-1
+  {:bindings [[[:frage_ausrufe_zeichen] [:mac_prev_next_window] [:swapper] [:tmux_next_pre] [:kp "LC(DE_U_UMLAUT)"]]
+              [[:at_equal] [:lCl] [:kCk] [:jCj] [:hCh]]]}
+  :right-main-nav2-rows-0-1
+  {:bindings [[:trans :trans :trans :trans :trans]
+              [:trans :trans :trans :trans :trans]]}
+  :left-main-nav2-row-2
+  {:bindings [[:trans [:slash_backslash] [:dollar_ampersand] :trans [:prozent_ringli] [:daechli_tilde]]]}
+  :right-main-nav2-row-2
+  {:bindings [[:trans :trans :trans :trans :trans :trans]]}
+  :left-thumb-nav2
+  {:bindings [[:trans :trans :trans]]}
+  :right-thumb-nav2
+  {:bindings [[:trans :trans :trans]]}}
  :regions
  [[:combos
    {:nodes
@@ -381,17 +409,21 @@
                    {:tile :left-thumb-base :pos [0 3]}
                    {:tile :right-thumb-base :pos [3 3]}]}
      {:name "Nav1"
-      :bindings
-      [[[:B_UE] :END :PG_UP :PG_DN :HOME :N1 :trans :trans :trans :trans]
-       [[:B_OE] :RIGHT_ARROW :UP :DOWN :LEFT_ARROW :trans :trans :trans :trans :trans]
-       [:trans :DE_A_UMLAUT :N9 [:double_single_quote] [:back_front_tick] [:hash_pipe] :N3 :trans :trans :trans :trans :trans]
-       [:trans :trans :trans :trans :trans :trans]]}
+      :row-widths [10 10 12 6]
+      :placements [{:tile :left-main-nav1-rows-0-1 :pos [0 0]}
+                   {:tile :right-main-nav1-rows-0-1 :pos [5 0]}
+                   {:tile :left-main-nav1-row-2 :pos [0 2]}
+                   {:tile :right-main-nav1-row-2 :pos [6 2]}
+                   {:tile :left-thumb-nav1 :pos [0 3]}
+                   {:tile :right-thumb-nav1 :pos [3 3]}]}
      {:name "Nav2"
-      :bindings
-      [[[:frage_ausrufe_zeichen] [:mac_prev_next_window] [:swapper] [:tmux_next_pre] [:kp "LC(DE_U_UMLAUT)"] :trans :trans :trans :trans :trans]
-       [[:at_equal] [:lCl] [:kCk] [:jCj] [:hCh] :trans :trans :trans :trans :trans]
-       [:trans [:slash_backslash] [:dollar_ampersand] :trans [:prozent_ringli] [:daechli_tilde] :trans :trans :trans :trans :trans :trans]
-       [:trans :trans :trans :trans :trans :trans]]}
+      :row-widths [10 10 12 6]
+      :placements [{:tile :left-main-nav2-rows-0-1 :pos [0 0]}
+                   {:tile :right-main-nav2-rows-0-1 :pos [5 0]}
+                   {:tile :left-main-nav2-row-2 :pos [0 2]}
+                   {:tile :right-main-nav2-row-2 :pos [6 2]}
+                   {:tile :left-thumb-nav2 :pos [0 3]}
+                   {:tile :right-thumb-nav2 :pos [3 3]}]}
      {:name "Num"
       :bindings
       [[:trans [:n3ue3] [:n2ue2] [:n1ue1] [:minus_underscore] :trans :trans :trans :trans :trans]

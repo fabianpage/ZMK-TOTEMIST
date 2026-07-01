@@ -2,9 +2,10 @@
 
 (ns scripts.implement-issues
   (:require [babashka.fs :as fs]
+            [babashka.process :refer [shell]]
             [clojure.java.io :as io]
             [clojure.string :as str])
-  (:import [java.lang ProcessBuilder]
+  (:import [java.io OutputStream]
            [java.nio.charset StandardCharsets]))
 
 (def issues-dir "issues")
@@ -32,34 +33,44 @@
 (defn commit-message [{:keys [number title]}]
   (str "Implement issue " number ": " (str/replace title #"-" " ")))
 
-(defn print-and-log! [log-writer s]
-  (print s)
-  (flush)
-  (.write log-writer s)
-  (.flush log-writer))
+(defn print-and-log! [log-stream s]
+  (let [bytes (.getBytes s StandardCharsets/UTF_8)]
+    (.write System/out bytes)
+    (.flush System/out)
+    (.write log-stream bytes)
+    (.flush log-stream)))
 
-(defn title! [log-writer title]
-  (print-and-log! log-writer (str "\n\n=== " title " ===\n")))
+(defn title! [log-stream title]
+  (print-and-log! log-stream (str "\n\n=== " title " ===\n")))
 
-(defn run-command! [log-writer title args]
-  (title! log-writer (str title "\n$ " (pr-str args)))
-  (let [process (-> (ProcessBuilder. ^java.util.List args)
-                    (.redirectErrorStream true)
-                    (.start))
-        buffer (byte-array 8192)]
-    (with-open [stream (.getInputStream process)]
-      (loop []
-        (let [n (.read stream buffer)]
-          (when (pos? n)
-            (let [chunk (String. buffer 0 n StandardCharsets/UTF_8)]
-              (print-and-log! log-writer chunk))
-            (recur)))))
-    (let [exit (.waitFor process)]
-      (print-and-log! log-writer (str "\n[exit " exit "]\n"))
-      exit)))
+(defn tee-output-stream [log-stream]
+  (proxy [OutputStream] []
+    (write
+      ([b]
+       (.write System/out b)
+       (.write log-stream b)
+       (.flush System/out)
+       (.flush log-stream))
+      ([bytes off len]
+       (.write System/out bytes off len)
+       (.write log-stream bytes off len)
+       (.flush System/out)
+       (.flush log-stream)))
+    (flush []
+      (.flush System/out)
+      (.flush log-stream))))
 
-(defn require-success! [issue log-writer title args]
-  (let [exit (run-command! log-writer title args)]
+(defn run-command! [log-stream title args]
+  (title! log-stream (str title "\n$ " (pr-str args)))
+  (let [{:keys [exit]} (shell {:continue true
+                               :err :out
+                               :out (tee-output-stream log-stream)
+                               :cmd args})]
+    (print-and-log! log-stream (str "\n[exit " exit "]\n"))
+    exit))
+
+(defn require-success! [issue log-stream title args]
+  (let [exit (run-command! log-stream title args)]
     (when-not (zero? exit)
       (throw (ex-info (str title " failed")
                       {:issue (:file-name issue)
@@ -69,17 +80,17 @@
 (defn run-issue! [{:keys [path file-name stem] :as issue}]
   (fs/create-dirs logs-dir)
   (let [log-path (fs/path logs-dir (str stem ".log"))]
-    (with-open [log-writer (io/writer (fs/file log-path) :append true)]
-      (title! log-writer (str "Issue " file-name))
-      (require-success! issue log-writer "Implement issue with pi"
-                        ["pi" "-p" "--mode" "json" "/skill:implement" (str "@" path)])
-      (require-success! issue log-writer "Run tests"
+    (with-open [log-stream (io/output-stream (fs/file log-path) :append true)]
+      (title! log-stream (str "Issue " file-name))
+      (require-success! issue log-stream "Implement issue with pi"
+                        ["pi" "-p" "/skill:implement" (str "@" path)])
+      (require-success! issue log-stream "Run tests"
                         ["bb" "test"])
-      (require-success! issue log-writer "Delete completed issue"
+      (require-success! issue log-stream "Delete completed issue"
                         ["rm" (str path)])
-      (require-success! issue log-writer "Stage changes"
+      (require-success! issue log-stream "Stage changes"
                         ["git" "add" "-A"])
-      (require-success! issue log-writer "Commit changes"
+      (require-success! issue log-stream "Commit changes"
                         ["git" "commit" "-m" (commit-message issue)]))))
 
 (defn -main [& _args]
