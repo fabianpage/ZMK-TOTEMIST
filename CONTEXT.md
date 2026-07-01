@@ -8,6 +8,7 @@
 - **Combo-layer** — A node in the `:combos` region. Defines a grid of combo trigger cells plus a `:pattern` (relative offsets) and `:row-widths`. Renders into multiple ZMK combo nodes.
 - **Alias** — A keyword mapping in the config (e.g. `{:S [:lt 3 :DE_S]}`). Aliases are resolved globally before any rendering or assembly.
 - **Tile** — A reusable named binding grid. Defined in the top-level `:tiles` map. Does not render directly; exists only in the config data structure.
+- **Physical-half Tile** — A Tile representing one hand-side region of the keyboard layout, used to make the physical shape of a Layer or Combo-layer explicit without requiring symmetry.
 - **Placement** — A tile referenced at a position within a larger grid, with optional mirroring. `{:tile :name :pos [col row] :mirror :horizontal}`.
 - **Assembled grid** — The flat binding grid produced by merging placements into a container with given `:row-widths` and an `:empty` fill cell.
 

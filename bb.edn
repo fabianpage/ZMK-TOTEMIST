@@ -1,6 +1,42 @@
 {:paths ["." "test"]
  :tasks
- {test {:doc "Run Babashka tests"
+ {generate {:doc "Generate config/totem.keymap from totem_config.edn + totem_template.keymap"
+            :task (let [exit (:exit (clojure.java.shell/sh
+                                     "bb" "generator.clj"
+                                     "--config" "totem_config.edn"
+                                     "--input" "totem_template.keymap"
+                                     "--output" "config/totem.keymap"))]
+                    (if (zero? exit)
+                      (println "Generated config/totem.keymap")
+                      (throw (ex-info "Generator failed" {:exit exit}))))}
+  verify-totem-equivalence {:doc "Regenerate Totem keymap and diff it against the pre-refactor baseline"
+                            :task (let [baseline "examples/totem_generated_baseline.keymap"
+                                        generated-file (java.io.File/createTempFile "totem-generated-" ".keymap")
+                                        generated (.getPath generated-file)]
+                                    (try
+                                      (let [{generate-exit :exit generate-err :err}
+                                            (clojure.java.shell/sh
+                                             "bb" "generator.clj"
+                                             "--config" "totem_config.edn"
+                                             "--input" "totem_template.keymap"
+                                             "--output" generated)]
+                                        (when-not (zero? generate-exit)
+                                          (print generate-err)
+                                          (throw (ex-info "Generator failed" {:exit generate-exit})))
+                                        (let [{diff-exit :exit diff-out :out diff-err :err}
+                                              (clojure.java.shell/sh "diff" "-u" baseline generated)]
+                                          (if (zero? diff-exit)
+                                            (println "Generated Totem keymap matches" baseline)
+                                            (do
+                                              (print diff-out)
+                                              (print diff-err)
+                                              (throw (ex-info "Generated Totem keymap differs from baseline"
+                                                              {:baseline baseline
+                                                               :generated generated
+                                                               :exit diff-exit}))))))
+                                      (finally
+                                        (.delete generated-file))))}
+  test {:doc "Run Babashka tests"
         :extra-deps {io.github.matthewdowney/rich-comment-tests {:git/url "https://github.com/matthewdowney/rich-comment-tests.git"
                                                                   :git/tag "v1.0.3"
                                                                   :git/sha "a8711e9"}}

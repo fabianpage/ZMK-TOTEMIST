@@ -1,0 +1,17 @@
+{:tiles
+ {:qrow {:bindings [[:Q :W :E :R]]}
+  :arow {:bindings [[:A :S :D :F]]}}
+ :regions
+ [[:combos
+   {:nodes [{:name "diag"
+              :type :combo-layer
+              :row-widths [8 8]
+              :pattern [[0 0] [1 1]]
+              :placements [{:tile :qrow :pos [0 0]}
+                           {:tile :qrow :pos [4 0] :mirror :horizontal}
+                           {:tile :arow :pos [0 1]}
+                           {:tile :arow :pos [4 1] :mirror :horizontal}]}]}]
+  [:keymap
+   {:nodes [{:name "BASE"
+             :bindings [[:Q :W :E :R :R :E :W :Q]
+                        [:A :S :D :F :F :D :S :A]]}]}]]}

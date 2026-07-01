@@ -135,6 +135,63 @@
      (make-empty-grid row-widths empty)
      placements)))
 
+(defn resolve-tile-bindings
+  "Recursively resolve a tile from the registry. If the tile has :placements
+   and :row-widths, assemble its bindings by recursively resolving all
+   referenced tiles first. Detects cycles using visited-chain.
+   Returns [resolved-tile updated-tiles]."
+  [tile-name tiles visited-chain]
+  (when (contains? (set visited-chain) tile-name)
+    (throw (ex-info (str "Tile cycle detected: " (str/join " -> " (concat visited-chain [tile-name])))
+                    {:cycle (concat visited-chain [tile-name])
+                     :tile tile-name})))
+  (let [tile (get tiles tile-name)]
+    (cond
+      ;; Already has inline bindings - done
+      (:bindings tile)
+      [tile tiles]
+
+      ;; Has placements - assemble recursively
+      (:placements tile)
+      (let [row-widths (:row-widths tile)
+            _ (when-not row-widths
+                (throw (ex-info (str "Tile " tile-name " has :placements but no :row-widths")
+                                {:tile tile-name})))
+            child-tile-names (distinct (map :tile (:placements tile)))
+            ;; Recursively resolve any child tiles that don't yet have :bindings
+            [resolved-tiles _]
+            (reduce (fn [[rtiles _] child-name]
+                      (if (get-in rtiles [child-name :bindings])
+                        [rtiles rtiles]
+                        (let [[child resolved-rtiles]
+                              (resolve-tile-bindings child-name rtiles (conj visited-chain tile-name))]
+                          [(assoc resolved-rtiles child-name child) resolved-rtiles])))
+                    [tiles tiles]
+                    child-tile-names)
+            empty-cell (or (:empty tile) :trans)
+            clip? (boolean (:clip? tile))
+            assembled (assemble-placements (:placements tile)
+                                           row-widths
+                                           resolved-tiles
+                                           {:empty empty-cell :clip? clip?})]
+        [(assoc tile :bindings assembled) resolved-tiles])
+
+      ;; No bindings, no placements - return as-is
+      :else
+      [tile tiles])))
+
+(defn resolve-all-tiles
+  "Resolve all tiles in the registry that have :placements into :bindings.
+   Returns an updated tiles map."
+  [tiles]
+  (reduce (fn [acc [tile-name _]]
+            (if (get-in acc [tile-name :bindings])
+              acc
+              (let [[resolved updated] (resolve-tile-bindings tile-name acc [])]
+                (assoc updated tile-name resolved))))
+          tiles
+          tiles))
+
 (defn- resolve-placements-node
   "If node has :placements but no :bindings, assemble a flat :bindings grid.
    Otherwise return node unchanged."
@@ -310,6 +367,7 @@
   [template config]
   (let [config (-> config
                    expand-aliases
+                   (update :tiles resolve-all-tiles)
                    resolve-placements)
         layer-index-map (extract-layer-indexes config)
         opts {:layer-index-map layer-index-map}]

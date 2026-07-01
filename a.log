@@ -1,0 +1,71 @@
+
+
+=== huhu
+$ ["ls"] ===
+a.log
+AGENTS.md
+bb.edn
+boards
+build.yaml
+config
+CONTEXT.md
+devenv.lock
+devenv.nix
+devenv.yaml
+docs
+examples
+generator.clj
+issues
+logs
+README.md
+scripts
+test
+totem_config.edn
+totem_template.keymap
+zephyr
+
+[exit 0]
+
+
+=== huhu
+$ ["ls" "-la"] ===
+total 192
+drwxr-xr-x@ 33 fabian  staff   1056 Jul  1 10:58 .
+drwxr-xr-x  15 fabian  staff    480 Jun 30 11:34 ..
+drwxr-xr-x@  3 fabian  staff     96 Jun 26 11:02 .agents
+drwxr-xr-x@  4 fabian  staff    128 Jun 24 17:17 .clj-kondo
+-rw-r--r--@  1 fabian  staff   8196 Jun 26 09:54 .DS_Store
+drwxr-xr-x@ 19 fabian  staff    608 Jul  1 10:54 .git
+drwxr-xr-x@  4 fabian  staff    128 Jun 26 10:33 .github
+-rw-r--r--@  1 fabian  staff    234 Jul  1 10:22 .gitignore
+drwxr-xr-x@  3 fabian  staff     96 Jun 24 17:17 .lsp
+-rw-r--r--@  1 fabian  staff      5 Jun 29 10:22 .nrepl-port
+drwxr-xr-x@  3 fabian  staff     96 Jun 23 12:45 .opencode
+drwxr-xr-x@  3 fabian  staff     96 Jun 24 17:17 .portal
+-rw-r--r--@  1 fabian  staff    267 Jul  1 11:00 a.log
+-rw-r--r--@  1 fabian  staff   1778 Jun 30 11:33 AGENTS.md
+-rw-r--r--@  1 fabian  staff   4019 Jul  1 09:49 bb.edn
+drwxr-xr-x@  3 fabian  staff     96 Feb 16 13:37 boards
+-rw-r--r--@  1 fabian  staff    985 Feb 16 13:37 build.yaml
+drwxr-xr-x@  8 fabian  staff    256 Jun 30 13:31 config
+-rw-r--r--@  1 fabian  staff   2396 Jun 30 13:43 CONTEXT.md
+-rw-r--r--@  1 fabian  staff   2610 Jun 23 12:45 devenv.lock
+-rw-r--r--@  1 fabian  staff   1048 Jun 23 12:45 devenv.nix
+-rw-r--r--@  1 fabian  staff    228 Jun 23 12:45 devenv.yaml
+drwxr-xr-x@  5 fabian  staff    160 Jul  1 09:33 docs
+drwxr-xr-x@ 27 fabian  staff    864 Jul  1 09:49 examples
+-rw-r--r--@  1 fabian  staff  16189 Jun 30 13:31 generator.clj
+drwxr-xr-x@  5 fabian  staff    160 Jul  1 10:04 issues
+drwxr-xr-x@  3 fabian  staff     96 Jul  1 10:25 logs
+-rw-r--r--@  1 fabian  staff    609 Jul  1 09:49 README.md
+drwxr-xr-x@  3 fabian  staff     96 Jul  1 10:56 scripts
+drwxr-xr-x@  3 fabian  staff     96 Jun 30 13:31 test
+-rw-r--r--@  1 fabian  staff  18569 Jul  1 10:02 totem_config.edn
+-rw-r--r--@  1 fabian  staff    898 Jun 30 13:31 totem_template.keymap
+drwxr-xr-x@  3 fabian  staff     96 Feb 16 13:37 zephyr
+
+[exit 0]
+
+
+=== huhu
+$ ["pi" "-p" "hallo"] ===
