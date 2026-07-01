@@ -1,4 +1,19 @@
-{:regions
+{:tiles
+ {:left-main-base-rows-0-1
+  {:bindings [[:P :O :I :U :T]
+              [[:lt 3 :DE_S] :A :E :N :R]]}
+  :right-main-base-rows-0-1
+  {:bindings [[[:bt :BT_SEL 0] [:bt :BT_SEL 1] [:out :OUT_TOG] [:bootloader] [:bt :BT_CLR_ALL]]
+              [:H :D :DE_F :DE_H [:mt :RGUI :O]]]}
+  :left-main-base-row-2
+  {:bindings [[:DE_G :D :L :C :F :H]]}
+  :right-main-base-row-2
+  {:bindings [[:K :M :COMMA :DOT :FSLH :FSLH]]}
+  :left-thumb-base
+  {:bindings [[[:sl 1] [:sk :LEFT_SHIFT] [:sl 2]]]}
+  :right-thumb-base
+  {:bindings [[:C :A :B]]}}
+ :regions
  [[:combos
    {:nodes
     [{:name "horiz_base"
@@ -358,11 +373,13 @@
   [:keymap
    {:nodes
     [{:name "BASE"
-      :bindings
-      [[:P :O :I :U :T [:bt :BT_SEL 0] [:bt :BT_SEL 1] [:out :OUT_TOG] [:bootloader] [:bt :BT_CLR_ALL]]
-       [[:lt 3 :DE_S] :A :E :N :R :H :D :DE_F :DE_H [:mt :RGUI :O]]
-       [:DE_G :D :L :C :F :H :K :M :COMMA :DOT :FSLH :FSLH]
-       [[:sl 1] [:sk :LEFT_SHIFT] [:sl 2] :C :A :B]]}
+      :row-widths [10 10 12 6]
+      :placements [{:tile :left-main-base-rows-0-1 :pos [0 0]}
+                   {:tile :right-main-base-rows-0-1 :pos [5 0]}
+                   {:tile :left-main-base-row-2 :pos [0 2]}
+                   {:tile :right-main-base-row-2 :pos [6 2]}
+                   {:tile :left-thumb-base :pos [0 3]}
+                   {:tile :right-thumb-base :pos [3 3]}]}
      {:name "Nav1"
       :bindings
       [[[:B_UE] :END :PG_UP :PG_DN :HOME :N1 :trans :trans :trans :trans]
