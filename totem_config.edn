@@ -68,7 +68,30 @@
   :left-thumb-bt
   {:bindings [[:trans :trans :trans]]}
   :right-thumb-bt
-  {:bindings [[:trans :trans :trans]]}}
+  {:bindings [[:trans :trans :trans]]}
+
+  :horiz-base-left-main-rows-0-1
+  {:bindings [[:DE_X :DE_W :DE_M :DE_Z :none]
+              [:DE_Q :TAB :DE_V :DE_G :none]]}
+  :horiz-base-left-main-row-2
+  {:bindings [[:none :DE_Y :DE_K :DE_J :DE_B :none]]}
+
+  :vert-base-left-main-rows-0-1
+  {:bindings [[[:backspace_delete] [:round_brackets] [:esc_layerreset] [:sk :LEFT_ALT] [:sk :LEFT_GUI]]
+              [:none :none :none :none :none]]}
+
+  :diag-down-base-left-main-rows-0-1
+  {:bindings [[:none :none [:punkt_doppelpunkt] :none :none]
+              [:ENTER [:square_brackets] :none [:caps_word] [:sk :LCTRL]]]}
+
+  :diag-up-base-left-main-rows-0-1
+  {:bindings [[:none :none :none :none :none]
+              [:none :none :none :none [:curly_brackets]]]}
+  :diag-up-base-left-main-row-2
+  {:bindings [[:none :none :none :SPACE :none :none]]}
+
+  :diag-knight-base-left-main-row-2
+  {:bindings [[:none :none :none :none [:komma_strickpunkt] [:angled_brackets]]]}}
  :regions
  [[:combos
    {:nodes
@@ -76,45 +99,42 @@
       :type :combo-layer
       :row-widths [10 10 12 6]
       :pattern [[0 0] [0 1]]
-      :bindings [[:DE_X :DE_W :DE_M :DE_Z :none :none :none :none :none :none]
-                 [:DE_Q :TAB :DE_V :DE_G :none :none :none :none :none :none]
-                 [:none :DE_Y :DE_K :DE_J :DE_B :none :none :none :none :none :none]]
+      :empty :none
+      :placements [{:tile :horiz-base-left-main-rows-0-1 :pos [0 0]}
+                   {:tile :horiz-base-left-main-row-2 :pos [0 2]}]
       :layers [:BASE]}
 
      {:name "vert_base"
       :type :combo-layer
       :row-widths [10 10 12 6]
       :pattern [[0 0] [1 0]]
-      :bindings [[[:backspace_delete] [:round_brackets] [:esc_layerreset] [:sk :LEFT_ALT] [:sk :LEFT_GUI]]
-                 [:none :none :none :none :none]]
+      :empty :none
+      :placements [{:tile :vert-base-left-main-rows-0-1 :pos [0 0]}]
       :layers [:BASE]}
 
      {:name "diag_down_base"
       :type :combo-layer
       :row-widths [10 10 12 6]
       :pattern [[0 0] [1 1]]
-      :bindings [[:none :none [:punkt_doppelpunkt] :none :none :none :none :none :none :none]
-                 [:ENTER [:square_brackets] :none [:caps_word] [:sk :LCTRL] :none]
-                 [:none :none :none :none :none :none :none :none :none :none :none :none]]
+      :empty :none
+      :placements [{:tile :diag-down-base-left-main-rows-0-1 :pos [0 0]}]
       :layers [:BASE]}
 
      {:name "diag_up_base"
       :type :combo-layer
       :row-widths [10 10 12 6]
       :pattern [[0 0] [-1 -1]]
-      :bindings [[:none :none :none :none :none :none :none :none :none :none]
-                 [:none :none :none :none [:curly_brackets] :none :none :none :none :none]
-                 [:none :none :none :SPACE :none :none :none :none :none :none :none]]
+      :empty :none
+      :placements [{:tile :diag-up-base-left-main-rows-0-1 :pos [0 0]}
+                   {:tile :diag-up-base-left-main-row-2 :pos [0 2]}]
       :layers [:BASE]}
 
      {:name "diag_knight_base"
       :type :combo-layer
       :row-widths [10 10 12 6]
       :pattern [[0 0] [-1 -2]]
-      :bindings [[:none :none :none :none :none :none :none :none :none :none]
-                 [:none :none :none :none :none :none :none :none :none :none]
-                 [:none :none :none :none [:komma_strickpunkt] [:angled_brackets] :none :none :none :none :none :none]
-                 [:none :none :none :none :none :none]]
+      :empty :none
+      :placements [{:tile :diag-knight-base-left-main-row-2 :pos [0 2]}]
       :layers [:BASE]}
 
      {:name "toBT"
