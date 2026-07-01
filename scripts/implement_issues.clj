@@ -42,7 +42,7 @@
   (print-and-log! log-writer (str "\n\n=== " title " ===\n")))
 
 (defn run-command! [log-writer title args]
-  (title! log-writer (str title "\n$ " (str/join " " args)))
+  (title! log-writer (str title "\n$ " (pr-str args)))
   (let [process (-> (ProcessBuilder. ^java.util.List args)
                     (.redirectErrorStream true)
                     (.start))
@@ -72,7 +72,7 @@
     (with-open [log-writer (io/writer (fs/file log-path) :append true)]
       (title! log-writer (str "Issue " file-name))
       (require-success! issue log-writer "Implement issue with pi"
-                        ["pi" "-p" (str "/skill:implement @" path)])
+                        ["pi" "-p" "--mode" "json" "/skill:implement" (str "@" path)])
       (require-success! issue log-writer "Run tests"
                         ["bb" "test"])
       (require-success! issue log-writer "Delete completed issue"
