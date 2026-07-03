@@ -627,7 +627,64 @@
     (is (not (str/includes? generated "bindings = <&kp W>;")))))
 
 ; (deftest rich-comment-tests
- ; (test-runner/run-tests-in-file-tree! :dirs #{"./"} ))
+ (deftest replace-placeholder-swaps-placeholder
+  (is (= :MACRO_PLACEHOLDER (generator/replace-placeholder :_placeholder)))
+  (is (= [:kp :MACRO_PLACEHOLDER] (generator/replace-placeholder [:kp :_placeholder])))
+  (is (= [:macro_tap [:kp :MACRO_PLACEHOLDER]] (generator/replace-placeholder [:macro_tap [:kp :_placeholder]]))))
+
+(deftest binding-dsl-compiles-param-ops
+  (is (= "&macro_param_1to1" (generator/binding->str :param-1to1)))
+  (is (= "&macro_param_1to2" (generator/binding->str :param-1to2)))
+  (is (= "&macro_param_2to1" (generator/binding->str :param-2to1)))
+  (is (= "&macro_param_2to2" (generator/binding->str :param-2to2))))
+
+(deftest render-macro-one-param-generates-expected-output
+  (let [rendered (generator/render-macro {:name "upper"
+                                          :type :macro-one-param
+                                          :body [:CAPSLOCK [:pause] [:param-1to1 [:kp :_placeholder]] :CAPSLOCK]
+                                          :wait-ms 80
+                                          :tap-ms 80}
+                                         2)]
+    (is (str/includes? rendered "compatible = \"zmk,behavior-macro-one-param\";"))
+    (is (str/includes? rendered "#binding-cells = <1>;"))
+    (is (str/includes? rendered "<&kp CAPSLOCK>,"))
+    (is (str/includes? rendered "<&macro_pause_for_release>,"))
+    (is (str/includes? rendered "<&macro_param_1to1>,"))
+    (is (str/includes? rendered "<&kp MACRO_PLACEHOLDER>,"))
+    (is (str/includes? rendered "<&kp CAPSLOCK>;"))
+    (is (str/includes? rendered "wait-ms = <80>;"))
+    (is (str/includes? rendered "tap-ms = <80>;"))))
+
+(deftest render-macro-two-param-generates-expected-output
+  (let [rendered (generator/render-macro {:name "swap"
+                                          :type :macro-two-param
+                                          :body [[:param-2to1 [:kp :_placeholder]] [:param-2to2 [:kp :_placeholder]]]
+                                          :wait-ms 20}
+                                         2)]
+    (is (str/includes? rendered "compatible = \"zmk,behavior-macro-two-param\";"))
+    (is (str/includes? rendered "#binding-cells = <2>;"))
+    (is (str/includes? rendered "<&macro_param_2to1>,"))
+    (is (str/includes? rendered "<&kp MACRO_PLACEHOLDER>,"))
+    (is (str/includes? rendered "<&macro_param_2to2>,"))
+    (is (str/includes? rendered "<&kp MACRO_PLACEHOLDER>;"))))
+
+(deftest param-wrappers-compose-with-macro-tap
+  (let [rendered (generator/render-macro {:name "tap_param"
+                                          :type :macro-one-param
+                                          :body [[:param-1to1 [:macro_tap :_placeholder]]]}
+                                         2)]
+    (is (str/includes? rendered "<&macro_param_1to1>,"))
+    (is (str/includes? rendered "<&macro_tap MACRO_PLACEHOLDER>;"))))
+
+(deftest param-1to2-with-macro-tap-emits-expected-groups
+  (let [rendered (generator/render-macro {:name "param12"
+                                          :type :macro-one-param
+                                          :body [[:param-1to2 [:macro_tap :_placeholder]]]}
+                                         2)]
+    (is (str/includes? rendered "<&macro_param_1to2>,"))
+    (is (str/includes? rendered "<&macro_tap MACRO_PLACEHOLDER>;"))))
+
+; (test-runner/run-tests-in-file-tree! :dirs #{"./"} ))
 
 
 

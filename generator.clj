@@ -25,6 +25,22 @@
     (name token)
     (str token)))
 
+(defn replace-placeholder
+  "Recursively walk a binding expression and replace :_placeholder with :MACRO_PLACEHOLDER."
+  [cell]
+  (cond
+    (keyword? cell)
+    (if (= cell :_placeholder) :MACRO_PLACEHOLDER cell)
+    (vector? cell)
+    (mapv replace-placeholder cell)
+    :else cell))
+
+(defn param-step?
+  "Check if a cell is a param-forwarding wrapper."
+  [cell]
+  (and (vector? cell)
+       (#{:param-1to1 :param-1to2 :param-2to1 :param-2to2} (first cell))))
+
 (defn resolve-alias
   "Recursively resolve a binding cell through the aliases map.
    :_ -> :trans -> &trans (one or more levels). Vectors and non-alias keywords are returned as-is."
@@ -269,6 +285,8 @@
         (str "&macro_tap_time " (second cell))
         :pause
         "&macro_pause_for_release"
+        (:param-1to1 :param-1to2 :param-2to1 :param-2to2)
+        (str "&macro_param_" (subs (name op) 6))
         (str "&" (token->str op)
              (when (seq (rest cell))
                (str " " (str/join " " (map token->str (rest cell))))))))
@@ -277,10 +295,27 @@
     (case cell
       :trans "&trans"
       :none "&none"
+      (:param-1to1 :param-1to2 :param-2to1 :param-2to2)
+      (str "&macro_param_" (subs (name cell) 6))
       (str "&kp " (name cell)))
 
     :else
     (str cell)))
+
+(defn macro-binding-groups
+  "Expand a macro body into a seq of <...> group contents.
+   Most cells become one group. Param wrappers become two groups:
+   the param control behavior, and the resolved binding with
+   :_placeholder replaced by :MACRO_PLACEHOLDER."
+  [body]
+  (mapcat
+    (fn [cell]
+      (if (param-step? cell)
+        (let [[param-op inner-binding] cell]
+          [(str "&macro_param_" (subs (name param-op) 6))
+           (binding->str (replace-placeholder inner-binding))])
+        [(binding->str cell)]))
+    body))
 
 (defn render-macro
   "Render a declarative ZMK macro node.
@@ -300,13 +335,21 @@
                         :macro 0
                         :macro-one-param 1
                         :macro-two-param 2)
-        display-name (or label name)]
+        display-name (or label name)
+        bindings-line (if (#{:macro-one-param :macro-two-param} type)
+                        (let [groups (macro-binding-groups body)]
+                          (str (indent (inc level)) "bindings =\n"
+                               (str/join ",\n"
+                                         (map #(str (indent (inc level)) "    <" % ">")
+                                              groups))
+                               ";"))
+                        (str (indent (inc level)) "bindings = <" (str/join " " (map binding->str body)) ">;"))]
     (str/join
      "\n"
      (concat [(str (indent level) name ": " display-name " {")
               (str (indent (inc level)) "compatible = \"" compat-str "\";")
               (str (indent (inc level)) "#binding-cells = <" binding-cells ">;")
-              (str (indent (inc level)) "bindings = <" (str/join " " (map binding->str body)) ">;")]
+              bindings-line]
              (when wait-ms [(str (indent (inc level)) "wait-ms = <" wait-ms ">;")])
              (when tap-ms  [(str (indent (inc level)) "tap-ms = <" tap-ms ">;")])
              [(str (indent level) "};")]))))
