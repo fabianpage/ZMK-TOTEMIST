@@ -38,4 +38,5 @@ Do **not** modify firmware config files in `config/` or `build.yaml` unless expl
 
 ## Clojure (all files which end with .clj)
  - use the clj-surgeon skill to list/analyze and edit clojure files. Berofe reading a clojure file start at least with clj-surgeon :op :ls :file filename
- - use the brepl skill to run clojure code
+ - use the brepl skill to run clojure code and test clojure code
+ - error and stop if you can't use brepl or clj-surgeon
