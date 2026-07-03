@@ -205,6 +205,42 @@
     (is (str/includes? rendered "wait-ms = <40>;"))
     (is (str/includes? rendered "tap-ms = <30>;"))))
 
+(deftest aliases-expand-inside-macro-bodies
+  (let [template "    // BEGIN macros
+    // END macros
+    // BEGIN keymap
+    // END keymap
+"
+        config {:aliases {:ESC :ESCAPE :CTRL [:lt 2 :LCTRL]}
+                :regions [[:macros
+                           {:nodes [{:name "esc_macro"
+                                     :type :macro
+                                     :body [:ESC [:press :CTRL] [:wait 30] [:release :CTRL]]}]}]
+                          [:keymap
+                           {:nodes [{:name "BASE"
+                                     :bindings [[:Q :W :E]
+                                                [:A :S :D]]}]}]]}]
+    (is (re-find #"bindings = <&kp ESCAPE &macro_press &lt 2 LCTRL &macro_wait_time 30 &macro_release &lt 2 LCTRL>"
+                 (generator/generate-keymap template config)))
+    (is (re-find #"esc_macro" (generator/generate-keymap template config)))))
+
+(deftest raw-body-macro-nodes-render-backward-compatible
+  (let [template "    // BEGIN macros
+    // END macros
+"
+        config {:regions [[:macros
+                           {:nodes [{:name "legacy"
+                                     :label "LEGACY"
+                                     :body ["compatible = \"zmk,behavior-macro\";"
+                                            "#binding-cells = <0>;"
+                                            "bindings = <&kp A &kp B>;"]}]}]]}]
+    (let [generated (generator/generate-keymap template config)]
+      (is (str/includes? generated "legacy: LEGACY {"))
+      (is (str/includes? generated "    compatible = \"zmk,behavior-macro\";"))
+      (is (str/includes? generated "    #binding-cells = <0>;"))
+      (is (str/includes? generated "    bindings = <&kp A &kp B>;")))))
+
+
 (deftest binding-dsl-compiles-macro-timing-steps
   (is (= "&macro_wait_time 30" (generator/binding->str [:wait 30])))
   (is (= "&macro_tap_time 50" (generator/binding->str [:tap-time 50])))
