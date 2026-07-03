@@ -144,12 +144,12 @@
       :body ["bindings = <&M_UPPER_AEOEUE DE_A_UMLAUT>;" "key-positions = <33 21 32>;" "layers = <0>;"]}]}]
   [:macros
    {:nodes
-    [{:name "esc_layerreset", :label "esc_layerreset",
-      :body ["compatible = \"zmk,behavior-macro\";" "#binding-cells = <0>;" "bindings = <&kp ESCAPE &to 0>;"]}
-     {:name "daechli", :label "daechli",
-      :body ["compatible = \"zmk,behavior-macro\";" "#binding-cells = <0>;" "bindings = <&kp DE_CARET &kp SPACE>;"]}
-     {:name "tilde", :label "tilde",
-      :body ["compatible = \"zmk,behavior-macro\";" "#binding-cells = <0>;" "bindings = <&kp LA(DE_N) &kp SPACE>;"]}
+    [{:name "esc_layerreset" :type :macro
+      :body [:ESCAPE [:to 0]]}
+     {:name "daechli" :type :macro
+      :body [:DE_CARET :SPACE]}
+     {:name "tilde" :type :macro
+      :body [[:kp "LA(DE_N)"] :SPACE]}
      {:name "M_UPPER_AEOEUE", :label "AE",
       :body ["compatible = \"zmk,behavior-macro-one-param\";"
               "#binding-cells = <1>;"
@@ -160,56 +160,40 @@
               ""
               "tap-ms = <80>;"
               "wait-ms = <80>;"]}
-     {:name "M_UE", :label "UE",
-      :body ["compatible = \"zmk,behavior-macro\";" "#binding-cells = <0>;"
-              "bindings = <&kp CAPSLOCK &kp DE_U_UMLAUT &kp CAPSLOCK>;"
-              "wait-ms = <20>;" "tap-ms = <20>;"]}
-     {:name "M_OE", :label "M_OE",
-      :body ["compatible = \"zmk,behavior-macro\";" "#binding-cells = <0>;"
-              "bindings = <&kp CAPSLOCK &kp DE_O_UMLAUT &kp CAPSLOCK>;"
-              "wait-ms = <100>;" "tap-ms = <100>;"]}
-     {:name "backtick_macro", :label "backtick_macro",
-      :body ["compatible = \"zmk,behavior-macro\";" "#binding-cells = <0>;"
-              "bindings = <&kp DE_GRAVE &kp SPACE>;"]}
-     {:name "fronttick_macro", :label "fronttick_macro",
-      :body ["compatible = \"zmk,behavior-macro\";" "#binding-cells = <0>;"
-              "bindings = <&kp RA(EQUAL) &kp SPACE>;"]}
-     {:name "ue1", :label "ue1",
-      :body ["compatible = \"zmk,behavior-macro\";" "#binding-cells = <0>;"
-              "bindings = <&kp DE_U_UMLAUT &kp DE_N1>;"]}
-     {:name "ue2", :label "ue2",
-      :body ["compatible = \"zmk,behavior-macro\";" "#binding-cells = <0>;"
-              "bindings = <&kp DE_U_UMLAUT &kp DE_N2>;"]}
-     {:name "ue3", :label "ue3",
-      :body ["compatible = \"zmk,behavior-macro\";" "#binding-cells = <0>;"
-              "bindings = <&kp DE_U_UMLAUT &kp DE_N3>;"]}
-     {:name "ue4", :label "ue4",
-      :body ["compatible = \"zmk,behavior-macro\";" "#binding-cells = <0>;"
-              "bindings = <&kp DE_U_UMLAUT &kp DE_N4>;"]}
-     {:name "ue5", :label "ue5",
-      :body ["compatible = \"zmk,behavior-macro\";" "#binding-cells = <0>;"
-              "bindings = <&kp DE_U_UMLAUT &kp DE_N5>;"]}
-     {:name "ue6", :label "ue6",
-      :body ["compatible = \"zmk,behavior-macro\";" "#binding-cells = <0>;"
-              "bindings = <&kp DE_U_UMLAUT &kp DE_N6>;"]}
-     {:name "ue7", :label "ue7",
-      :body ["compatible = \"zmk,behavior-macro\";" "#binding-cells = <0>;"
-              "bindings = <&kp DE_U_UMLAUT &kp DE_N7>;"]}
-     {:name "ue8", :label "ue8",
-      :body ["compatible = \"zmk,behavior-macro\";" "#binding-cells = <0>;"
-              "bindings = <&kp DE_U_UMLAUT &kp DE_N8>;"]}
-     {:name "ue9", :label "ue9",
-      :body ["compatible = \"zmk,behavior-macro\";" "#binding-cells = <0>;"
-              "bindings = <&kp DE_U_UMLAUT &kp DE_N9>;"]}
-     {:name "ue0", :label "ue0",
-      :body ["compatible = \"zmk,behavior-macro\";" "#binding-cells = <0>;"
-              "bindings = <&kp DE_U_UMLAUT &kp DE_N0>;"]}
-     {:name "tmux_next_window", :label "tmux_next",
-      :body ["compatible = \"zmk,behavior-macro\";" "#binding-cells = <0>;"
-              "bindings = <&kp DE_U_UMLAUT &kp DE_N>;"]}
-     {:name "tmux_prev_window", :label "tmux_prev",
-      :body ["compatible = \"zmk,behavior-macro\";" "#binding-cells = <0>;"
-              "bindings = <&kp DE_U_UMLAUT &kp DE_P>;"]}]}]
+     {:name "M_UE" :type :macro
+      :body [:CAPSLOCK :DE_U_UMLAUT :CAPSLOCK]
+      :wait-ms 20 :tap-ms 20}
+     {:name "M_OE" :type :macro
+      :body [:CAPSLOCK :DE_O_UMLAUT :CAPSLOCK]
+      :wait-ms 100 :tap-ms 100}
+     {:name "backtick_macro" :type :macro
+      :body [:DE_GRAVE :SPACE]}
+     {:name "fronttick_macro" :type :macro
+      :body [[:kp "RA(EQUAL)"] :SPACE]}
+     {:name "ue1" :type :macro
+      :body [:DE_U_UMLAUT :DE_N1]}
+     {:name "ue2" :type :macro
+      :body [:DE_U_UMLAUT :DE_N2]}
+     {:name "ue3" :type :macro
+      :body [:DE_U_UMLAUT :DE_N3]}
+     {:name "ue4" :type :macro
+      :body [:DE_U_UMLAUT :DE_N4]}
+     {:name "ue5" :type :macro
+      :body [:DE_U_UMLAUT :DE_N5]}
+     {:name "ue6" :type :macro
+      :body [:DE_U_UMLAUT :DE_N6]}
+     {:name "ue7" :type :macro
+      :body [:DE_U_UMLAUT :DE_N7]}
+     {:name "ue8" :type :macro
+      :body [:DE_U_UMLAUT :DE_N8]}
+     {:name "ue9" :type :macro
+      :body [:DE_U_UMLAUT :DE_N9]}
+     {:name "ue0" :type :macro
+      :body [:DE_U_UMLAUT :DE_N0]}
+     {:name "tmux_next_window" :type :macro
+      :body [:DE_U_UMLAUT :DE_N]}
+     {:name "tmux_prev_window" :type :macro
+      :body [:DE_U_UMLAUT :DE_P]}]}]
   [:behaviors
    {:nodes
     [{:name "square_brackets", :label "square_brackets",

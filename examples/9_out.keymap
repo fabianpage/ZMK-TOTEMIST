@@ -1,0 +1,38 @@
+/ {
+    keymap {
+        compatible = "zmk,keymap";
+
+        // BEGIN macros
+        esc_layerreset: esc_layerreset {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp ESCAPE &to 0>;
+            wait-ms = <20>;
+            tap-ms = <20>;
+        };
+
+        hello: hello {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp H &kp E &kp L &kp L &kp O>;
+        };
+
+        slow_macro: slow_macro {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp A &kp B>;
+        };
+        // END macros
+
+        // BEGIN keymap
+        BASE {
+            display-name = "BASE";
+            bindings = <
+&kp Q &kp W &kp E
+&kp A &kp S &kp D
+            >;
+        };
+        // END keymap
+    };
+};
+

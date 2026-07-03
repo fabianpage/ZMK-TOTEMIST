@@ -225,7 +225,7 @@
             wait-ms = <80>;
         };
 
-        M_UE: UE {
+        M_UE: M_UE {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
             bindings = <&kp CAPSLOCK &kp DE_U_UMLAUT &kp CAPSLOCK>;
@@ -313,13 +313,13 @@
             bindings = <&kp DE_U_UMLAUT &kp DE_N0>;
         };
 
-        tmux_next_window: tmux_next {
+        tmux_next_window: tmux_next_window {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
             bindings = <&kp DE_U_UMLAUT &kp DE_N>;
         };
 
-        tmux_prev_window: tmux_prev {
+        tmux_prev_window: tmux_prev_window {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
             bindings = <&kp DE_U_UMLAUT &kp DE_P>;

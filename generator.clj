@@ -266,6 +266,33 @@
     :else
     (str cell)))
 
+(defn render-macro
+  "Render a declarative ZMK macro node.
+   :name     — used for both the DT node id and the label
+   :type     — :macro, :macro-one-param, or :macro-two-param
+   :body     — flat vector of binding expressions (compiled via binding->str)
+   :wait-ms  — optional, emitted as wait-ms = <N>;
+   :tap-ms   — optional, emitted as tap-ms = <N>;"
+  [{:keys [name type body wait-ms tap-ms] :as node} level]
+  (let [compat-str (case type
+                     :macro "zmk,behavior-macro"
+                     :macro-one-param "zmk,behavior-macro-one-param"
+                     :macro-two-param "zmk,behavior-macro-two-param"
+                     (throw (ex-info (str "Unknown macro type: " type) {:node node})))
+        binding-cells (case type
+                        :macro 0
+                        :macro-one-param 1
+                        :macro-two-param 2)]
+    (str/join
+     "\n"
+     (concat [(str (indent level) name ": " name " {")
+              (str (indent (inc level)) "compatible = \"" compat-str "\";")
+              (str (indent (inc level)) "#binding-cells = <" binding-cells ">;")
+              (str (indent (inc level)) "bindings = <" (str/join " " (map binding->str body)) ">;")]
+             (when wait-ms [(str (indent (inc level)) "wait-ms = <" wait-ms ">;")])
+             (when tap-ms  [(str (indent (inc level)) "tap-ms = <" tap-ms ">;")])
+             [(str (indent level) "};")]))))
+
 (defn render-layer
   "Render a keymap layer node. The :name doubles as the DT node id and the
    generated display-name. :bindings is a vector of rows, each a vector of cells."
@@ -318,6 +345,7 @@
   [{:keys [type] :as node} level raw-body? opts]
   (case type
     :combo-layer (render-combo-layer node level opts)
+    (:macro :macro-one-param :macro-two-param) (render-macro node level)
     (if (:bindings node)
       (render-layer node level)
       (str/join

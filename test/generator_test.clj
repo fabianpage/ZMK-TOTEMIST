@@ -149,6 +149,28 @@
     (is (not (str/includes? generated "diag_1_1")))
     (is (not (str/includes? generated "diag_1_2")))))
 
+(deftest render-macro-0-param-generates-macro-node
+  (let [rendered (generator/render-macro {:name "hello"
+                                          :type :macro
+                                          :body [:H :E :L :L :O]}
+                                         2)]
+    (is (str/includes? rendered "hello: hello {"))
+    (is (str/includes? rendered "compatible = \"zmk,behavior-macro\";"))
+    (is (str/includes? rendered "#binding-cells = <0>;"))
+    (is (str/includes? rendered "bindings = <&kp H &kp E &kp L &kp L &kp O>;"))
+    (is (not (str/includes? rendered "wait-ms")))
+    (is (not (str/includes? rendered "tap-ms")))))
+
+(deftest render-macro-emits-wait-ms-and-tap-ms
+  (let [rendered (generator/render-macro {:name "slow"
+                                          :type :macro
+                                          :body [:A :B]
+                                          :wait-ms 40
+                                          :tap-ms 30}
+                                         2)]
+    (is (str/includes? rendered "wait-ms = <40>;"))
+    (is (str/includes? rendered "tap-ms = <30>;"))))
+
 (deftest combo-layer-resolves-layer-names
   (let [template "    // BEGIN combos
     // END combos

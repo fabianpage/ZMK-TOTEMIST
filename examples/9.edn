@@ -1,0 +1,17 @@
+{:regions [[:macros
+            {:nodes
+             [{:name "esc_layerreset"
+               :type :macro
+               :body [:ESCAPE [:to 0]]
+               :wait-ms 20
+               :tap-ms 20}
+              {:name "hello"
+               :type :macro
+               :body [:H :E :L :L :O]}
+              {:name "slow_macro"
+               :type :macro
+               :body [:A :B]}]}]
+           [:keymap
+            {:nodes [{:name "BASE"
+                      :bindings [[:Q :W :E]
+                                 [:A :S :D]]}]}]]}
