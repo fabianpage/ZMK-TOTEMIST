@@ -68,7 +68,16 @@
   (is (= "&lt 3 DE_S" (generator/binding->str [:lt 3 :DE_S])))
   (is (= "&bt BT_SEL 0" (generator/binding->str [:bt :BT_SEL 0])))
   (is (= "&trans" (generator/binding->str :trans)))
-     (is (= "&none" (generator/binding->str :none))))
+  (is (= "&none" (generator/binding->str :none))))
+
+(deftest binding-dsl-compiles-press-release-tap-wrappers
+  (is (= "&macro_press &kp A" (generator/binding->str [:press :A])))
+  (is (= "&macro_release &kp B" (generator/binding->str [:release :B])))
+  (is (= "&macro_tap &kp C" (generator/binding->str [:tap :C])))
+  ;; wrappers compose with vector bindings
+  (is (= "&macro_press &mo 2" (generator/binding->str [:press [:mo 2]])))
+  (is (= "&macro_release &lt 3 DE_S" (generator/binding->str [:release [:lt 3 :DE_S]])))
+  (is (= "&macro_tap &bt BT_SEL 0" (generator/binding->str [:tap [:bt :BT_SEL 0]]))))
 
 (deftest resolve-alias-expands-keywords-recursively
   (let [aliases {:_ :trans :trans :none :S [:lt 3 :DE_S]}]
@@ -178,6 +187,13 @@
                                          2)]
     (is (str/includes? rendered "tap-ms = <20>;"))
     (is (not (str/includes? rendered "wait-ms")))))
+
+(deftest render-macro-with-wrapper-bindings
+  (let [rendered (generator/render-macro {:name "ctrl_a"
+                                          :type :macro
+                                          :body [[:press :LCTRL] :A [:release :LCTRL]]}
+                                         2)]
+    (is (str/includes? rendered "bindings = <&macro_press &kp LCTRL &kp A &macro_release &kp LCTRL>;"))))
 
 (deftest render-macro-emits-wait-ms-and-tap-ms
   (let [rendered (generator/render-macro {:name "slow"

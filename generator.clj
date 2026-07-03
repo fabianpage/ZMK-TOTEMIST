@@ -249,13 +249,20 @@
   "Compile one keymap cell into a ZMK binding string.
    :P              -> &kp P
    [:lt 3 :DE_S]   -> &lt 3 DE_S
+   [:press :A]    -> &macro_press &kp A
+   [:release :B]  -> &macro_release &kp B
+   [:tap :C]      -> &macro_tap &kp C
    :trans/:none  -> &trans / &none (special case)"
   [cell]
   (cond
     (vector? cell)
-    (str "&" (token->str (first cell))
-         (when (seq (rest cell))
-           (str " " (str/join " " (map token->str (rest cell))))))
+    (let [op (first cell)]
+      (case op
+        (:press :release :tap)
+        (str "&macro_" (name op) " " (binding->str (second cell)))
+        (str "&" (token->str op)
+             (when (seq (rest cell))
+               (str " " (str/join " " (map token->str (rest cell))))))))
 
     (keyword? cell)
     (case cell
