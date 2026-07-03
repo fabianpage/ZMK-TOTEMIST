@@ -1,3 +1,5 @@
+#!/usr/bin/env bb
+
 (require '[babashka.deps :as deps])
 
 (deps/add-deps '{:deps {aero/aero {:mvn/version "1.1.6"}}})
