@@ -83,8 +83,8 @@
     (with-open [log-stream (io/output-stream (fs/file log-path) :append true)]
       (title! log-stream (str "Issue " file-name))
       (require-success! issue log-stream "Implement issue with pi"
-                        ; ["pi" "--provider" "github-copilot" "--model" "gpt-5.3-codex" "-p" "/skill:implement" (str "@" path)])
-                        ["ollama" "launch" "pi" "--model" "qwen3.6:27b-q4" "-p" "/skill:implement" (str "@" path)])
+                        ["pi" "--model" "qwen3.6:27b-q4" "-p" "/skill:implement" (str "@" path)])
+                        ; ["ollama" "launch" "pi" "--model" "qwen3.6:27b-q4" "-p" "/skill:implement" (str "@" path)])
       (require-success! issue log-stream "Run tests"
                         ["bb" "test"])
       (require-success! issue log-stream "Delete completed issue"
