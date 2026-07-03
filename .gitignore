@@ -18,3 +18,4 @@ devenv.local.yaml
 
 # Local automation logs
 logs/issue-runner/
+.pi-subagents
