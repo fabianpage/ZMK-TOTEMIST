@@ -161,6 +161,24 @@
     (is (not (str/includes? rendered "wait-ms")))
     (is (not (str/includes? rendered "tap-ms")))))
 
+(deftest render-macro-emits-wait-ms-only
+  (let [rendered (generator/render-macro {:name "slow-wait"
+                                          :type :macro
+                                          :body [:A :B]
+                                          :wait-ms 80}
+                                         2)]
+    (is (str/includes? rendered "wait-ms = <80>;"))
+    (is (not (str/includes? rendered "tap-ms")))))
+
+(deftest render-macro-emits-tap-ms-only
+  (let [rendered (generator/render-macro {:name "slow-tap"
+                                          :type :macro
+                                          :body [:A :B]
+                                          :tap-ms 20}
+                                         2)]
+    (is (str/includes? rendered "tap-ms = <20>;"))
+    (is (not (str/includes? rendered "wait-ms")))))
+
 (deftest render-macro-emits-wait-ms-and-tap-ms
   (let [rendered (generator/render-macro {:name "slow"
                                           :type :macro

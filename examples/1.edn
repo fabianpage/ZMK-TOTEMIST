@@ -99,22 +99,12 @@
        ""
        "tap-ms = <80>;"
        "wait-ms = <80>;"]}
-     {:name "M_UE",
-      :label "UE",
-      :body
-      ["compatible = \"zmk,behavior-macro\";"
-       "#binding-cells = <0>;"
-       "bindings = <&kp CAPSLOCK &kp DE_U_UMLAUT &kp CAPSLOCK>;"
-       "wait-ms = <20>;"
-       "tap-ms = <20>;"]}
-     {:name "M_OE",
-      :label "M_OE",
-      :body
-      ["compatible = \"zmk,behavior-macro\";"
-       "#binding-cells = <0>;"
-       "bindings = <&kp CAPSLOCK &kp DE_O_UMLAUT &kp CAPSLOCK>;"
-       "wait-ms = <100>;"
-       "tap-ms = <100>;"]}
+     {:name "M_UE", :label "UE", :type :macro
+      :body [:CAPSLOCK :DE_U_UMLAUT :CAPSLOCK]
+      :wait-ms 20 :tap-ms 20}
+     {:name "M_OE", :label "M_OE", :type :macro
+      :body [:CAPSLOCK :DE_O_UMLAUT :CAPSLOCK]
+      :wait-ms 100 :tap-ms 100}
      {:name "backtick_macro",
       :label "backtick_macro",
       :body

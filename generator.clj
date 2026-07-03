@@ -268,12 +268,13 @@
 
 (defn render-macro
   "Render a declarative ZMK macro node.
-   :name     — used for both the DT node id and the label
+   :name     — DT node id
+   :label    — optional display name (defaults to :name)
    :type     — :macro, :macro-one-param, or :macro-two-param
    :body     — flat vector of binding expressions (compiled via binding->str)
    :wait-ms  — optional, emitted as wait-ms = <N>;
    :tap-ms   — optional, emitted as tap-ms = <N>;"
-  [{:keys [name type body wait-ms tap-ms] :as node} level]
+  [{:keys [name type body wait-ms tap-ms label] :as node} level]
   (let [compat-str (case type
                      :macro "zmk,behavior-macro"
                      :macro-one-param "zmk,behavior-macro-one-param"
@@ -282,10 +283,11 @@
         binding-cells (case type
                         :macro 0
                         :macro-one-param 1
-                        :macro-two-param 2)]
+                        :macro-two-param 2)
+        display-name (or label name)]
     (str/join
      "\n"
-     (concat [(str (indent level) name ": " name " {")
+     (concat [(str (indent level) name ": " display-name " {")
               (str (indent (inc level)) "compatible = \"" compat-str "\";")
               (str (indent (inc level)) "#binding-cells = <" binding-cells ">;")
               (str (indent (inc level)) "bindings = <" (str/join " " (map binding->str body)) ">;")]
