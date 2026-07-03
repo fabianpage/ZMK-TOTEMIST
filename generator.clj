@@ -252,6 +252,9 @@
    [:press :A]    -> &macro_press &kp A
    [:release :B]  -> &macro_release &kp B
    [:tap :C]      -> &macro_tap &kp C
+   [:wait 30]     -> &macro_wait_time 30
+   [:tap-time 50] -> &macro_tap_time 50
+   [:pause]       -> &macro_pause_for_release
    :trans/:none  -> &trans / &none (special case)"
   [cell]
   (cond
@@ -260,6 +263,12 @@
       (case op
         (:press :release :tap)
         (str "&macro_" (name op) " " (binding->str (second cell)))
+        :wait
+        (str "&macro_wait_time " (second cell))
+        :tap-time
+        (str "&macro_tap_time " (second cell))
+        :pause
+        "&macro_pause_for_release"
         (str "&" (token->str op)
              (when (seq (rest cell))
                (str " " (str/join " " (map token->str (rest cell))))))))

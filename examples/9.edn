@@ -10,7 +10,16 @@
                :body [:H :E :L :L :O]}
               {:name "slow_macro"
                :type :macro
-               :body [:A :B]}]}]
+               :body [:A :B]}
+              {:name "pause_demo"
+               :type :macro
+               :body [[:press :LCTRL]
+                      [:wait 30]
+                      :A
+                      [:tap-time 50]
+                      [:pause]
+                      :B
+                      [:release :LCTRL]]}]}]
            [:keymap
             {:nodes [{:name "BASE"
                       :bindings [[:Q :W :E]

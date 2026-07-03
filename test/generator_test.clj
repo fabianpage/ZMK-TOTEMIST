@@ -205,6 +205,24 @@
     (is (str/includes? rendered "wait-ms = <40>;"))
     (is (str/includes? rendered "tap-ms = <30>;"))))
 
+(deftest binding-dsl-compiles-macro-timing-steps
+  (is (= "&macro_wait_time 30" (generator/binding->str [:wait 30])))
+  (is (= "&macro_tap_time 50" (generator/binding->str [:tap-time 50])))
+  (is (= "&macro_pause_for_release" (generator/binding->str [:pause]))))
+
+(deftest render-macro-with-mixed-timing-bindings-and-wrappers
+  (let [rendered (generator/render-macro {:name "combo_macro"
+                                          :type :macro
+                                          :body [[:press :LCTRL]
+                                                 [:wait 30]
+                                                 :A
+                                                 [:tap-time 50]
+                                                 [:pause]
+                                                 :B
+                                                 [:release :LCTRL]]}
+                                         2)]
+    (is (str/includes? rendered "bindings = <&macro_press &kp LCTRL &macro_wait_time 30 &kp A &macro_tap_time 50 &macro_pause_for_release &kp B &macro_release &kp LCTRL>;"))))
+
 (deftest combo-layer-resolves-layer-names
   (let [template "    // BEGIN combos
     // END combos
