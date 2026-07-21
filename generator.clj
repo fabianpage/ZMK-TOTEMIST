@@ -314,6 +314,40 @@
                                               nodes)))])
                     regions)))))
 
+(defn resolve-left-bindings
+  "Walk config regions.
+   For each node in the :keymap region that has :left, assemble a full :bindings
+   grid by mirroring and applying :right-override. Any existing :bindings is
+   overwritten.
+   For each :combo-layer node that does not declare :row-widths, inject
+   :keyboard :row-widths."
+  [config]
+  (let [keyboard (:keyboard config)]
+    (update config :regions
+            (fn [regions]
+              (mapv (fn [[region spec]]
+                      [region (update spec :nodes
+                                      (fn [nodes]
+                                        (mapv (fn [node]
+                                                (cond
+                                                  ;; :keymap region + :left → assemble full bindings
+                                                  (and (= region :keymap) (:left node))
+                                                  (let [bindings (assemble-layer-bindings node keyboard)]
+                                                    (-> node
+                                                        (dissoc :left :right-override)
+                                                        (assoc :bindings bindings)))
+
+                                                  ;; combo-layer without :row-widths → inherit from keyboard if present
+                                                  (and (= (:type node) :combo-layer) (not (:row-widths node)))
+                                                  (if keyboard
+                                                    (assoc node :row-widths (:row-widths keyboard))
+                                                    node)
+
+                                                  :else
+                                                  node))
+                                              nodes)))])
+                    regions)))))
+
 (defn combo-positions
   "Given row-widths, a pattern of [[row-off col-off] ...], and a base [row col],
    return the absolute ZMK key-positions in pattern order, or nil if any
@@ -529,7 +563,8 @@
   (let [config (-> config
                    expand-aliases
                    (update :tiles resolve-all-tiles)
-                   resolve-placements)
+                   resolve-placements
+                   resolve-left-bindings)
         layer-index-map (extract-layer-indexes config)
         opts {:layer-index-map layer-index-map}]
     (str/replace

@@ -1085,6 +1085,46 @@
                                            :right-override [[:X :Y :Z]]}
                                           {:row-widths [4]}))))
 
+(deftest generate-keymap-left-only-produces-symmetric-bindings
+  (let [template "    // BEGIN keymap\n    // END keymap\n"
+        config {:keyboard {:row-widths [4 4]}
+                :regions [[:keymap
+                           {:nodes [{:name "BASE"
+                                     :left [[:A :B]
+                                            [:C :D]]}]}]]}
+        generated (generator/generate-keymap template config)]
+    (is (str/includes? generated "BASE {"))
+    (is (re-find #"&kp A &kp B &kp B &kp A" generated))
+    (is (re-find #"&kp C &kp D &kp D &kp C" generated))))
+
+(deftest generate-keymap-right-override-overrides-mirrored
+  (let [template "    // BEGIN keymap\n    // END keymap\n"
+        config {:keyboard {:row-widths [4]}
+                :regions [[:keymap
+                           {:nodes [{:name "BASE"
+                                     :left [[:A :B]]
+                                     :right-override [[:X :*]]}]}]]}
+        generated (generator/generate-keymap template config)]
+    (is (re-find #"&kp A &kp B &kp X &kp A" generated))))
+
+(deftest combo-layer-inherits-row-widths-from-keyboard
+  (let [template "    // BEGIN combos\n    // END combos\n    // BEGIN keymap\n    // END keymap\n"
+        config {:keyboard {:row-widths [3 3]}
+                :regions [[:combos
+                           {:nodes [{:name "diag"
+                                      :type :combo-layer
+                                      :pattern [[0 0] [1 1]]
+                                      :bindings [[:Q :W :E]
+                                                 [:A :S :D]]}]}]
+                          [:keymap
+                           {:nodes [{:name "BASE"
+                                     :bindings [[:Q :W :E]
+                                                [:A :S :D]]}]}]]}
+        generated (generator/generate-keymap template config)]
+    (is (str/includes? generated "diag_0_0"))
+    (is (str/includes? generated "key-positions = <0 4>;"))
+    (is (str/includes? generated "bindings = <&kp Q>;"))))
+
 (defn run
   []
   (let [{:keys [fail error] :as result} (run-tests 'generator-test)]
