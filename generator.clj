@@ -87,6 +87,76 @@
     (mapv (comp vec reverse) tile-bindings)
     tile-bindings))
 
+(defn assemble-layer-bindings
+  "Given a layer node with :left (half-grid) and optional :right-override,
+   produce a complete :bindings grid by mirroring each left row horizontally
+   and applying overrides. Validates against :keyboard geometry.
+   
+   :*      - sentinel meaning 'use mirrored value'
+   nil row - means 'use full mirrored row'"
+  [{:keys [left right-override]} {:keys [row-widths] :as keyboard}]
+  (when (nil? keyboard)
+    (throw (ex-info "Missing :keyboard config"
+                    {:keyboard keyboard})))
+  (when-not (seq row-widths)
+    (throw (ex-info "Missing :keyboard :row-widths in config"
+                    {:keyboard keyboard})))
+  (doseq [[idx w] (map-indexed vector row-widths)]
+    (when-not (integer? w)
+      (throw (ex-info (str ":row-widths entry " idx " is not an integer: " w)
+                      {:row-widths row-widths :index idx :value w})))
+    (when (odd? w)
+      (throw (ex-info (str ":row-widths entry " idx " is odd: " w)
+                      {:row-widths row-widths :index idx :value w}))))
+  (when-not (seq left)
+    (throw (ex-info ":left is required and must contain at least one row"
+                    {:left left})))
+  (when-not (= (count left) (count row-widths))
+    (throw (ex-info ":left row count does not match :keyboard :row-widths"
+                    {:left-row-count (count left)
+                     :row-widths-count (count row-widths)})))
+  (doseq [[idx left-row row-width] (map vector (range) left row-widths)]
+    (let [expected-half (quot row-width 2)]
+      (when-not (= (count left-row) expected-half)
+        (throw (ex-info (str ":left row " idx " length (" (count left-row) 
+                             ") does not match half row-width (" expected-half ")")
+                        {:row-idx idx
+                         :left-row left-row
+                         :row-width row-width
+                         :expected expected-half
+                         :actual (count left-row)})))))
+  (when right-override
+    (when-not (= (count right-override) (count left))
+      (throw (ex-info ":right-override row count does not match :left"
+                      {:right-override-count (count right-override)
+                       :left-count (count left)})))
+    (doseq [[idx override-row row-width] (map vector (range) right-override row-widths)]
+      (when (some? override-row)
+        (let [expected-half (quot row-width 2)]
+          (when-not (= (count override-row) expected-half)
+            (throw (ex-info (str ":right-override row " idx " length (" (count override-row) 
+                                 ") does not match half row-width (" expected-half ")")
+                            {:row-idx idx
+                             :override-row override-row
+                             :row-width row-width
+                             :expected expected-half
+                             :actual (count override-row)})))))))
+  (mapv (fn [idx left-row row-width]
+          (let [mirrored (vec (reverse left-row))
+                override-row (when right-override (nth right-override idx))
+                right-half (if (nil? override-row)
+                             mirrored
+                             (mapv (fn [override-cell mirrored-cell]
+                                     (if (= override-cell :*)
+                                       mirrored-cell
+                                       override-cell))
+                                   override-row
+                                   mirrored))]
+            (into (vec left-row) right-half)))
+        (range (count left))
+        left
+        row-widths))
+
 (defn assemble-placements
   "Resolve placements into a flat bindings grid.
 

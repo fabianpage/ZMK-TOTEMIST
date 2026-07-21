@@ -1013,6 +1013,78 @@
 
 
 
+(deftest assemble-layer-bindings-mirror-without-override
+  (let [keyboard {:row-widths [4 4]}
+        layer {:left [[:A :B]
+                       [:C :D]]}]
+    (is (= [[:A :B :B :A]
+            [:C :D :D :C]]
+           (generator/assemble-layer-bindings layer keyboard)))))
+
+(deftest assemble-layer-bindings-with-override-sentinel
+  (let [keyboard {:row-widths [4]}
+        layer {:left [[:A :B]]
+               :right-override [[:X :*]]}]
+    (is (= [[:A :B :X :A]]
+           (generator/assemble-layer-bindings layer keyboard)))))
+
+(deftest assemble-layer-bindings-with-nil-override-row
+  (let [keyboard {:row-widths [4 4 2]}
+        layer {:left [[:A :B]
+                       [:C :D]
+                       [:E]]
+               :right-override [nil [:X :Y] nil]}]
+    (is (= [[:A :B :B :A]
+            [:C :D :X :Y]
+            [:E :E]]
+           (generator/assemble-layer-bindings layer keyboard)))))
+
+(deftest assemble-layer-bindings-missing-keyboard-throws
+  (is (thrown-with-msg?
+       clojure.lang.ExceptionInfo
+       #"Missing :keyboard"
+       (generator/assemble-layer-bindings {:left [[:A :B]]} nil))))
+
+(deftest assemble-layer-bindings-missing-row-widths-throws
+  (is (thrown-with-msg?
+       clojure.lang.ExceptionInfo
+       #"Missing :keyboard :row-widths"
+       (generator/assemble-layer-bindings {:left [[:A :B]]} {}))))
+
+(deftest assemble-layer-bindings-odd-row-widths-throws
+  (is (thrown-with-msg?
+       clojure.lang.ExceptionInfo
+       #"odd"
+       (generator/assemble-layer-bindings {:left [[:A :B]]} {:row-widths [5]}))))
+
+(deftest assemble-layer-bindings-left-row-length-mismatch-throws
+  (is (thrown-with-msg?
+       clojure.lang.ExceptionInfo
+       #"does not match half row-width"
+       (generator/assemble-layer-bindings {:left [[:A :B :C]]} {:row-widths [4]}))))
+
+(deftest assemble-layer-bindings-left-row-count-mismatch-throws
+  (is (thrown-with-msg?
+       clojure.lang.ExceptionInfo
+       #"row count does not match"
+       (generator/assemble-layer-bindings {:left [[:A :B] [:C :D]]} {:row-widths [4]}))))
+
+(deftest assemble-layer-bindings-override-row-count-mismatch-throws
+  (is (thrown-with-msg?
+       clojure.lang.ExceptionInfo
+       #"right-override row count"
+       (generator/assemble-layer-bindings {:left [[:A :B]]
+                                           :right-override [nil nil]}
+                                          {:row-widths [4]}))))
+
+(deftest assemble-layer-bindings-override-row-length-mismatch-throws
+  (is (thrown-with-msg?
+       clojure.lang.ExceptionInfo
+       #"does not match half row-width"
+       (generator/assemble-layer-bindings {:left [[:A :B]]
+                                           :right-override [[:X :Y :Z]]}
+                                          {:row-widths [4]}))))
+
 (defn run
   []
   (let [{:keys [fail error] :as result} (run-tests 'generator-test)]
