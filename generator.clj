@@ -74,19 +74,6 @@
                            (:nodes keymap-region)))
     {}))
 
-(defn make-empty-grid
-  "Create a grid of the given dimensions filled with empty-cell."
-  [row-widths empty-cell]
-  (mapv (fn [w] (vec (repeat w empty-cell))) row-widths))
-
-(defn mirror-tile
-  "Apply mirroring to a tile's bindings.
-   :horizontal reverses the column order within each row."
-  [mirror tile-bindings]
-  (if (= mirror :horizontal)
-    (mapv (comp vec reverse) tile-bindings)
-    tile-bindings))
-
 (defn assemble-layer-bindings
   "Given a layer node with :left (half-grid) and optional :right-override,
    produce a complete :bindings grid by mirroring each left row horizontally
@@ -156,163 +143,6 @@
         (range (count left))
         left
         row-widths))
-
-(defn assemble-placements
-  "Resolve placements into a flat bindings grid.
-
-   placements  - vector of {:tile <keyword> :pos [col row] :mirror ... :clip? ...}
-   row-widths  - vector of row widths for the target grid
-   tiles       - map of {<keyword> {:bindings <grid>}}
-   opts        - optional map:
-                :empty  - fill value for empty cells (default :trans)
-                :clip?  - default clip behavior for placements without their own :clip?"
-  [placements row-widths tiles {:keys [empty clip?] :or {empty :trans}}]
-  (let [num-rows (count row-widths)]
-    ;; Validate all placements reference existing tiles
-    (doseq [[idx {:keys [tile]}] (map-indexed vector placements)]
-      (when-not (get tiles tile)
-        (throw (ex-info (str "Unknown tile: " tile)
-                        {:tile tile
-                         :placement-idx idx
-                         :available (keys tiles)}))))
-
-    ;; Build the grid by pasting each placement in order
-    (reduce
-     (fn [current-grid {:keys [tile pos mirror] :as placement}]
-       (let [tile-bindings (mirror-tile mirror (get-in tiles [tile :bindings]))
-             effective-clip? (if (contains? placement :clip?)
-                               (boolean (:clip? placement))
-                               clip?)
-             [start-col start-row] pos]
-         (when-not (and (vector? pos) (= 2 (count pos)))
-           (throw (ex-info ":pos must be a vector of [col row]"
-                           {:placement placement})))
-         (reduce
-          (fn [g [row-idx col-idx cell]]
-            (let [target-row (+ start-row row-idx)
-                  target-col (+ start-col col-idx)]
-              (cond
-                ;; Row out of bounds
-                (or (< target-row 0) (>= target-row num-rows))
-                (if effective-clip?
-                  g
-                  (throw (ex-info "Tile placement out of bounds: row outside grid"
-                                  {:tile tile
-                                   :pos pos
-                                   :target-row target-row
-                                   :num-rows num-rows})))
-
-                ;; Col out of bounds for this row
-                (or (< target-col 0) (>= target-col (nth row-widths target-row)))
-                (if effective-clip?
-                  g
-                  (throw (ex-info "Tile placement out of bounds: col exceeds row width"
-                                  {:tile tile
-                                   :pos pos
-                                   :target-col target-col
-                                   :row-width (nth row-widths target-row)
-                                   :target-row target-row})))
-
-                ;; In bounds: place the cell (last placement wins)
-                :else (assoc-in g [target-row target-col] cell))))
-          current-grid
-          (for [row-idx (range (count tile-bindings))
-                col-idx (range (count (nth tile-bindings row-idx)))
-                :let [cell (get-in tile-bindings [row-idx col-idx])]]
-            [row-idx col-idx cell]))))
-     (make-empty-grid row-widths empty)
-     placements)))
-
-(defn resolve-tile-bindings
-  "Recursively resolve a tile from the registry. If the tile has :placements
-   and :row-widths, assemble its bindings by recursively resolving all
-   referenced tiles first. Detects cycles using visited-chain.
-   Returns [resolved-tile updated-tiles]."
-  [tile-name tiles visited-chain]
-  (when (contains? (set visited-chain) tile-name)
-    (throw (ex-info (str "Tile cycle detected: " (str/join " -> " (concat visited-chain [tile-name])))
-                    {:cycle (concat visited-chain [tile-name])
-                     :tile tile-name})))
-  (let [tile (get tiles tile-name)]
-    (cond
-      ;; Already has inline bindings - done
-      (:bindings tile)
-      [tile tiles]
-
-      ;; Has placements - assemble recursively
-      (:placements tile)
-      (let [row-widths (:row-widths tile)
-            _ (when-not row-widths
-                (throw (ex-info (str "Tile " tile-name " has :placements but no :row-widths")
-                                {:tile tile-name})))
-            child-tile-names (distinct (map :tile (:placements tile)))
-            ;; Recursively resolve any child tiles that don't yet have :bindings
-            [resolved-tiles _]
-            (reduce (fn [[rtiles _] child-name]
-                      (if (get-in rtiles [child-name :bindings])
-                        [rtiles rtiles]
-                        (let [[child resolved-rtiles]
-                              (resolve-tile-bindings child-name rtiles (conj visited-chain tile-name))]
-                          [(assoc resolved-rtiles child-name child) resolved-rtiles])))
-                    [tiles tiles]
-                    child-tile-names)
-            empty-cell (or (:empty tile) :trans)
-            clip? (boolean (:clip? tile))
-            assembled (assemble-placements (:placements tile)
-                                           row-widths
-                                           resolved-tiles
-                                           {:empty empty-cell :clip? clip?})]
-        [(assoc tile :bindings assembled) resolved-tiles])
-
-      ;; No bindings, no placements - return as-is
-      :else
-      [tile tiles])))
-
-(defn resolve-all-tiles
-  "Resolve all tiles in the registry that have :placements into :bindings.
-   Returns an updated tiles map."
-  [tiles]
-  (reduce (fn [acc [tile-name _]]
-            (if (get-in acc [tile-name :bindings])
-              acc
-              (let [[resolved updated] (resolve-tile-bindings tile-name acc [])]
-                (assoc updated tile-name resolved))))
-          tiles
-          tiles))
-
-(defn- resolve-placements-node
-  "If node has :placements but no :bindings, assemble a flat :bindings grid.
-   Otherwise return node unchanged."
-  [tiles node]
-  (if (and (:placements node) (not (:bindings node)))
-    (do
-      (when-not (:row-widths node)
-        (throw (ex-info ":row-widths is required when using :placements"
-                        {:node node})))
-      (let [row-widths (:row-widths node)
-            empty-cell (or (:empty node) :trans)
-            clip? (boolean (:clip? node))
-            assembled (assemble-placements (:placements node) row-widths tiles
-                                             {:empty empty-cell :clip? clip?})]
-        (-> node
-            (dissoc :placements :empty :clip?)
-            (assoc :bindings assembled))))
-    node))
-
-(defn resolve-placements
-  "Walk config regions and resolve :placements → :bindings for any node
-   that has :placements but not :bindings. This is a pure preprocessing
-   step so render-layer and render-combo-layer require zero changes."
-  [config]
-  (let [tiles (:tiles config)]
-    (update config :regions
-            (fn [regions]
-              (mapv (fn [[region spec]]
-                      [region (update spec :nodes
-                                      (fn [nodes]
-                                        (mapv (partial resolve-placements-node tiles)
-                                              nodes)))])
-                    regions)))))
 
 (defn resolve-left-bindings
   "Walk config regions.
@@ -562,8 +392,6 @@
   [template config]
   (let [config (-> config
                    expand-aliases
-                   (update :tiles resolve-all-tiles)
-                   resolve-placements
                    resolve-left-bindings)
         layer-index-map (extract-layer-indexes config)
         opts {:layer-index-map layer-index-map}]
