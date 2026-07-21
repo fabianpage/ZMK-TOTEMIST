@@ -1,7 +1,7 @@
 # What exact operation is "mirroring" and what data shape does `:right-override` take?
 
 Type: grilling
-Status: open
+Status: resolved
 
 ## Question
 

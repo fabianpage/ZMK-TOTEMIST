@@ -1,7 +1,7 @@
 # Do combo-layers adopt the `:left` / `:right-override` syntax, or keep `:bindings` grids?
 
 Type: grilling
-Status: open
+Status: resolved
 Blocked by: 01
 
 ## Question

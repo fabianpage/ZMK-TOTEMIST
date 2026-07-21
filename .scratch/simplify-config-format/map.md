@@ -16,17 +16,21 @@ The generator config format is refactored so that:
 
 ## Decisions so far
 
-<!-- index — one line per closed ticket: enough to judge relevance, then zoom the link for the detail the ticket holds -->
-
-(none yet)
+1. **Mirror operation**: Horizontal reversal. Left `[:P :O :I :U :T]` → right `[:T :U :I :O :P]` (finger-correspondent mirror).
+2. **`:right-override` shape**: Vector of rows matching `:left` row count. Each row is `nil` (full mirror) or a vector of half-width length containing bindings or the sentinel `:*`.
+3. **Sentinel**: `:*` means "use mirrored value".
+4. **Geometry**: Top-level mandatory`:keyboard {:row-widths [10 10 12 6]}`. `:left` rows must equal `row-width/2`. Only even splits.
+5. **`:right-override` `nil` rows**: Allowed — means "mirror entire row".
+6. **`:left` is left half only**.
+7. **Combo-layers keep `:bindings`** (full grid), no mirroring. Inherit `:row-widths` from `:keyboard`. Fill is hard-coded `:none`.
+8. **`:keyboard` keys**: `:row-widths` and `:empty`. `:aliases` stays top-level.
+9. **`:keyboard` required**: Config must have `:keyboard` or error. Old `:bindings` config must be migrated.
+10. **`:empty` key name**: `:empty` (matches existing `:placements` convention).
+11. **Old `:tiles` / `:placements` removed entirely** — no backward-compat shim.
 
 ## Not yet specified
 
-- What exact operation does "mirror" perform? Horizontal reversal of `:left` per row to produce the right-half implied bindings? Or a copy? The difference matters for finger-position correspondence on a split keyboard.
-- Does the `:right-override` also use the `:keyboard` `:default` fill value (e.g. `:trans`) instead of `nil`? The user example shows `nil`, but `nil` in EDN is not a binding cell — the user likely intended it as a sentinel for "use mirrored value".
-- How do combo-layers fit in? Combo-layers also use `:row-widths` and `:bindings` grids today. Do they also gain `:left` / `:right-override`, or do they keep a single `:bindings` grid because combos are inherently full-grid?
-- Migration strategy: do we rewrite `totem_config.edn` in-place, keep a dual-syntax compatibility shim during transition, or snapshot a baseline and rewrite tests?
-- For layers with `:right-override`, how do we validate that `:right-override` row lengths are ≤ the `:keyboard` `:row-widths` / 2? What happens if they don't match?
+(none — spec written to spec.md)
 
 ## Out of scope
 

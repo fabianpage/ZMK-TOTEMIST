@@ -1,7 +1,7 @@
 # What shape should `:keyboard` global defaults take, and how do they interact with per-node overrides?
 
 Type: grilling
-Status: open
+Status: resolved
 
 ## Question
 
