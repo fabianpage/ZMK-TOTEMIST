@@ -5,8 +5,11 @@ All tile-registry, recursive tile-resolution, placement assembly, and mirror-on-
 
 **Blocked by:** 06
 
-**Status:** ready-for-agent
+**Status:** resolved
 
-- [ ] No `:tiles`, `:placements`, `mirror-tile` (placement variant), `assemble-placements`, `resolve-tile-bindings`, or `resolve-all-tiles` functions remain in the generator.
-- [ ] No test references old tile/placement concepts.
-- [ ] `bb test` passes with no failures or errors.
+- [x] No `:tiles`, `:placements`, `mirror-tile` (placement variant), `assemble-placements`, `resolve-tile-bindings`, or `resolve-all-tiles` functions remain in the generator.
+- [x] No test references old tile/placement concepts.
+- [x] `bb test` passes with no failures or errors.
+
+## Answer
+All tile-registry, placement assembly, and tile-resolution code removed from `generator.clj`. Corresponding tests removed from `test/generator_test.clj`. Full test suite passes (0 failures, 0 errors).

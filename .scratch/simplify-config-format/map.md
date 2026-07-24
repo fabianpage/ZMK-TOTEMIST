@@ -37,3 +37,12 @@ The generator config format is refactored so that:
 - Changes to the ZMK firmware or shield definitions in `config/`.
 - Changes to the template `.keymap` format (the `// BEGIN` / `// END` marker system).
 - Adding new key behaviors (macros, mod-morphs) not already present in the config.
+
+## Status
+
+**Resolved.** All 7 tickets resolved (01-03 via `/grilling`, 04-07 via `/implement`).
+- `generator.clj` refactored: `assemble-layer-bindings`, `resolve-left-bindings`, old tile/placement code removed.
+- `totem_config.edn` migrated to `:left` / `:right-override` syntax with top-level `:keyboard`.
+- `examples/1.edn` migrated; `examples/1_out.keymap` regenerated.
+- All tests pass (`bb test` — 0 failures, 0 errors).
+- Spec (`spec.md`) and all issue files updated.

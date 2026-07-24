@@ -5,9 +5,12 @@ A pure function `assemble-layer-bindings` that takes a layer node and produces a
 
 **Blocked by:** None — can start immediately.
 
-**Status:** ready-for-agent
+**Status:** resolved
 
-- [ ] `assemble-layer-bindings` produces correct full `:bindings` for layers with no `:right-override`.
-- [ ] `:*` sentinel resolves to the mirrored left value at that position.
-- [ ] `nil` row in `:right-override` produces full mirror for that row.
-- [ ] Missing `:keyboard`, odd `:row-widths`, or row length mismatch throws `ExceptionInfo` with a clear message.
+- [x] `assemble-layer-bindings` produces correct full `:bindings` for layers with no `:right-override`.
+- [x] `:*` sentinel resolves to the mirrored left value at that position.
+- [x] `nil` row in `:right-override` produces full mirror for that row.
+- [x] Missing `:keyboard`, odd `:row-widths`, or row length mismatch throws `ExceptionInfo` with a clear message.
+
+## Answer
+Implemented `assemble-layer-bindings` in `generator.clj` with full geometry validation. All edge cases (no override, `:*` sentinel, `nil` rows, validation errors) covered by tests.
