@@ -278,318 +278,201 @@
        "bindings = <&kp DE_U_UMLAUT &kp DE_P>;"]}]}]
   [:behaviors
    {:nodes
-    [{:name "square_brackets",
-      :label "square_brackets",
-      :body
-      ["compatible = \"zmk,behavior-mod-morph\";"
-       "bindings = <&kp LA(DE_N5)>, <&kp LA(DE_N6)>;"
-       ""
-       "#binding-cells = <0>;"
-       "mods = <(MOD_LSFT)>;"]}
-     {:name "round_brackets",
-      :label "round_brackets",
-      :body
-      ["compatible = \"zmk,behavior-mod-morph\";"
-       "bindings = <&kp LS(DE_N8)>, <&kp LS(DE_N9)>;"
-       ""
-       "#binding-cells = <0>;"
-       "mods = <(MOD_LSFT)>;"]}
-     {:name "angled_brackets",
-      :label "angled_brackets",
-      :body
-      ["compatible = \"zmk,behavior-mod-morph\";"
-       "bindings = <&kp DE_LESS_THAN>, <&kp DE_GREATER_THAN>;"
-       ""
-       "#binding-cells = <0>;"
-       "mods = <(MOD_LSFT)>;"]}
-     {:name "curly_brackets",
-      :label "curly_brackets",
-      :body
-      ["compatible = \"zmk,behavior-mod-morph\";"
-       "bindings = <&kp LA(DE_N8)>, <&kp LA(DE_N9)>;"
-       ""
-       "#binding-cells = <0>;"
-       "mods = <(MOD_LSFT)>;"]}
-     {:name "backspace_delete",
-      :label "backspace_delete",
-      :body
-      ["compatible = \"zmk,behavior-mod-morph\";"
-       "bindings = <&kp BACKSPACE>, <&kp DELETE>;"
-       ""
-       "#binding-cells = <0>;"
-       "mods = <(MOD_LSFT)>;"]}
-     {:name "double_single_quote",
-      :label "double_single_quote",
-      :body
-      ["compatible = \"zmk,behavior-mod-morph\";"
-       "bindings = <&kp DE_DOUBLE_QUOTES>, <&kp MINUS>;"
-       ""
-       "#binding-cells = <0>;"
-       "mods = <(MOD_LSFT)>;"]}
-     {:name "back_front_tick",
-      :label "back_front_tick",
-      :body
-      ["compatible = \"zmk,behavior-mod-morph\";"
-       "bindings = <&backtick_macro>, <&fronttick_macro>;"
-       ""
-       "#binding-cells = <0>;"
-       "mods = <(MOD_LSFT)>;"]}
-     {:name "punkt_doppelpunkt",
-      :label "punkt_doppelpunkt",
-      :body
-      ["compatible = \"zmk,behavior-mod-morph\";"
-       "bindings = <&kp DE_DOT>, <&kp DE_COLON>;"
-       ""
-       "#binding-cells = <0>;"
-       "mods = <(MOD_LSFT)>;"]}
-     {:name "komma_strickpunkt",
-      :label "komma_strickpunkt",
-      :body
-      ["compatible = \"zmk,behavior-mod-morph\";"
-       "bindings = <&kp DE_COMMA>, <&kp DE_SEMICOLON>;"
-       ""
-       "#binding-cells = <0>;"
-       "mods = <(MOD_LSFT)>;"]}
-     {:name "frage_ausrufe_zeichen",
-      :label "frage_ausrufe_zeichen",
-      :body
-      ["compatible = \"zmk,behavior-mod-morph\";"
-       "bindings = <&kp DE_QUESTION>, <&kp DE_EXCLAMATION>;"
-       ""
-       "#binding-cells = <0>;"
-       "mods = <(MOD_LSFT)>;"]}
-     {:name "daechli_tilde",
-      :label "daechli_tilde",
-      :body
-      ["compatible = \"zmk,behavior-mod-morph\";"
-       "bindings = <&daechli>, <&tilde>;"
-       ""
-       "#binding-cells = <0>;"
-       "mods = <(MOD_LSFT)>;"]}
-     {:name "prozent_ringli",
-      :label "prozent_ringli",
-      :body
-      ["compatible = \"zmk,behavior-mod-morph\";"
-       "bindings = <&kp DE_PERCENT>, <&kp LS(NON_US_BSLH)>;"
-       ""
-       "#binding-cells = <0>;"
-       "mods = <(MOD_LSFT)>;"]}
-     {:name "hash_pipe",
-      :label "hash_pipe",
-      :body
-      ["compatible = \"zmk,behavior-mod-morph\";"
-       "bindings = <&kp DE_HASH>, <&kp DE_PIPE>;"
-       ""
-       "#binding-cells = <0>;"
-       "mods = <(MOD_LSFT)>;"]}
-     {:name "at_equal",
-      :label "at_equal",
-      :body
-      ["compatible = \"zmk,behavior-mod-morph\";"
-       "bindings = <&kp LA(DE_G)>, <&kp DE_EQUAL>;"
-       ""
-       "#binding-cells = <0>;"
-       "mods = <(MOD_LSFT)>;"]}
-     {:name "dollar_ampersand",
-      :label "dollar_ampersand",
-      :body
-      ["compatible = \"zmk,behavior-mod-morph\";"
-       "bindings = <&kp DE_DOLLAR>, <&kp DE_AMPERSAND>;"
-       ""
-       "#binding-cells = <0>;"
-       "mods = <(MOD_LSFT)>;"]}
-     {:name "slash_backslash",
-      :label "slash_backslash",
-      :body
-      ["compatible = \"zmk,behavior-mod-morph\";"
-       "bindings = <&kp DE_SLASH>, <&kp LS(LA(DE_N7))>;"
-       ""
-       "#binding-cells = <0>;"
-       "mods = <(MOD_LSFT)>;"]}
-     {:name "mal_plus",
-      :label "mal_plus",
-      :body
-      ["compatible = \"zmk,behavior-mod-morph\";"
-       "bindings = <&kp DE_ASTERISK>, <&kp DE_PLUS>;"
-       ""
-       "#binding-cells = <0>;"
-       "mods = <(MOD_LSFT)>;"]}
-     {:name "minus_underscore",
-      :label "minus_underscore",
-      :body
-      ["compatible = \"zmk,behavior-mod-morph\";"
-       "bindings = <&kp DE_MINUS>, <&kp DE_UNDER>;"
-       ""
-       "#binding-cells = <0>;"
-       "mods = <(MOD_LSFT)>;"]}
-     {:name "B_AE",
-      :label "B_AE",
-      :body
-      ["compatible = \"zmk,behavior-mod-morph\";"
-       "bindings = <&kp DE_A_UMLAUT>, <&M_UPPER_AEOEUE DE_A_UMLAUT>;"
-       ""
-       "#binding-cells = <0>;"
-       "mods = <(MOD_LSFT)>;"]}
-     {:name "B_UE",
-      :label "B_UE",
-      :body
-      ["compatible = \"zmk,behavior-mod-morph\";"
-       "bindings = <&kp DE_U_UMLAUT>, <&M_UE>;"
-       ""
-       "#binding-cells = <0>;"
-       "mods = <(MOD_LSFT)>;"]}
-     {:name "B_OE",
-      :label "B_OE",
-      :body
-      ["compatible = \"zmk,behavior-mod-morph\";"
-       "bindings = <&kp DE_O_UMLAUT>, <&M_OE>;"
-       ""
-       "#binding-cells = <0>;"
-       "mods = <(MOD_LSFT)>;"]}
-     {:name "hCh",
-      :label "hCh",
-      :body
-      ["compatible = \"zmk,behavior-mod-morph\";"
-       "bindings = <&kp DE_H>, <&kp LC(DE_H)>;"
-       ""
-       "#binding-cells = <0>;"
-       "mods = <(MOD_LSFT)>;"]}
-     {:name "jCj",
-      :label "jCj",
-      :body
-      ["compatible = \"zmk,behavior-mod-morph\";"
-       "bindings = <&kp DE_J>, <&kp LC(DE_J)>;"
-       ""
-       "#binding-cells = <0>;"
-       "mods = <(MOD_LSFT)>;"]}
-     {:name "kCk",
-      :label "kCk",
-      :body
-      ["compatible = \"zmk,behavior-mod-morph\";"
-       "bindings = <&kp DE_K>, <&kp LC(DE_K)>;"
-       ""
-       "#binding-cells = <0>;"
-       "mods = <(MOD_LSFT)>;"]}
-     {:name "lCl",
-      :label "lCl",
-      :body
-      ["compatible = \"zmk,behavior-mod-morph\";"
-       "bindings = <&kp DE_L>, <&kp LC(DE_L)>;"
-       ""
-       "#binding-cells = <0>;"
-       "mods = <(MOD_LSFT)>;"]}
-     {:name "n0ue0",
-      :label "n0ue0",
-      :body
-      ["compatible = \"zmk,behavior-mod-morph\";"
-       "bindings = <&kp DE_N0>, <&ue0>;"
-       ""
-       "#binding-cells = <0>;"
-       "mods = <(MOD_LSFT)>;"]}
-     {:name "n1ue1",
-      :label "n1ue1",
-      :body
-      ["compatible = \"zmk,behavior-mod-morph\";"
-       "bindings = <&kp DE_N1>, <&ue1>;"
-       ""
-       "#binding-cells = <0>;"
-       "mods = <(MOD_LSFT)>;"]}
-     {:name "n2ue2",
-      :label "n2ue2",
-      :body
-      ["compatible = \"zmk,behavior-mod-morph\";"
-       "bindings = <&kp DE_N2>, <&ue2>;"
-       ""
-       "#binding-cells = <0>;"
-       "mods = <(MOD_LSFT)>;"]}
-     {:name "n3ue3",
-      :label "n3ue3",
-      :body
-      ["compatible = \"zmk,behavior-mod-morph\";"
-       "bindings = <&kp DE_N3>, <&ue3>;"
-       ""
-       "#binding-cells = <0>;"
-       "mods = <(MOD_LSFT)>;"]}
-     {:name "n4ue4",
-      :label "n4ue4",
-      :body
-      ["compatible = \"zmk,behavior-mod-morph\";"
-       "bindings = <&kp DE_N4>, <&ue4>;"
-       ""
-       "#binding-cells = <0>;"
-       "mods = <(MOD_LSFT)>;"]}
-     {:name "n5ue5",
-      :label "n5ue5",
-      :body
-      ["compatible = \"zmk,behavior-mod-morph\";"
-       "bindings = <&kp DE_N5>, <&ue5>;"
-       ""
-       "#binding-cells = <0>;"
-       "mods = <(MOD_LSFT)>;"]}
-     {:name "n6ue6",
-      :label "n6ue6",
-      :body
-      ["compatible = \"zmk,behavior-mod-morph\";"
-       "bindings = <&kp DE_N6>, <&ue6>;"
-       ""
-       "#binding-cells = <0>;"
-       "mods = <(MOD_LSFT)>;"]}
-     {:name "n7ue7",
-      :label "n7ue7",
-      :body
-      ["compatible = \"zmk,behavior-mod-morph\";"
-       "bindings = <&kp DE_N7>, <&ue7>;"
-       ""
-       "#binding-cells = <0>;"
-       "mods = <(MOD_LSFT)>;"]}
-     {:name "n8ue8",
-      :label "n8ue8",
-      :body
-      ["compatible = \"zmk,behavior-mod-morph\";"
-       "bindings = <&kp DE_N8>, <&ue8>;"
-       ""
-       "#binding-cells = <0>;"
-       "mods = <(MOD_LSFT)>;"]}
-     {:name "n9ue9",
-      :label "n9ue9",
-      :body
-      ["compatible = \"zmk,behavior-mod-morph\";"
-       "bindings = <&kp DE_N9>, <&ue9>;"
-       ""
-       "#binding-cells = <0>;"
-       "mods = <(MOD_LSFT)>;"]}
-     {:name "tmux_next_pre",
-      :label "tmux_next_pre",
-      :body
-      ["compatible = \"zmk,behavior-mod-morph\";"
-       "bindings = <&tmux_next_window>, <&tmux_prev_window>;"
-       ""
-       "#binding-cells = <0>;"
-       "mods = <(MOD_LSFT)>;"]}
-     {:name "mac_next_prev_app",
-      :label "mac_next_prev_app",
-      :body
-      ["compatible = \"zmk,behavior-mod-morph\";"
-       "bindings = <&kp LG(TAB)>, <&kp LG(LS(TAB))>;"
-       ""
-       "#binding-cells = <0>;"
-       "mods = <(MOD_LSFT)>;"]}
-     {:name "mac_prev_next_window",
-      :label "mac_prev_next_window",
-      :body
-      ["compatible = \"zmk,behavior-mod-morph\";"
-       "bindings = <&kp LC(F9)>, <&kp LS(LC(F9))>;"
-       ""
-       "#binding-cells = <0>;"
-       "mods = <(MOD_LSFT)>;"]}
-     {:name "swapper",
-      :label "swapper",
-      :body
-      ["compatible = \"zmk,behavior-smart-toggle\";"
-       "#binding-cells = <0>;"
-       "bindings = <&kp LGUI>, <&kp TAB>;"
-       ""
-       "ignored-key-positions = <33>;"]}]}]
+    [{:name "square_brackets"
+      :type :mod-morph
+      :bindings ["&kp LA(DE_N5)" "&kp LA(DE_N6)"]
+      :mods "(MOD_LSFT)"
+}
+     {:name "round_brackets"
+      :type :mod-morph
+      :bindings ["&kp LS(DE_N8)" "&kp LS(DE_N9)"]
+      :mods "(MOD_LSFT)"
+}
+     {:name "angled_brackets"
+      :type :mod-morph
+      :bindings [:DE_LESS_THAN :DE_GREATER_THAN]
+      :mods "(MOD_LSFT)"
+}
+     {:name "curly_brackets"
+      :type :mod-morph
+      :bindings ["&kp LA(DE_N8)" "&kp LA(DE_N9)"]
+      :mods "(MOD_LSFT)"
+}
+     {:name "backspace_delete"
+      :type :mod-morph
+      :bindings [:BACKSPACE :DELETE]
+      :mods "(MOD_LSFT)"
+}
+     {:name "double_single_quote"
+      :type :mod-morph
+      :bindings [:DE_DOUBLE_QUOTES :MINUS]
+      :mods "(MOD_LSFT)"
+}
+     {:name "back_front_tick"
+      :type :mod-morph
+      :bindings [[:backtick_macro] [:fronttick_macro]]
+      :mods "(MOD_LSFT)"
+}
+     {:name "punkt_doppelpunkt"
+      :type :mod-morph
+      :bindings [:DE_DOT :DE_COLON]
+      :mods "(MOD_LSFT)"
+}
+     {:name "komma_strickpunkt"
+      :type :mod-morph
+      :bindings [:DE_COMMA :DE_SEMICOLON]
+      :mods "(MOD_LSFT)"
+}
+     {:name "frage_ausrufe_zeichen"
+      :type :mod-morph
+      :bindings [:DE_QUESTION :DE_EXCLAMATION]
+      :mods "(MOD_LSFT)"
+}
+     {:name "daechli_tilde"
+      :type :mod-morph
+      :bindings [[:daechli] [:tilde]]
+      :mods "(MOD_LSFT)"
+}
+     {:name "prozent_ringli"
+      :type :mod-morph
+      :bindings [:DE_PERCENT "&kp LS(NON_US_BSLH)"]
+      :mods "(MOD_LSFT)"
+}
+     {:name "hash_pipe"
+      :type :mod-morph
+      :bindings [:DE_HASH :DE_PIPE]
+      :mods "(MOD_LSFT)"
+}
+     {:name "at_equal"
+      :type :mod-morph
+      :bindings ["&kp LA(DE_G)" :DE_EQUAL]
+      :mods "(MOD_LSFT)"
+}
+     {:name "dollar_ampersand"
+      :type :mod-morph
+      :bindings [:DE_DOLLAR :DE_AMPERSAND]
+      :mods "(MOD_LSFT)"
+}
+     {:name "slash_backslash"
+      :type :mod-morph
+      :bindings [:DE_SLASH "&kp LS(LA(DE_N7))"]
+      :mods "(MOD_LSFT)"
+}
+     {:name "mal_plus"
+      :type :mod-morph
+      :bindings [:DE_ASTERISK :DE_PLUS]
+      :mods "(MOD_LSFT)"
+}
+     {:name "minus_underscore"
+      :type :mod-morph
+      :bindings [:DE_MINUS :DE_UNDER]
+      :mods "(MOD_LSFT)"
+}
+     {:name "B_AE"
+      :type :mod-morph
+      :bindings [:DE_A_UMLAUT [:M_UPPER_AEOEUE :DE_A_UMLAUT]]
+      :mods "(MOD_LSFT)"
+}
+     {:name "B_UE"
+      :type :mod-morph
+      :bindings [:DE_U_UMLAUT [:M_UE]]
+      :mods "(MOD_LSFT)"
+}
+     {:name "B_OE"
+      :type :mod-morph
+      :bindings [:DE_O_UMLAUT [:M_OE]]
+      :mods "(MOD_LSFT)"
+}
+     {:name "hCh"
+      :type :mod-morph
+      :bindings [:DE_H "&kp LC(DE_H)"]
+      :mods "(MOD_LSFT)"
+}
+     {:name "jCj"
+      :type :mod-morph
+      :bindings [:DE_J "&kp LC(DE_J)"]
+      :mods "(MOD_LSFT)"
+}
+     {:name "kCk"
+      :type :mod-morph
+      :bindings [:DE_K "&kp LC(DE_K)"]
+      :mods "(MOD_LSFT)"
+}
+     {:name "lCl"
+      :type :mod-morph
+      :bindings [:DE_L "&kp LC(DE_L)"]
+      :mods "(MOD_LSFT)"
+}
+     {:name "n0ue0"
+      :type :mod-morph
+      :bindings [:DE_N0 [:ue0]]
+      :mods "(MOD_LSFT)"
+}
+     {:name "n1ue1"
+      :type :mod-morph
+      :bindings [:DE_N1 [:ue1]]
+      :mods "(MOD_LSFT)"
+}
+     {:name "n2ue2"
+      :type :mod-morph
+      :bindings [:DE_N2 [:ue2]]
+      :mods "(MOD_LSFT)"
+}
+     {:name "n3ue3"
+      :type :mod-morph
+      :bindings [:DE_N3 [:ue3]]
+      :mods "(MOD_LSFT)"
+}
+     {:name "n4ue4"
+      :type :mod-morph
+      :bindings [:DE_N4 [:ue4]]
+      :mods "(MOD_LSFT)"
+}
+     {:name "n5ue5"
+      :type :mod-morph
+      :bindings [:DE_N5 [:ue5]]
+      :mods "(MOD_LSFT)"
+}
+     {:name "n6ue6"
+      :type :mod-morph
+      :bindings [:DE_N6 [:ue6]]
+      :mods "(MOD_LSFT)"
+}
+     {:name "n7ue7"
+      :type :mod-morph
+      :bindings [:DE_N7 [:ue7]]
+      :mods "(MOD_LSFT)"
+}
+     {:name "n8ue8"
+      :type :mod-morph
+      :bindings [:DE_N8 [:ue8]]
+      :mods "(MOD_LSFT)"
+}
+     {:name "n9ue9"
+      :type :mod-morph
+      :bindings [:DE_N9 [:ue9]]
+      :mods "(MOD_LSFT)"
+}
+     {:name "tmux_next_pre"
+      :type :mod-morph
+      :bindings [[:tmux_next_window] [:tmux_prev_window]]
+      :mods "(MOD_LSFT)"
+}
+     {:name "mac_next_prev_app"
+      :type :mod-morph
+      :bindings ["&kp LG(TAB)" "&kp LG(LS(TAB))"]
+      :mods "(MOD_LSFT)"
+}
+     {:name "mac_prev_next_window"
+      :type :mod-morph
+      :bindings ["&kp LC(F9)" "&kp LS(LC(F9))"]
+      :mods "(MOD_LSFT)"
+}
+     {:name "swapper"
+      :type :smart-toggle
+      :bindings [:LGUI :TAB]
+      :ignored-key-positions "33"
+}]}]
   [:keymap
    {:nodes
     [{:name "BASE",

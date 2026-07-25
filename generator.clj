@@ -258,11 +258,11 @@
    Each entry specifies the DTS compatible string, #binding-cells count,
    and how the :bindings / :body vector should be formatted."
   {:mod-morph       {:compatible     "zmk,behavior-mod-morph"
-                     :binding-cells  2
+                     :binding-cells  0
                      :binding-format :multi-bracket-comma}
    :smart-toggle    {:compatible     "zmk,behavior-smart-toggle"
-                     :binding-cells  1
-                     :binding-format :single-bracket-space}
+                     :binding-cells  0
+                     :binding-format :multi-bracket-comma}
    :macro           {:compatible     "zmk,behavior-macro"
                      :binding-cells  0
                      :binding-format :single-bracket-space}
@@ -507,7 +507,7 @@
 ^:rct/test
 (comment
   (render-behavior {:name "m" :type :mod-morph :bindings [:A :B] :mods "MOD_LGUI"} 0)
-  ;=> "m: m {\n    compatible = \"zmk,behavior-mod-morph\";\n    #binding-cells = <2>;\n    bindings = <&kp A>, <&kp B>;\n    mods = <MOD_LGUI>;\n};"
+  ;=> "m: m {\n    compatible = \"zmk,behavior-mod-morph\";\n    #binding-cells = <0>;\n    bindings = <&kp A>, <&kp B>;\n    mods = <MOD_LGUI>;\n};"
 
   :rcf)
 

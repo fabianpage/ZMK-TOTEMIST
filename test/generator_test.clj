@@ -298,7 +298,7 @@
                                              2)]
     (is (str/includes? rendered "comma_morph: COMMA_MORPH {"))
     (is (str/includes? rendered "compatible = \"zmk,behavior-mod-morph\";"))
-    (is (str/includes? rendered "#binding-cells = <2>;"))
+    (is (str/includes? rendered "#binding-cells = <0>;"))
     (is (str/includes? rendered "bindings = <&kp COMMA>, <&kp SEMICOLON>;"))
     (is (str/includes? rendered "mods = <(MOD_LGUI)>;"))))
 
