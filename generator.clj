@@ -317,43 +317,6 @@
                [(str (indent level) "};")] )))
     (throw (ex-info (str "Unsupported behavior type: " type) {:node node}))))
 
-(defn render-macro
-  "Render a declarative ZMK macro node.
-   :name     — DT node id
-   :label    — optional display name (defaults to :name)
-   :type     — :macro, :macro-one-param, or :macro-two-param
-   :body     — flat vector of binding expressions (compiled via binding->str)
-   :wait-ms  — optional, emitted as wait-ms = <N>;
-   :tap-ms   — optional, emitted as tap-ms = <N>;"
-  [{:keys [name type body wait-ms tap-ms label] :as node} level]
-  (let [compat-str (case type
-                     :macro "zmk,behavior-macro"
-                     :macro-one-param "zmk,behavior-macro-one-param"
-                     :macro-two-param "zmk,behavior-macro-two-param"
-                     (throw (ex-info (str "Unknown macro type: " type) {:node node})))
-        binding-cells (case type
-                        :macro 0
-                        :macro-one-param 1
-                        :macro-two-param 2)
-        display-name (or label name)
-        bindings-line (if (#{:macro-one-param :macro-two-param} type)
-                        (let [groups (macro-binding-groups body)]
-                          (str (indent (inc level)) "bindings =\n"
-                               (str/join ",\n"
-                                         (map #(str (indent (inc level)) "    <" % ">")
-                                              groups))
-                               ";"))
-                        (str (indent (inc level)) "bindings = <" (str/join " " (map binding->str body)) ">;"))]
-    (str/join
-     "\n"
-     (concat [(str (indent level) name ": " display-name " {")
-              (str (indent (inc level)) "compatible = \"" compat-str "\";")
-              (str (indent (inc level)) "#binding-cells = <" binding-cells ">;")
-              bindings-line]
-             (when wait-ms [(str (indent (inc level)) "wait-ms = <" wait-ms ">;")])
-             (when tap-ms  [(str (indent (inc level)) "tap-ms = <" tap-ms ">;")])
-             [(str (indent level) "};")]))))
-
 (defn render-layer
   "Render a keymap layer node. The :name doubles as the DT node id and the
    generated display-name. :bindings is a vector of rows, each a vector of cells."
@@ -412,8 +375,7 @@
   [{:keys [type layers] :as node} level raw-body? {:keys [layer-index-map] :as opts}]
   (case type
     :combo-layer (render-combo-layer node level opts)
-    (:macro :macro-one-param :macro-two-param) (render-macro node level)
-    (:mod-morph :smart-toggle) (render-behavior node level)
+    (:mod-morph :smart-toggle :macro :macro-one-param :macro-two-param) (render-behavior node level)
     (if (:bindings node)
       (render-layer node level)
       (let [layer-nums (resolve-layer-nums layers layer-index-map)

@@ -188,11 +188,11 @@
     (is (not (str/includes? generated "diag_1_1")))
     (is (not (str/includes? generated "diag_1_2")))))
 
-(deftest render-macro-0-param-generates-macro-node
-  (let [rendered (generator/render-macro {:name "hello"
-                                          :type :macro
-                                          :body [:H :E :L :L :O]}
-                                         2)]
+(deftest render-behavior-macro-0-param-generates-macro-node
+  (let [rendered (generator/render-behavior {:name "hello"
+                                             :type :macro
+                                             :bindings [:H :E :L :L :O]}
+                                            2)]
     (is (str/includes? rendered "hello: hello {"))
     (is (str/includes? rendered "compatible = \"zmk,behavior-macro\";"))
     (is (str/includes? rendered "#binding-cells = <0>;"))
@@ -200,38 +200,38 @@
     (is (not (str/includes? rendered "wait-ms")))
     (is (not (str/includes? rendered "tap-ms")))))
 
-(deftest render-macro-emits-wait-ms-only
-  (let [rendered (generator/render-macro {:name "slow-wait"
-                                          :type :macro
-                                          :body [:A :B]
-                                          :wait-ms 80}
-                                         2)]
+(deftest render-behavior-macro-emits-wait-ms-only
+  (let [rendered (generator/render-behavior {:name "slow-wait"
+                                             :type :macro
+                                             :bindings [:A :B]
+                                             :wait-ms 80}
+                                            2)]
     (is (str/includes? rendered "wait-ms = <80>;"))
     (is (not (str/includes? rendered "tap-ms")))))
 
-(deftest render-macro-emits-tap-ms-only
-  (let [rendered (generator/render-macro {:name "slow-tap"
-                                          :type :macro
-                                          :body [:A :B]
-                                          :tap-ms 20}
-                                         2)]
+(deftest render-behavior-macro-emits-tap-ms-only
+  (let [rendered (generator/render-behavior {:name "slow-tap"
+                                             :type :macro
+                                             :bindings [:A :B]
+                                             :tap-ms 20}
+                                            2)]
     (is (str/includes? rendered "tap-ms = <20>;"))
     (is (not (str/includes? rendered "wait-ms")))))
 
-(deftest render-macro-with-wrapper-bindings
-  (let [rendered (generator/render-macro {:name "ctrl_a"
-                                          :type :macro
-                                          :body [[:press :LCTRL] :A [:release :LCTRL]]}
-                                         2)]
+(deftest render-behavior-macro-with-wrapper-bindings
+  (let [rendered (generator/render-behavior {:name "ctrl_a"
+                                             :type :macro
+                                             :bindings [[:press :LCTRL] :A [:release :LCTRL]]}
+                                            2)]
     (is (str/includes? rendered "bindings = <&macro_press &kp LCTRL &kp A &macro_release &kp LCTRL>;"))))
 
-(deftest render-macro-emits-wait-ms-and-tap-ms
-  (let [rendered (generator/render-macro {:name "slow"
-                                          :type :macro
-                                          :body [:A :B]
-                                          :wait-ms 40
-                                          :tap-ms 30}
-                                         2)]
+(deftest render-behavior-emits-wait-ms-and-tap-ms
+  (let [rendered (generator/render-behavior {:name "slow"
+                                             :type :macro
+                                             :bindings [:A :B]
+                                             :wait-ms 40
+                                             :tap-ms 30}
+                                            2)]
     (is (str/includes? rendered "wait-ms = <40>;"))
     (is (str/includes? rendered "tap-ms = <30>;"))))
 
@@ -245,7 +245,7 @@
                 :regions [[:macros
                            {:nodes [{:name "esc_macro"
                                      :type :macro
-                                     :body [:ESC [:press :CTRL] [:wait 30] [:release :CTRL]]}]}]
+                                     :bindings [:ESC [:press :CTRL] [:wait 30] [:release :CTRL]]}]}]
                           [:keymap
                            {:nodes [{:name "BASE"
                                      :bindings [[:Q :W :E]
@@ -254,39 +254,22 @@
                  (generator/generate-keymap template config)))
     (is (re-find #"esc_macro" (generator/generate-keymap template config)))))
 
-(deftest raw-body-macro-nodes-render-backward-compatible
-  (let [template "    // BEGIN macros
-    // END macros
-"
-        config {:regions [[:macros
-                           {:nodes [{:name "legacy"
-                                     :label "LEGACY"
-                                     :body ["compatible = \"zmk,behavior-macro\";"
-                                            "#binding-cells = <0>;"
-                                            "bindings = <&kp A &kp B>;"]}]}]]}]
-    (let [generated (generator/generate-keymap template config)]
-      (is (str/includes? generated "legacy: LEGACY {"))
-      (is (str/includes? generated "    compatible = \"zmk,behavior-macro\";"))
-      (is (str/includes? generated "    #binding-cells = <0>;"))
-      (is (str/includes? generated "    bindings = <&kp A &kp B>;")))))
-
-
 (deftest binding-dsl-compiles-macro-timing-steps
   (is (= "&macro_wait_time 30" (generator/binding->str [:wait 30])))
   (is (= "&macro_tap_time 50" (generator/binding->str [:tap-time 50])))
   (is (= "&macro_pause_for_release" (generator/binding->str [:pause]))))
 
-(deftest render-macro-with-mixed-timing-bindings-and-wrappers
-  (let [rendered (generator/render-macro {:name "combo_macro"
-                                          :type :macro
-                                          :body [[:press :LCTRL]
-                                                 [:wait 30]
-                                                 :A
-                                                 [:tap-time 50]
-                                                 [:pause]
-                                                 :B
-                                                 [:release :LCTRL]]}
-                                         2)]
+(deftest render-behavior-macro-with-mixed-timing-bindings-and-wrappers
+  (let [rendered (generator/render-behavior {:name "combo_macro"
+                                             :type :macro
+                                             :bindings [[:press :LCTRL]
+                                                        [:wait 30]
+                                                        :A
+                                                        [:tap-time 50]
+                                                        [:pause]
+                                                        :B
+                                                        [:release :LCTRL]]}
+                                            2)]
     (is (str/includes? rendered "bindings = <&macro_press &kp LCTRL &macro_wait_time 30 &kp A &macro_tap_time 50 &macro_pause_for_release &kp B &macro_release &kp LCTRL>;"))))
 
 (deftest render-behavior-mod-morph-renders-correctly
@@ -706,13 +689,13 @@
   (is (= "&macro_param_2to1" (generator/binding->str :param-2to1)))
   (is (= "&macro_param_2to2" (generator/binding->str :param-2to2))))
 
-(deftest render-macro-one-param-generates-expected-output
-  (let [rendered (generator/render-macro {:name "upper"
-                                          :type :macro-one-param
-                                          :body [:CAPSLOCK [:pause] [:param-1to1 [:kp :_placeholder]] :CAPSLOCK]
-                                          :wait-ms 80
-                                          :tap-ms 80}
-                                         2)]
+(deftest render-behavior-one-param-generates-expected-output
+  (let [rendered (generator/render-behavior {:name "upper"
+                                             :type :macro-one-param
+                                             :bindings [:CAPSLOCK [:pause] [:param-1to1 [:kp :_placeholder]] :CAPSLOCK]
+                                             :wait-ms 80
+                                             :tap-ms 80}
+                                            2)]
     (is (str/includes? rendered "compatible = \"zmk,behavior-macro-one-param\";"))
     (is (str/includes? rendered "#binding-cells = <1>;"))
     (is (str/includes? rendered "<&kp CAPSLOCK>,"))
@@ -723,12 +706,12 @@
     (is (str/includes? rendered "wait-ms = <80>;"))
     (is (str/includes? rendered "tap-ms = <80>;"))))
 
-(deftest render-macro-two-param-generates-expected-output
-  (let [rendered (generator/render-macro {:name "swap"
-                                          :type :macro-two-param
-                                          :body [[:param-2to1 [:kp :_placeholder]] [:param-2to2 [:kp :_placeholder]]]
-                                          :wait-ms 20}
-                                         2)]
+(deftest render-behavior-two-param-generates-expected-output
+  (let [rendered (generator/render-behavior {:name "swap"
+                                             :type :macro-two-param
+                                             :bindings [[:param-2to1 [:kp :_placeholder]] [:param-2to2 [:kp :_placeholder]]]
+                                             :wait-ms 20}
+                                            2)]
     (is (str/includes? rendered "compatible = \"zmk,behavior-macro-two-param\";"))
     (is (str/includes? rendered "#binding-cells = <2>;"))
     (is (str/includes? rendered "<&macro_param_2to1>,"))
@@ -736,19 +719,19 @@
     (is (str/includes? rendered "<&macro_param_2to2>,"))
     (is (str/includes? rendered "<&kp MACRO_PLACEHOLDER>;"))))
 
-(deftest param-wrappers-compose-with-macro-tap
-  (let [rendered (generator/render-macro {:name "tap_param"
-                                          :type :macro-one-param
-                                          :body [[:param-1to1 [:macro_tap :_placeholder]]]}
-                                         2)]
+(deftest param-wrappers-compose-with-behavior-macro-tap
+  (let [rendered (generator/render-behavior {:name "tap_param"
+                                             :type :macro-one-param
+                                             :bindings [[:param-1to1 [:macro_tap :_placeholder]]]}
+                                            2)]
     (is (str/includes? rendered "<&macro_param_1to1>,"))
     (is (str/includes? rendered "<&macro_tap MACRO_PLACEHOLDER>;"))))
 
-(deftest param-1to2-with-macro-tap-emits-expected-groups
-  (let [rendered (generator/render-macro {:name "param12"
-                                          :type :macro-one-param
-                                          :body [[:param-1to2 [:macro_tap :_placeholder]]]}
-                                         2)]
+(deftest param-1to2-with-behavior-macro-tap-emits-expected-groups
+  (let [rendered (generator/render-behavior {:name "param12"
+                                             :type :macro-one-param
+                                             :bindings [[:param-1to2 [:macro_tap :_placeholder]]]}
+                                            2)]
     (is (str/includes? rendered "<&macro_param_1to2>,"))
     (is (str/includes? rendered "<&macro_tap MACRO_PLACEHOLDER>;"))))
 
