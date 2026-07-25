@@ -1,18 +1,13 @@
-Status: ready-for-agent
+# 01 — Add behavior-types registry and render-behavior
 
-## Task
+**What to build:** The generator gains a unified `render-behavior` function that can emit any registered behavior type (mod-morph, smart-toggle, macro, macro-one-param, macro-two-param) with correct `compatible`, `#binding-cells`, and binding format. Unit tests and RCT blocks verify it independently of any config changes. `render-macro` still exists but is not yet displaced.
 
-Implement the `simplify-behaviors` spec:
-- Refactor `:behaviors` and `:macros` from vectors of opaque/raw nodes into maps of named, typed behaviors.
-- Unify all behavior rendering through a single `render-behavior` function keyed by a `behavior-types` registry.
-- Delete `render-macro`; fold macros into the behavior ontology.
-- Update `examples/1.edn` and `totem_config.edn` to the new schema.
-- Regenerate `examples/1_out.keymap` and `examples/totem_generated_baseline.keymap`.
-- Add unit tests for `render-behavior` and rich-comment test blocks in `generator.clj`.
+**Blocked by:** None — can start immediately.
 
-## Acceptance Criteria
+**Status:** ready-for-agent
 
-- `bb test` passes with all four test seams (integration, totem baseline, unit render-behavior, RCT).
-- All configs that previously used raw `:body` strings for behaviors/macros now use declarative map syntax.
-- `generator.clj` no longer contains `render-macro` or raw-body rendering for behaviors.
-`
+- [ ] `behavior-types` registry contains all 5 known types with `compatible`, `#binding-cells`, and `:binding-format`
+- [ ] `render-behavior` function exists and handles `:multi-bracket-comma`, `:single-bracket-space`, and `:macro-groups` formats
+- [ ] Pass-through keys (`:mods`, `:wait-ms`, etc.) emit as `key = <value>;`
+- [ ] Unit tests in `test/generator_test.clj` cover: mod-morph rendering, optional label omission, present label, unsupported type error
+- [ ] RCT `^:rct/test` comment block in `generator.clj` with at least one `render-behavior` example invocation + expected string

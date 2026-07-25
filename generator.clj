@@ -253,6 +253,70 @@
         [(binding->str cell)]))
     body))
 
+(def behavior-types
+  "Registry of declarative ZMK behavior node types.
+   Each entry specifies the DTS compatible string, #binding-cells count,
+   and how the :bindings / :body vector should be formatted."
+  {:mod-morph       {:compatible     "zmk,behavior-mod-morph"
+                     :binding-cells  2
+                     :binding-format :multi-bracket-comma}
+   :smart-toggle    {:compatible     "zmk,behavior-smart-toggle"
+                     :binding-cells  1
+                     :binding-format :single-bracket-space}
+   :macro           {:compatible     "zmk,behavior-macro"
+                     :binding-cells  0
+                     :binding-format :single-bracket-space}
+   :macro-one-param {:compatible     "zmk,behavior-macro-one-param"
+                     :binding-cells  1
+                     :binding-format :macro-groups}
+   :macro-two-param {:compatible     "zmk,behavior-macro-two-param"
+                     :binding-cells  2
+                     :binding-format :macro-groups}})
+
+(defn render-behavior
+  "Render any registered behavior type as a ZMK devicetree node.
+   :name      — DT node id (:label, if present, is used as the display-name)
+   :type      — keyword looked up in `behavior-types`
+   :bindings  — behavior-specific binding vector (overrides :body)
+   :body      — alias for :bindings
+   Any other keys are emitted as pass-through properties: key = <value>;"
+  [{:keys [name type bindings body label] :as node} level]
+  (if-let [{:keys [compatible binding-cells binding-format]} (get behavior-types type)]
+    (let [display-name   (or label name)
+          reserved       #{:name :type :bindings :body :label}
+          pass-through   (remove (comp reserved key) node)
+          b              (or body bindings)
+          bindings-line  (case binding-format
+                           :single-bracket-space
+                           (str (indent (inc level)) "bindings = <"
+                                (str/join " " (map binding->str b))
+                                ">;")
+
+                           :multi-bracket-comma
+                           (str (indent (inc level)) "bindings = "
+                                (str/join ", "
+                                  (map #(str "<" (binding->str %) ">") b))
+                                ";")
+
+                           :macro-groups
+                           (let [groups (macro-binding-groups b)]
+                             (str (indent (inc level)) "bindings =\n"
+                                  (str/join ",\n"
+                                            (map #(str (indent (inc level)) "    <" % ">")
+                                                 groups))
+                                  ";")))]
+      (str/join
+       "\n"
+       (concat [(str (indent level) name ": " display-name " {")
+                (str (indent (inc level)) "compatible = \"" compatible "\";")
+                (str (indent (inc level)) "#binding-cells = <" binding-cells ">;")
+                bindings-line]
+               (map (fn [[k v]]
+                      (str (indent (inc level)) (clojure.core/name k) " = <" v ">;"))
+                    pass-through)
+               [(str (indent level) "};")] )))
+    (throw (ex-info (str "Unsupported behavior type: " type) {:node node}))))
+
 (defn render-macro
   "Render a declarative ZMK macro node.
    :name     — DT node id
@@ -349,6 +413,7 @@
   (case type
     :combo-layer (render-combo-layer node level opts)
     (:macro :macro-one-param :macro-two-param) (render-macro node level)
+    (:mod-morph :smart-toggle) (render-behavior node level)
     (if (:bindings node)
       (render-layer node level)
       (let [layer-nums (resolve-layer-nums layers layer-index-map)
@@ -438,6 +503,13 @@
     (println (usage))
     (write-output! (cli/parse-opts args {:spec cli-spec
                                          :error-fn cli-error}))))
+
+^:rct/test
+(comment
+  (render-behavior {:name "m" :type :mod-morph :bindings [:A :B] :mods "MOD_LGUI"} 0)
+  ;=> "m: m {\n    compatible = \"zmk,behavior-mod-morph\";\n    #binding-cells = <2>;\n    bindings = <&kp A>, <&kp B>;\n    mods = <MOD_LGUI>;\n};"
+
+  :rcf)
 
 ^:rct/test
 (comment

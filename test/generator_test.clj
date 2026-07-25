@@ -289,6 +289,44 @@
                                          2)]
     (is (str/includes? rendered "bindings = <&macro_press &kp LCTRL &macro_wait_time 30 &kp A &macro_tap_time 50 &macro_pause_for_release &kp B &macro_release &kp LCTRL>;"))))
 
+(deftest render-behavior-mod-morph-renders-correctly
+  (let [rendered (generator/render-behavior {:name "comma_morph"
+                                              :type :mod-morph
+                                              :bindings [:COMMA :SEMICOLON]
+                                              :label "COMMA_MORPH"
+                                              :mods "(MOD_LGUI)"}
+                                             2)]
+    (is (str/includes? rendered "comma_morph: COMMA_MORPH {"))
+    (is (str/includes? rendered "compatible = \"zmk,behavior-mod-morph\";"))
+    (is (str/includes? rendered "#binding-cells = <2>;"))
+    (is (str/includes? rendered "bindings = <&kp COMMA>, <&kp SEMICOLON>;"))
+    (is (str/includes? rendered "mods = <(MOD_LGUI)>;"))))
+
+(deftest render-behavior-omits-label-when-absent
+  (let [rendered (generator/render-behavior {:name "hello"
+                                              :type :macro
+                                              :bindings [:H :E :L :L :O]}
+                                             2)]
+    (is (str/includes? rendered "hello: hello {"))
+    (is (not (str/includes? rendered "hello: hello: ")))))
+
+(deftest render-behavior-includes-label-when-present
+  (let [rendered (generator/render-behavior {:name "hello"
+                                              :type :macro
+                                              :bindings [:H]
+                                              :label "HELLO"}
+                                             2)]
+    (is (str/includes? rendered "hello: HELLO {"))))
+
+(deftest render-behavior-unsupported-type-throws
+  (is (thrown-with-msg?
+       clojure.lang.ExceptionInfo
+       #"Unsupported behavior type: :fantasy"
+       (generator/render-behavior {:name "bad"
+                                    :type :fantasy
+                                    :bindings [:A]}
+                                   2))))
+
 (deftest combo-layer-resolves-layer-names
   (let [template "    // BEGIN combos
     // END combos
